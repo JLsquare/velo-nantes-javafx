@@ -1,11 +1,13 @@
 package modele;
 
 import java.sql.*;
+import java.util.HashMap;
 
 public class Compteur{
 
     // ---------------- Attributes ---------------- //
 
+    public static HashMap<Integer, Compteur> lesCompteurs = new HashMap<Integer, Compteur>();
     private int idCompteur;
     private String nomCompteur;
     private String sens;
@@ -24,16 +26,18 @@ public class Compteur{
      * @param coord_Y the Y coordinate of the Compteur
      * @param leQuartier the Quartier of the Compteur
      */
-    public Compteur(int idCompteur, String nomCompteur, String sens, float coord_X, float coord_Y, Quartier leQuartier) throws NullPointerException {
-        if(nomCompteur == null || sens == null || leQuartier == null){
-            throw new NullPointerException("nomCompteur, sens or leQuartier is null");
+    public Compteur(int idCompteur, String nomCompteur, String sens, float coord_X, float coord_Y, int leQuartier) throws NullPointerException {
+        if(nomCompteur == null || sens == null){
+            throw new NullPointerException("nomCompteur or sens is null");
         }
         this.idCompteur = idCompteur;
         this.nomCompteur = nomCompteur;
         this.sens = sens;
         this.coord_X = coord_X;
         this.coord_Y = coord_Y;
-        this.leQuartier = leQuartier;
+        this.leQuartier = Quartier.getQuartier(leQuartier);
+
+        lesCompteurs.put(idCompteur, this);
     }
 
     /**
@@ -48,6 +52,8 @@ public class Compteur{
         this.coord_X = rs.getFloat("coord_X");
         this.coord_Y = rs.getFloat("coord_Y");
         this.leQuartier = Quartier.getQuartier(idCompteur);
+
+        lesCompteurs.put(idCompteur, this);
     }
 
     // ---------------- Getters & Setters ---------------- //
@@ -148,6 +154,20 @@ public class Compteur{
         this.leQuartier = leQuartier;
     }
 
+    /**
+     * Get the Compteur with the id
+     * @param idCompteur the id of the Compteur
+     * @return the Compteur with the id
+     * @throws NullPointerException if the Compteur is not found
+     */
+    public static Compteur getCompteur(int idCompteur) throws NullPointerException{
+        Compteur ret = lesCompteurs.get(idCompteur);
+        if(ret == null){
+            throw new NullPointerException("Compteur not found");
+        }
+        return ret;
+    }
+
     // ---------------- Methods ---------------- //
 
     /**
@@ -160,69 +180,29 @@ public class Compteur{
     }
 
     /**
-     * Insert the Compteur into the database
-     * @throws SQLException if there is an error with the SQL request
-     * @throws NoConnectionException if there is no connection to the database
+     * Get the query to insert the Compteur
+     * @return the query to insert the Compteur as a String
      */
-    public void insert() throws SQLException, NoConnectionException{
-        Connection connection = Database.getWriteConnection();
-        PreparedStatement statement = null;
-        try{
-            statement = connection.prepareStatement("INSERT INTO Compteur (idCompteur, nomCompteur, sens, coord_X, coord_Y, idQuartier) VALUES (?, ?, ?, ?, ?, ?)");
-            statement.setInt(1, idCompteur);
-            statement.setString(2, nomCompteur);
-            statement.setString(3, sens);
-            statement.setFloat(4, coord_X);
-            statement.setFloat(5, coord_Y);
-            statement.setInt(6, leQuartier.getIdQuartier());
-            statement.executeUpdate();
-        } finally {
-            if(statement != null){
-                statement.close();
-            }
-        }
+    public String toInsertQuery(){
+        String ret = "INSERT INTO COMPTEUR VALUES (" + idCompteur + ", '" + nomCompteur + "', '" + sens + "', " + coord_X + ", " + coord_Y + ", " + leQuartier.getIdQuartier() + ")";
+        return ret;
+    }  
+
+    /**
+     * Get the query to update the Compteur
+     * @return the query to update the Compteur as a String
+     */
+    public String toUpdateQuery(){
+        String ret = "UPDATE COMPTEUR SET nomCompteur = '" + nomCompteur + "', sens = '" + sens + "', coord_X = " + coord_X + ", coord_Y = " + coord_Y + ", idQuartier = " + leQuartier.getIdQuartier() + " WHERE idCompteur = " + idCompteur;
+        return ret;
     }
 
     /**
-     * Update the Compteur into the database
-     * @throws SQLException if there is an error with the SQL request
-     * @throws NoConnectionException if there is no connection to the database
+     * Get the query to delete the Compteur
+     * @return the query to delete the Compteur as a String
      */
-    public void update() throws SQLException, NoConnectionException{
-        Connection connection = Database.getWriteConnection();
-        PreparedStatement statement = null;
-        try{
-            statement = connection.prepareStatement("UPDATE Compteur SET nomCompteur = ?, sens = ?, coord_X = ?, coord_Y = ?, idQuartier = ? WHERE idCompteur = ?");
-            statement.setString(1, nomCompteur);
-            statement.setString(2, sens);
-            statement.setFloat(3, coord_X);
-            statement.setFloat(4, coord_Y);
-            statement.setInt(5, leQuartier.getIdQuartier());
-            statement.setInt(6, idCompteur);
-            statement.executeUpdate();
-        } finally {
-            if(statement != null){
-                statement.close();
-            }
-        }
+    public String toDeleteQuery(){
+        String ret = "DELETE FROM COMPTEUR WHERE idCompteur = " + idCompteur;
+        return ret;
     }
-
-    /**
-     * Delete the Compteur from the database
-     * @throws SQLException if there is an error with the SQL request
-     * @throws NoConnectionException if there is no connection to the database
-     */
-    public void delete() throws SQLException, NoConnectionException{
-        Connection connection = Database.getWriteConnection();
-        PreparedStatement statement = null;
-        try{
-            statement = connection.prepareStatement("DELETE FROM Compteur WHERE idCompteur = ?");
-            statement.setInt(1, idCompteur);
-            statement.executeUpdate();
-        } finally {
-            if(statement != null){
-                statement.close();
-            }
-        }
-    }    
 }
