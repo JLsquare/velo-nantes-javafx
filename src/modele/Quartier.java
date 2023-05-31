@@ -163,35 +163,48 @@ public class Quartier {
      * To String method
      * @return the String of the Quartier
      */
-    @Override
     public String toString() {
         String string = "Quartier{" + "idQuartier : " + this.idQuartier + ", nomQuartier : " + this.nomQuartier + ", longueurPisteVelo : " + this.longueurPisteVelo + '}';
         return string;
     }
 
     /**
-     * Convert the Quartier to a Insert SQL Query
-     * @return the Insert SQL Query
+     * Insert the Quartier into the database
+     * @throws SQLException if there is an error with the SQL request
+     * @throws NoConnectionException if there is no connection to the database
      */
-    public PreparedStatement toInsertQuery() throws SQLException, NoDatabaseException{
+    public void insert() throws SQLException, NoConnectionException{
         Connection connection = Database.getWriteConnection();
         PreparedStatement statement = connection.prepareStatement("INSERT INTO Quartier (idQuartier, nomQuartier, longueurPisteVelo) VALUES (?, ?, ?)");
         statement.setInt(1, this.idQuartier);
         statement.setString(2, this.nomQuartier);
         statement.setFloat(3, this.longueurPisteVelo);
-        return statement;
+        statement.executeUpdate();
     }
 
     /**
-     * Convert the Quartier to a Update SQL Query
-     * @return the Update SQL Query
+     * Update the Quartier into the database
+     * @throws SQLException if there is an error with the SQL request
+     * @throws NoConnectionException if there is no connection to the database
      */
-    public PreparedStatement toUpdateQuery() throws SQLException, NoDatabaseException{
+    public void update() throws SQLException, NoConnectionException{
         Connection connection = Database.getWriteConnection();
         PreparedStatement statement = connection.prepareStatement("UPDATE Quartier SET nomQuartier = ?, longueurPisteVelo = ? WHERE idQuartier = ?");
         statement.setString(1, this.nomQuartier);
         statement.setFloat(2, this.longueurPisteVelo);
         statement.setInt(3, this.idQuartier);
-        return statement;
+        statement.executeUpdate();
+    }
+
+    /**
+     * Delete the Quartier from the database
+     * @throws SQLException if there is an error with the SQL request
+     * @throws NoConnectionException if there is no connection to the database
+     */
+    public void delete() throws SQLException, NoConnectionException{
+        Connection connection = Database.getWriteConnection();
+        PreparedStatement statement = connection.prepareStatement("DELETE FROM Quartier WHERE idQuartier = ?");
+        statement.setInt(1, this.idQuartier);
+        statement.executeUpdate();
     }
 }
