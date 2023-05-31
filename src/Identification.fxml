@@ -66,7 +66,7 @@
             <Button alignment="TOP_RIGHT" contentDisplay="CENTER" layoutX="366.0" layoutY="14.0" mnemonicParsing="false" text="=" />
             <ImageView fitHeight="207.0" fitWidth="217.0" layoutX="101.0" layoutY="96.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../Downloads/warning-sign-svgrepo-com(1).png" />
+                  <Image url="@../data/warning_sign.png" />
                </image>
             </ImageView>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="99.0" layoutY="62.0" prefHeight="26.0" prefWidth="211.0" text="Connexion requise !" textFill="RED" wrapText="true">
