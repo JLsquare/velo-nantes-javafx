@@ -2,34 +2,27 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.3010033444816054" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane dividerPositions="0.16326530612244897" maxHeight="720.0" maxWidth="1080.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <items>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+    <AnchorPane maxWidth="180.0" minHeight="0.0" minWidth="180.0" prefHeight="718.0" prefWidth="200.0">
          <children>
             <Label layoutX="8.0" layoutY="8.0" prefHeight="40.0" prefWidth="158.0" text="Velo Nantes">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <ListView layoutY="49.0" prefHeight="351.0" prefWidth="177.0" />
             <Pane layoutX="7.0" layoutY="104.0" prefHeight="40.0" prefWidth="164.0" style="-fx-background-color: #e6e6e6;">
                <children>
                   <Label layoutX="14.0" layoutY="7.0" prefHeight="26.0" prefWidth="57.0" text="Label" />
                   <Spinner layoutX="77.0" layoutY="7.0" prefHeight="26.0" prefWidth="78.0" />
                </children>
             </Pane>
-            <Label layoutX="16.0" layoutY="62.0" prefHeight="26.0" prefWidth="142.0" text="Filtres :" wrapText="true">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
             <Pane layoutX="7.0" layoutY="144.0" prefHeight="40.0" prefWidth="164.0" style="-fx-background-color: #e6e6e6;">
                <children>
                   <Label layoutX="14.0" layoutY="7.0" prefHeight="26.0" prefWidth="57.0" text="Label" />
@@ -54,11 +47,15 @@
                   <Spinner layoutX="77.0" layoutY="7.0" prefHeight="26.0" prefWidth="78.0" />
                </children>
             </Pane>
+            <Label layoutX="16.0" layoutY="62.0" prefHeight="26.0" prefWidth="142.0" text="Filtres :" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
          </children></AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+    <AnchorPane maxWidth="900.0" minHeight="0.0" minWidth="900.0" prefHeight="718.0" prefWidth="259.0">
          <children>
-            <Button layoutX="425.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="21.0" text="=" />
-            <Button layoutX="375.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" text="=" />
+            <Button layoutX="845.0" layoutY="14.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="34.0" text="=" />
          </children></AnchorPane>
   </items>
 </SplitPane>
