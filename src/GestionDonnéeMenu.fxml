@@ -7,15 +7,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.3110367892976589" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane dividerPositions="0.3110367892976589" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="451.0" prefWidth="728.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <items>
       <AnchorPane nodeOrientation="LEFT_TO_RIGHT" style="-fx-background-color: #e6e6e6;">
          <children>
-            <SplitPane dividerPositions="0.11868686868686869" orientation="VERTICAL" prefHeight="398.0" prefWidth="183.0" style="-fx-background-color: #e9e9e9;">
+            <SplitPane dividerPositions="0.11868686868686869" orientation="VERTICAL" prefHeight="398.0" prefWidth="183.0" style="-fx-background-color: #e9e9e9;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <items>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="116.0" prefWidth="181.0" style="-fx-background-color: c9c9c9;">
                      <children>
-                        <Label prefHeight="40.0" prefWidth="164.0" text="Vélo Nantes">
+                        <Label layoutX="9.0" layoutY="2.0" prefHeight="40.0" prefWidth="164.0" text="Vélo Nantes" AnchorPane.leftAnchor="9.0" AnchorPane.topAnchor="2.0">
                            <font>
                               <Font name="System Bold" size="24.0" />
                            </font>
@@ -24,7 +24,7 @@
                   </AnchorPane>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="276.0" prefWidth="208.0">
                      <children>
-                        <VBox alignment="BASELINE_CENTER" layoutX="-1.0" layoutY="14.0" prefHeight="211.0" prefWidth="183.0">
+                        <VBox alignment="BASELINE_CENTER" layoutX="-1.0" layoutY="14.0" prefHeight="211.0" prefWidth="183.0" AnchorPane.bottomAnchor="121.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
                            <children>
                               <Label alignment="CENTER" prefHeight="26.0" prefWidth="142.0" text="Connecté " wrapText="true">
                                  <font>
@@ -52,7 +52,7 @@
                               <Label layoutX="102.0" layoutY="191.0" />
                            </children>
                         </VBox>
-                        <Button alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="299.0" mnemonicParsing="false" text="Se Déconnecter" />
+                        <Button alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="299.0" mnemonicParsing="false" text="Se Déconnecter" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="29.0" />
                      </children>
                   </AnchorPane>
                </items>
@@ -61,7 +61,7 @@
       </AnchorPane>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
-            <Button alignment="TOP_RIGHT" contentDisplay="CENTER" layoutX="366.0" layoutY="14.0" mnemonicParsing="false" text="=" />
+            <Button alignment="TOP_RIGHT" contentDisplay="CENTER" layoutX="366.0" layoutY="14.0" mnemonicParsing="false" text="=" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
          </children>
       </AnchorPane>
    </items>

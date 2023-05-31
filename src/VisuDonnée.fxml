@@ -15,11 +15,11 @@
    <items>
       <AnchorPane nodeOrientation="LEFT_TO_RIGHT" style="-fx-background-color: #e6e6e6;">
          <children>
-            <SplitPane dividerPositions="0.11868686868686869" orientation="VERTICAL" prefHeight="398.0" prefWidth="183.0" style="-fx-background-color: #e9e9e9;">
+            <SplitPane dividerPositions="0.11868686868686869" orientation="VERTICAL" prefHeight="398.0" prefWidth="183.0" style="-fx-background-color: #e9e9e9;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <items>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="116.0" prefWidth="181.0">
                      <children>
-                        <Label prefHeight="40.0" prefWidth="164.0" text="Vélo Nantes">
+                        <Label prefHeight="40.0" prefWidth="164.0" text="Vélo Nantes" AnchorPane.leftAnchor="9.0" AnchorPane.topAnchor="2.0">
                            <font>
                               <Font name="System Bold" size="24.0" />
                            </font>
@@ -28,7 +28,7 @@
                   </AnchorPane>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="276.0" prefWidth="208.0">
                      <children>
-                        <VBox layoutX="9.0" layoutY="55.0" prefHeight="236.0" prefWidth="164.0">
+                        <VBox layoutX="9.0" layoutY="55.0" prefHeight="236.0" prefWidth="164.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <Label prefHeight="26.0" prefWidth="142.0" text="Recherche de graphes" wrapText="true">
                                  <font>
@@ -45,7 +45,7 @@
       </AnchorPane>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
-            <Button alignment="TOP_RIGHT" contentDisplay="CENTER" layoutX="366.0" layoutY="14.0" mnemonicParsing="false" text="=" />
+            <Button alignment="TOP_RIGHT" contentDisplay="CENTER" layoutX="366.0" layoutY="14.0" mnemonicParsing="false" text="=" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
             <BarChart layoutX="20.0" layoutY="49.0" prefHeight="208.0" prefWidth="346.0" title="Graph sélectionné" titleSide="BOTTOM">
               <xAxis>
                 <CategoryAxis side="BOTTOM" />
@@ -62,7 +62,7 @@
                 <NumberAxis side="LEFT" />
               </yAxis>
             </BarChart>
-            <Slider layoutX="381.0" layoutY="49.0" orientation="VERTICAL" prefHeight="346.0" prefWidth="24.0" />
+            <Slider layoutX="381.0" layoutY="49.0" orientation="VERTICAL" prefHeight="346.0" prefWidth="24.0" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="49.0" />
          </children>
       </AnchorPane>
    </items>
