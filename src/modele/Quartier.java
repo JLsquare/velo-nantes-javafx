@@ -1,6 +1,7 @@
 package modele;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.sql.*;
 
 
@@ -14,10 +15,10 @@ public class Quartier {
 
     // ---------------- Attributes ---------------- //
 
+    public static HashMap<Integer, Quartier> lesQuartiers = new HashMap<Integer, Quartier>();
     private int idQuartier;
     private String nomQuartier;
     private float longueurPisteVelo;
-    private ArrayList<Compteur> lesCompteurs;
 
     // ---------------- Constructors ---------------- //
 
@@ -31,25 +32,8 @@ public class Quartier {
         this.idQuartier = idQuartier;
         this.nomQuartier = nomQuartier;
         this.longueurPisteVelo = longueurPisteVelo;
-        this.lesCompteurs = new ArrayList<Compteur>();
-    }
 
-    /**
-     * Constructor with ArrayList of Compteur
-     * @param idQuartier the id of the Quartier
-     * @param nomQuartier the name of the Quartier
-     * @param longueurPisteVelo the length of the bike path
-     * @param lesCompteurs the ArrayList of Compteur
-     * @throws NullPointerException if lesCompteurs is null
-     */
-    public Quartier(int idQuartier, String nomQuartier, float longueurPisteVelo, ArrayList<Compteur> lesCompteurs) throws NullPointerException{
-        if(lesCompteurs == null){
-            throw new NullPointerException("lesCompteurs ne peut pas être null");
-        }
-        this.idQuartier = idQuartier;
-        this.nomQuartier = nomQuartier;
-        this.longueurPisteVelo = longueurPisteVelo;
-        this.lesCompteurs = lesCompteurs;
+        lesQuartiers.put(idQuartier, this);
     }
 
     /**
@@ -61,7 +45,8 @@ public class Quartier {
         this.idQuartier = rs.getInt("idQuartier");
         this.nomQuartier = rs.getString("nomQuartier");
         this.longueurPisteVelo = rs.getFloat("longueurPisteVelo");
-        this.lesCompteurs = new ArrayList<Compteur>();
+
+        lesQuartiers.put(idQuartier, this);
     }
 
     // ---------------- Getters & Setters ---------------- //
@@ -118,53 +103,22 @@ public class Quartier {
         this.longueurPisteVelo = longueurPisteVelo;
     }
 
-    // ---------------- Compteur ---------------- //
-
-    /**
-     * Add a Compteur to the ArrayList of Compteur
-     * @param unCompteur the Compteur to add
-     * @throws NullPointerException if unCompteur is null
-     */
-    public void addCompteur(Compteur unCompteur) throws NullPointerException{
-        if(unCompteur == null){
-            throw new NullPointerException("unCompteur ne peut pas être null");
+    public static Quartier getQuartier(int idQuartier) throws NullPointerException{
+        Quartier quartier = lesQuartiers.get(idQuartier);
+        if(quartier == null){
+            throw new NullPointerException("The Quartier with id " + idQuartier + " doesn't exist");
         }
-        this.lesCompteurs.add(unCompteur);
+        return quartier;
     }
 
-    /**
-     * Get a Compteur from the ArrayList of Compteur
-     * @param index the index of the Compteur
-     * @return the Compteur
-     * @throws IndexOutOfBoundsException if index is out of bounds
-     */
-    public Compteur getCompteur(int index) throws IndexOutOfBoundsException{
-        if(index < 0 || index >= this.lesCompteurs.size()){
-            throw new IndexOutOfBoundsException("index doit être compris entre 0 et " + (this.lesCompteurs.size() - 1));
-        }
-        return this.lesCompteurs.get(index);
-    }
-
-    /**
-     * Remove a Compteur from the ArrayList of Compteur
-     * @param index the index of the Compteur
-     * @throws IndexOutOfBoundsException if index is out of bounds
-     */
-    public void removeCompteur(int index) throws IndexOutOfBoundsException{
-        if(index < 0 || index >= this.lesCompteurs.size()){
-            throw new IndexOutOfBoundsException("index doit être compris entre 0 et " + (this.lesCompteurs.size() - 1));
-        }
-        this.lesCompteurs.remove(index);
-    }
-
-    // ---------------- Other ---------------- //
+    // ---------------- Methods ---------------- //
 
     /**
      * To String method
      * @return the String of the Quartier
      */
     public String toString() {
-        String string = "Quartier{" + "idQuartier : " + this.idQuartier + ", nomQuartier : " + this.nomQuartier + ", longueurPisteVelo : " + this.longueurPisteVelo + '}';
+        String string = "Quartier(" + this.idQuartier + ", " + this.nomQuartier + ", " + this.longueurPisteVelo + ')';
         return string;
     }
 
