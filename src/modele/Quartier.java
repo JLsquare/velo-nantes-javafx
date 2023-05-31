@@ -175,11 +175,18 @@ public class Quartier {
      */
     public void insert() throws SQLException, NoConnectionException{
         Connection connection = Database.getWriteConnection();
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO Quartier (idQuartier, nomQuartier, longueurPisteVelo) VALUES (?, ?, ?)");
-        statement.setInt(1, this.idQuartier);
-        statement.setString(2, this.nomQuartier);
-        statement.setFloat(3, this.longueurPisteVelo);
-        statement.executeUpdate();
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement("INSERT INTO Quartier (idQuartier, nomQuartier, longueurPisteVelo) VALUES (?, ?, ?)");
+            statement.setInt(1, this.idQuartier);
+            statement.setString(2, this.nomQuartier);
+            statement.setFloat(3, this.longueurPisteVelo);
+            statement.executeUpdate();
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+        }
     }
 
     /**
@@ -189,11 +196,19 @@ public class Quartier {
      */
     public void update() throws SQLException, NoConnectionException{
         Connection connection = Database.getWriteConnection();
-        PreparedStatement statement = connection.prepareStatement("UPDATE Quartier SET nomQuartier = ?, longueurPisteVelo = ? WHERE idQuartier = ?");
-        statement.setString(1, this.nomQuartier);
-        statement.setFloat(2, this.longueurPisteVelo);
-        statement.setInt(3, this.idQuartier);
-        statement.executeUpdate();
+        PreparedStatement statement = null;
+        try{
+            statement = connection.prepareStatement("UPDATE Quartier SET nomQuartier = ?, longueurPisteVelo = ? WHERE idQuartier = ?");
+            statement.setString(1, this.nomQuartier);
+            statement.setFloat(2, this.longueurPisteVelo);
+            statement.setInt(3, this.idQuartier);
+            statement.executeUpdate();
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+        }
+
     }
 
     /**
@@ -203,8 +218,15 @@ public class Quartier {
      */
     public void delete() throws SQLException, NoConnectionException{
         Connection connection = Database.getWriteConnection();
-        PreparedStatement statement = connection.prepareStatement("DELETE FROM Quartier WHERE idQuartier = ?");
-        statement.setInt(1, this.idQuartier);
-        statement.executeUpdate();
+        PreparedStatement statement = null;
+        try{
+            statement = connection.prepareStatement("DELETE FROM Quartier WHERE idQuartier = ?");
+            statement.setInt(1, this.idQuartier);
+            statement.executeUpdate();
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+        }
     }
 }
