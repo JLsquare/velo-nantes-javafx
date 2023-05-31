@@ -181,4 +181,17 @@ public class Quartier {
         statement.setFloat(3, this.longueurPisteVelo);
         return statement;
     }
+
+    /**
+     * Convert the Quartier to a Update SQL Query
+     * @return the Update SQL Query
+     */
+    public PreparedStatement toUpdateQuery() throws SQLException, NoDatabaseException{
+        Connection connection = Database.getWriteConnection();
+        PreparedStatement statement = connection.prepareStatement("UPDATE Quartier SET nomQuartier = ?, longueurPisteVelo = ? WHERE idQuartier = ?");
+        statement.setString(1, this.nomQuartier);
+        statement.setFloat(2, this.longueurPisteVelo);
+        statement.setInt(3, this.idQuartier);
+        return statement;
+    }
 }
