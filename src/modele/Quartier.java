@@ -1,6 +1,5 @@
 package modele;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.sql.*;
 
@@ -103,12 +102,18 @@ public class Quartier {
         this.longueurPisteVelo = longueurPisteVelo;
     }
 
+    /**
+     * Get the Quartier with the id
+     * @param idQuartier the id of the Quartier
+     * @return the Quartier with the id
+     * @throws NullPointerException if the Quartier doesn't exist
+     */
     public static Quartier getQuartier(int idQuartier) throws NullPointerException{
-        Quartier quartier = lesQuartiers.get(idQuartier);
-        if(quartier == null){
+        Quartier ret = lesQuartiers.get(idQuartier);
+        if(ret == null){
             throw new NullPointerException("The Quartier with id " + idQuartier + " doesn't exist");
         }
-        return quartier;
+        return ret;
     }
 
     // ---------------- Methods ---------------- //
@@ -123,64 +128,30 @@ public class Quartier {
     }
 
     /**
-     * Insert the Quartier into the database
-     * @throws SQLException if there is an error with the SQL request
-     * @throws NoConnectionException if there is no connection to the database
+     * Generate the Quartier SQL Insert Query
+     * @return the generated SQL Insert Query as a String
      */
-    public void insert() throws SQLException, NoConnectionException{
-        Connection connection = Database.getWriteConnection();
-        PreparedStatement statement = null;
-        try {
-            statement = connection.prepareStatement("INSERT INTO Quartier (idQuartier, nomQuartier, longueurPisteVelo) VALUES (?, ?, ?)");
-            statement.setInt(1, this.idQuartier);
-            statement.setString(2, this.nomQuartier);
-            statement.setFloat(3, this.longueurPisteVelo);
-            statement.executeUpdate();
-        } finally {
-            if (statement != null) {
-                statement.close();
-            }
-        }
+    public String toInsertQuery(){
+        String query = "INSERT INTO QUARTIER VALUES(" + this.idQuartier + ", '" + this.nomQuartier + "', " + this.longueurPisteVelo + ");";
+        return query;
     }
 
     /**
-     * Update the Quartier into the database
-     * @throws SQLException if there is an error with the SQL request
-     * @throws NoConnectionException if there is no connection to the database
+     * Generate the Quartier SQL Update Query
+     * @return the generated SQL Update Query as a String
      */
-    public void update() throws SQLException, NoConnectionException{
-        Connection connection = Database.getWriteConnection();
-        PreparedStatement statement = null;
-        try{
-            statement = connection.prepareStatement("UPDATE Quartier SET nomQuartier = ?, longueurPisteVelo = ? WHERE idQuartier = ?");
-            statement.setString(1, this.nomQuartier);
-            statement.setFloat(2, this.longueurPisteVelo);
-            statement.setInt(3, this.idQuartier);
-            statement.executeUpdate();
-        } finally {
-            if (statement != null) {
-                statement.close();
-            }
-        }
-
+    public String toUpdateQuery(){
+        String query = "UPDATE QUARTIER SET nomQuartier = '" + this.nomQuartier + "', longueurPisteVelo = " + this.longueurPisteVelo + " WHERE idQuartier = " + this.idQuartier + ";";
+        return query;
     }
 
     /**
-     * Delete the Quartier from the database
-     * @throws SQLException if there is an error with the SQL request
-     * @throws NoConnectionException if there is no connection to the database
+     * Generate the Quartier SQL Delete Query
+     * @return the generated SQL Delete Query as a String
      */
-    public void delete() throws SQLException, NoConnectionException{
-        Connection connection = Database.getWriteConnection();
-        PreparedStatement statement = null;
-        try{
-            statement = connection.prepareStatement("DELETE FROM Quartier WHERE idQuartier = ?");
-            statement.setInt(1, this.idQuartier);
-            statement.executeUpdate();
-        } finally {
-            if (statement != null) {
-                statement.close();
-            }
-        }
+    public String toDeleteQuery(){
+        String query = "DELETE FROM QUARTIER WHERE idQuartier = " + this.idQuartier + ";";
+        return query;
     }
+
 }
