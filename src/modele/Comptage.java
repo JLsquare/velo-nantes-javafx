@@ -4,15 +4,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * The Comptage class which represents the Comptage table in the database
+ * @author Groupe 4B2
+ */
 public class Comptage{
 
     // ---------------- Attributes ---------------- //
 
     public static HashMap<Integer, Comptage> lesComptages = new HashMap<Integer, Comptage>();
     private int[] passages;
-    private String anomalie;
+    private PresenceAnomalie anomalie;
     private Compteur leCompteur;
-    private Date laDate;
+    private DateInfo laDate;
 
     // ---------------- Constructors ---------------- //
 
@@ -28,9 +32,9 @@ public class Comptage{
             throw new NullPointerException("passages or anomalie is null");
         }
         this.passages = passages;
-        this.anomalie = anomalie;
+        this.anomalie = PresenceAnomalie.getPresenceAnomalie(anomalie);
         this.leCompteur = Compteur.getCompteur(leCompteur);
-        this.laDate = laDate;
+        this.laDate = DateInfo.getDateInfo(laDate);
 
         lesComptages.put(laDate.hashCode() + leCompteur, this);
     }
@@ -45,9 +49,9 @@ public class Comptage{
         for(int i = 0; i < 24; i++){
             this.passages[i] = rs.getInt("h" + String.format("%02d", i));
         }
-        this.anomalie = rs.getString("presenceAnomalie");
+        this.anomalie = PresenceAnomalie.getPresenceAnomalie(rs.getString("presenceAnomalie"));
         this.leCompteur = Compteur.getCompteur(rs.getInt("leCompteur"));
-        this.laDate = rs.getDate("dateComptage");
+        this.laDate = DateInfo.getDateInfo(rs.getDate("dateComptage"));
 
         lesComptages.put(laDate.hashCode() + leCompteur.getIdCompteur(), this);
     }
@@ -56,6 +60,7 @@ public class Comptage{
 
     /**
      * Get the number of passages
+     * @param heure the hour
      * @return the number of passages
      */
     public int getPassages(int heure) {
@@ -74,7 +79,7 @@ public class Comptage{
      * Get the anomaly
      * @return the anomaly
      */
-    public String getAnomalie() {
+    public PresenceAnomalie getAnomalie() {
         return anomalie;
     }
 
@@ -82,7 +87,7 @@ public class Comptage{
      * Set the anomaly
      * @param anomalie the anomaly
      */
-    public void setAnomalie(String anomalie) {
+    public void setAnomalie(PresenceAnomalie anomalie) {
         this.anomalie = anomalie;
     }
 
@@ -106,7 +111,7 @@ public class Comptage{
      * Get the DateInfo
      * @return the DateInfo
      */
-    public Date getLaDate() {
+    public DateInfo getLaDate() {
         return laDate;
     }
 
@@ -114,7 +119,7 @@ public class Comptage{
      * Set the DateInfo
      * @param laDate the DateInfo
      */
-    public void setLaDate(Date laDate) {
+    public void setLaDate(DateInfo laDate) {
         this.laDate = laDate;
     }
 
@@ -126,6 +131,48 @@ public class Comptage{
      */
     public static Comptage getComptage(Date laDate, Compteur leCompteur){
         return lesComptages.get(laDate.hashCode() + leCompteur.getIdCompteur());
+    }
+
+    /**
+     * Get all the comptages for a compteur
+     * @param leCompteur the Compteur
+     * @return the comptages
+     */
+    public static ArrayList<Comptage> getComptagesByCompteur(Compteur leCompteur){
+        ArrayList<Comptage> comptages = new ArrayList<Comptage>();
+        for(Comptage c : lesComptages.values()){
+            if(c.getLeCompteur() == leCompteur){
+                comptages.add(c);
+            }
+        }
+        return comptages;
+    }
+
+    /**
+     * Get all the comptages for a date
+     * @param laDate the DateInfo
+     * @return the comptages
+     */
+    public static ArrayList<Comptage> getComptagesByDate(DateInfo laDate){
+        ArrayList<Comptage> comptages = new ArrayList<Comptage>();
+        for(Comptage c : lesComptages.values()){
+            if(c.getLaDate() == laDate){
+                comptages.add(c);
+            }
+        }
+        return comptages;
+    }
+
+    /**
+     * Get all the comptages
+     * @return all the comptages
+     */
+    public static ArrayList<Comptage> getComptages(){
+        ArrayList<Comptage> comptages = new ArrayList<Comptage>();
+        for(Comptage c : lesComptages.values()){
+            comptages.add(c);
+        }
+        return comptages;
     }
 
     // ---------------- Methods ---------------- //
@@ -151,57 +198,15 @@ public class Comptage{
     }
 
     /**
-     * Get all the comptages for a compteur
-     * @param leCompteur the Compteur
-     * @return the comptages
-     */
-    public static ArrayList<Comptage> getComptagesByCompteur(int leCompteur){
-        ArrayList<Comptage> comptages = new ArrayList<Comptage>();
-        for(Comptage c : lesComptages.values()){
-            if(c.getLeCompteur().getIdCompteur() == leCompteur){
-                comptages.add(c);
-            }
-        }
-        return comptages;
-    }
-
-    /**
-     * Get all the comptages for a date
-     * @param laDate the DateInfo
-     * @return the comptages
-     */
-    public static ArrayList<Comptage> getComptagesByDate(Date laDate){
-        ArrayList<Comptage> comptages = new ArrayList<Comptage>();
-        for(Comptage c : lesComptages.values()){
-            if(c.getLaDate().equals(laDate)){
-                comptages.add(c);
-            }
-        }
-        return comptages;
-    }
-
-    /**
      * To String method
      * @return the String
      */
     public String toString(){
-        String str = "Comptage(" + this.laDate + ", " + this.leCompteur + ", " + this.anomalie + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ", ";
+        String str = "Comptage(" + this.laDate.getLaDate() + ", " + this.leCompteur.getNomCompteur() + ", " + this.anomalie.getNom() + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ", ";
         for(int i = 0; i < 24; i++){
             str += this.passages[i] + ", ";
         }
         str = str.substring(0, str.length() - 2) + ")";
-        return str;
-    }
-
-    /**
-     * Get the String of all the Comptages
-     * @return the String
-     */
-    public static String toStringAll(){
-        String str = "";
-        for(Comptage c : lesComptages.values()){
-            str += c.toString() + "\n";
-        }
         return str;
     }
 

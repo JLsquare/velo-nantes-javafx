@@ -4,6 +4,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * The DateInfo class which represents the DateInfo table in the database
+ * It's a model who can contain all attributes and methods to access at data
+ * @author Groupe 4B2
+ */
 public class DateInfo {
 
     // ---------------- Attributes ---------------- //
@@ -12,7 +17,7 @@ public class DateInfo {
     private Date laDate;
     private float tempMoy;
     private Jour jour;
-    private String vacances;
+    private Vacances vacances;
 
     // ---------------- Constructors ---------------- //
 
@@ -27,7 +32,7 @@ public class DateInfo {
         this.laDate = laDate;
         this.tempMoy = tempMoy;
         this.jour = Jour.getJour(jour);
-        this.vacances = vacances;
+        this.vacances = Vacances.getVacances(vacances);
 
         lesDates.put(laDate.hashCode(), this);
     }
@@ -41,7 +46,7 @@ public class DateInfo {
         this.laDate = rs.getDate("laDate");
         this.tempMoy = rs.getFloat("tempMoy");
         this.jour = Jour.getJour(rs.getString("jour"));
-        this.vacances = rs.getString("vacances");
+        this.vacances = Vacances.getVacances(rs.getString("vacances"));
 
         lesDates.put(laDate.hashCode(), this);
     }
@@ -100,7 +105,7 @@ public class DateInfo {
      * Get the holidays
      * @return the holidays
      */
-    public String getVacances() {
+    public Vacances getVacances() {
         return vacances;
     }
 
@@ -108,7 +113,7 @@ public class DateInfo {
      * Set the holidays
      * @param vacances the holidays
      */
-    public void setVacances(String vacances) {
+    public void setVacances(Vacances vacances) {
         this.vacances = vacances;
     }
 
@@ -121,6 +126,18 @@ public class DateInfo {
         return lesDates.get(date.hashCode());
     }
 
+    /**
+     * Get all the DateInfo
+     * @return all the DateInfo
+     */
+    public static ArrayList<DateInfo> getDateInfos(){
+        ArrayList<DateInfo> ret = new ArrayList<DateInfo>();
+        for (DateInfo d : lesDates.values()){
+            ret.add(d);
+        }
+        return ret;
+    }
+
     // ---------------- Methods ---------------- //
 
     /**
@@ -129,7 +146,7 @@ public class DateInfo {
      */
     public int totalVeloCount(){
         int ret = 0;
-        ArrayList<Comptage> lesComptages = Comptage.getComptagesByDate(this.laDate);
+        ArrayList<Comptage> lesComptages = Comptage.getComptagesByDate(this);
         for (Comptage c : lesComptages){
             ret += c.totalVeloCount();
         }
@@ -142,7 +159,7 @@ public class DateInfo {
      */
     public float averageVeloCount(){
         float ret = 0;
-        ArrayList<Comptage> lesComptages = Comptage.getComptagesByDate(this.laDate);
+        ArrayList<Comptage> lesComptages = Comptage.getComptagesByDate(this);
         for (Comptage c : lesComptages){
             ret += c.averageVeloCount();
         }
@@ -155,19 +172,7 @@ public class DateInfo {
      * @return the String representation of the DateInfo
      */
     public String toString(){
-        String ret = "DateInfo(" + laDate + ", " + tempMoy + ", " + jour.getNom() + ", " + vacances + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ")";
-        return ret;
-    }
-
-    /**
-     * Get the String representation of all the DateInfo
-     * @return the String representation of all the DateInfo
-     */
-    public static String toStringAll(){
-        String ret = "";
-        for (DateInfo d : lesDates.values()){
-            ret += d.toString() + "\n";
-        }
+        String ret = "DateInfo(" + laDate + ", " + tempMoy + ", " + jour.getNom() + ", " + vacances.getNom() + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ")";
         return ret;
     }
 

@@ -110,11 +110,23 @@ public class Quartier {
      * @throws NullPointerException if the Quartier doesn't exist
      */
     public static Quartier getQuartier(int idQuartier) throws NullPointerException{
-        Quartier ret = lesQuartiers.get(idQuartier);
-        if(ret == null){
+        Quartier quartier = lesQuartiers.get(idQuartier);
+        if(quartier == null){
             throw new NullPointerException("The Quartier with id " + idQuartier + " doesn't exist");
         }
-        return ret;
+        return quartier;
+    }
+
+    /**
+     * Get all Quartier
+     * @return all Quartier
+     */
+    public static ArrayList<Quartier> getQuartiers(){
+        ArrayList<Quartier> quartiers = new ArrayList<Quartier>();
+        for(Quartier quartier : lesQuartiers.values()){
+            quartiers.add(quartier);
+        }
+        return quartiers;
     }
 
     // ---------------- Methods ---------------- //
@@ -125,7 +137,7 @@ public class Quartier {
      */
     public int totalVeloCount(){
         int ret = 0;
-        ArrayList<Compteur> lesCompteurs = Compteur.getCompteursByQuartier(this.idQuartier);
+        ArrayList<Compteur> lesCompteurs = Compteur.getCompteursByQuartier(this);
         for(Compteur compteur : lesCompteurs){
             ret += compteur.totalVeloCount();
         }
@@ -138,7 +150,7 @@ public class Quartier {
      */
     public float averageVeloCount(){
         float ret = 0;
-        ArrayList<Compteur> lesCompteurs = Compteur.getCompteursByQuartier(this.idQuartier);
+        ArrayList<Compteur> lesCompteurs = Compteur.getCompteursByQuartier(this);
         for(Compteur compteur : lesCompteurs){
             ret += compteur.averageVeloCount();
         }
@@ -151,18 +163,6 @@ public class Quartier {
      */
     public String toString() {
         String string = "Quartier(" + this.idQuartier + ", " + this.nomQuartier + ", " + this.longueurPisteVelo + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ')';
-        return string;
-    }
-
-    /**
-     * Get the String of all Quartier
-     * @return the String of all Quartier
-     */
-    public static String toStringAll(){
-        String string = "";
-        for(Quartier quartier : lesQuartiers.values()){
-            string += quartier.toString() + "\n";
-        }
         return string;
     }
 

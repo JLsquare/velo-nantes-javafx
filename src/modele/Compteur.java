@@ -4,6 +4,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * The Compteur class which represents the Compteur table in the database
+ * It's a model who can contain all attributes and methods to access at data
+ * @author Groupe 4B2
+ */
 public class Compteur{
 
     // ---------------- Attributes ---------------- //
@@ -14,7 +19,7 @@ public class Compteur{
     private String sens;
     private float coord_X;
     private float coord_Y;
-    private int leQuartier;
+    private Quartier leQuartier;
 
     // ---------------- Constructors ---------------- //
 
@@ -36,7 +41,7 @@ public class Compteur{
         this.sens = sens;
         this.coord_X = coord_X;
         this.coord_Y = coord_Y;
-        this.leQuartier = leQuartier;
+        this.leQuartier = Quartier.getQuartier(leQuartier);
 
         lesCompteurs.put(idCompteur, this);
     }
@@ -52,7 +57,7 @@ public class Compteur{
         this.sens = rs.getString("sens");
         this.coord_X = rs.getFloat("coord_X");
         this.coord_Y = rs.getFloat("coord_Y");
-        this.leQuartier = rs.getInt("leQuartier");
+        this.leQuartier = Quartier.getQuartier(rs.getInt("leQuartier"));
 
         lesCompteurs.put(idCompteur, this);
     }
@@ -143,7 +148,7 @@ public class Compteur{
      * Get the Quartier of the Compteur
      * @return the Quartier of the Compteur
      */
-    public int getLeQuartier() {
+    public Quartier getLeQuartier() {
         return leQuartier;
     }
 
@@ -151,7 +156,7 @@ public class Compteur{
      * Set the Quartier of the Compteur
      * @param leQuartier the Quartier of the Compteur
      */
-    public void setLeQuartier(int leQuartier) {
+    public void setLeQuartier(Quartier leQuartier) {
         this.leQuartier = leQuartier;
     }
 
@@ -162,12 +167,40 @@ public class Compteur{
      * @throws NullPointerException if the Compteur is not found
      */
     public static Compteur getCompteur(int idCompteur) throws NullPointerException{
-        Compteur ret = lesCompteurs.get(idCompteur);
-        if(ret == null){
+        Compteur compteur = lesCompteurs.get(idCompteur);
+        if(compteur == null){
             throw new NullPointerException("Compteur not found");
         }
-        return ret;
+        return compteur;
     }
+
+    /**
+     * Get all the compteurs by the Quartier
+     * @param quartier the id of the Quartier
+     * @return all the compteurs by the Quartier
+     */
+    public static ArrayList<Compteur> getCompteursByQuartier(Quartier quartier){
+        ArrayList<Compteur> compteurs = new ArrayList<Compteur>();
+        for (Compteur c : lesCompteurs.values()){
+            if (c.getLeQuartier() == quartier){
+                compteurs.add(c);
+            }
+        }
+        return compteurs;
+    }
+
+    /**
+     * Get all the Compteurs
+     * @return all the Compteurs
+     */
+    public static ArrayList<Compteur> getCompteurs(){
+        ArrayList<Compteur> compteurs = new ArrayList<Compteur>();
+        for (Compteur c : lesCompteurs.values()){
+            compteurs.add(c);
+        }
+        return compteurs;
+    }
+
 
     // ---------------- Methods ---------------- //
 
@@ -177,7 +210,7 @@ public class Compteur{
      */
     public int totalVeloCount(){
         int ret = 0;
-        ArrayList<Comptage> lesComptages = Comptage.getComptagesByCompteur(this.idCompteur);
+        ArrayList<Comptage> lesComptages = Comptage.getComptagesByCompteur(this);
         for (Comptage c : lesComptages){
             ret += c.totalVeloCount();
         }
@@ -190,7 +223,7 @@ public class Compteur{
      */
     public float averageVeloCount(){
         float ret = 0;
-        ArrayList<Comptage> lesComptages = Comptage.getComptagesByCompteur(this.idCompteur);
+        ArrayList<Comptage> lesComptages = Comptage.getComptagesByCompteur(this);
         for (Comptage c : lesComptages){
             ret += c.averageVeloCount();
         }
@@ -199,38 +232,11 @@ public class Compteur{
     }
 
     /**
-     * Get all the compteurs by the Quartier
-     * @param idQuartier the id of the Quartier
-     * @return all the compteurs by the Quartier
-     */
-    public static ArrayList<Compteur> getCompteursByQuartier(int idQuartier){
-        ArrayList<Compteur> ret = new ArrayList<Compteur>();
-        for (Compteur c : lesCompteurs.values()){
-            if (c.getLeQuartier() == idQuartier){
-                ret.add(c);
-            }
-        }
-        return ret;
-    }
-
-    /**
      * To String method
      * @return the String of the Compteur
      */
     public String toString() {
-        String ret = "Compteur(" + idCompteur + ", " + nomCompteur + ", " + sens + ", " + coord_X + ", " + coord_Y + ", " + leQuartier + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ")";
-        return ret;
-    }
-
-    /**
-     * Get the String of all the Compteurs
-     * @return the String of all the Compteurs
-     */
-    public static String toStringAll(){
-        String ret = "";
-        for (Compteur c : lesCompteurs.values()){
-            ret += c.toString() + "\n";
-        }
+        String ret = "Compteur(" + idCompteur + ", " + nomCompteur + ", " + sens + ", " + coord_X + ", " + coord_Y + ", " + leQuartier.getNomQuartier() + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ")";
         return ret;
     }
 
