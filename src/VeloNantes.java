@@ -10,12 +10,13 @@ public class VeloNantes extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/VeloNantes.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/Layout.fxml"));
             Scene scene = new Scene(root, 1080, 720);
             primaryStage.setTitle("Velo de Nantes");
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {
+            System.out.println("Erreur lors du chargement de la fenêtre");
             System.out.println(e);
         }
     }
