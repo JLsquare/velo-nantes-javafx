@@ -1,6 +1,7 @@
 package modele;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Comptage{
@@ -11,7 +12,7 @@ public class Comptage{
     private int[] passages;
     private String anomalie;
     private Compteur leCompteur;
-    private DateInfo laDate;
+    private Date laDate;
 
     // ---------------- Constructors ---------------- //
 
@@ -29,7 +30,7 @@ public class Comptage{
         this.passages = passages;
         this.anomalie = anomalie;
         this.leCompteur = Compteur.getCompteur(leCompteur);
-        this.laDate = DateInfo.getDateInfo(laDate);
+        this.laDate = laDate;
 
         lesComptages.put(laDate.hashCode() + leCompteur, this);
     }
@@ -42,11 +43,11 @@ public class Comptage{
     public Comptage(ResultSet rs) throws SQLException {
         this.passages = new int[24];
         for(int i = 0; i < 24; i++){
-            this.passages[i] = rs.getInt("passage" + (i + 1));
+            this.passages[i] = rs.getInt("h" + String.format("%02d", i));
         }
-        this.anomalie = rs.getString("anomalie");
+        this.anomalie = rs.getString("presenceAnomalie");
         this.leCompteur = Compteur.getCompteur(rs.getInt("leCompteur"));
-        this.laDate = DateInfo.getDateInfo(rs.getDate("laDate"));
+        this.laDate = rs.getDate("dateComptage");
 
         lesComptages.put(laDate.hashCode() + leCompteur.getIdCompteur(), this);
     }
@@ -105,7 +106,7 @@ public class Comptage{
      * Get the DateInfo
      * @return the DateInfo
      */
-    public DateInfo getLaDate() {
+    public Date getLaDate() {
         return laDate;
     }
 
@@ -113,7 +114,7 @@ public class Comptage{
      * Set the DateInfo
      * @param laDate the DateInfo
      */
-    public void setLaDate(DateInfo laDate) {
+    public void setLaDate(Date laDate) {
         this.laDate = laDate;
     }
 
@@ -130,15 +131,77 @@ public class Comptage{
     // ---------------- Methods ---------------- //
 
     /**
+     * Get the total number of passages
+     * @return the total number of passages
+     */
+    public int totalVeloCount(){
+        int total = 0;
+        for(int i = 0; i < 24; i++){
+            total += this.passages[i];
+        }
+        return total;
+    }
+
+    /**
+     * Get the average number of passages
+     * @return the average number of passages
+     */
+    public float averageVeloCount(){
+        return this.totalVeloCount() / 24.0f;
+    }
+
+    /**
+     * Get all the comptages for a compteur
+     * @param leCompteur the Compteur
+     * @return the comptages
+     */
+    public static ArrayList<Comptage> getComptagesByCompteur(int leCompteur){
+        ArrayList<Comptage> comptages = new ArrayList<Comptage>();
+        for(Comptage c : lesComptages.values()){
+            if(c.getLeCompteur().getIdCompteur() == leCompteur){
+                comptages.add(c);
+            }
+        }
+        return comptages;
+    }
+
+    /**
+     * Get all the comptages for a date
+     * @param laDate the DateInfo
+     * @return the comptages
+     */
+    public static ArrayList<Comptage> getComptagesByDate(Date laDate){
+        ArrayList<Comptage> comptages = new ArrayList<Comptage>();
+        for(Comptage c : lesComptages.values()){
+            if(c.getLaDate().equals(laDate)){
+                comptages.add(c);
+            }
+        }
+        return comptages;
+    }
+
+    /**
      * To String method
      * @return the String
      */
     public String toString(){
-        String str = "Comptage(" + this.laDate + " " + this.leCompteur + " " + this.anomalie + " ";
+        String str = "Comptage(" + this.laDate + ", " + this.leCompteur + ", " + this.anomalie + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ", ";
         for(int i = 0; i < 24; i++){
             str += this.passages[i] + ", ";
         }
         str = str.substring(0, str.length() - 2) + ")";
+        return str;
+    }
+
+    /**
+     * Get the String of all the Comptages
+     * @return the String
+     */
+    public static String toStringAll(){
+        String str = "";
+        for(Comptage c : lesComptages.values()){
+            str += c.toString() + "\n";
+        }
         return str;
     }
 

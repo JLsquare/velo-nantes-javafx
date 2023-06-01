@@ -1,5 +1,6 @@
 package modele;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.sql.*;
 
@@ -119,11 +120,49 @@ public class Quartier {
     // ---------------- Methods ---------------- //
 
     /**
+     * Compute the total number of Velo in the Quartier
+     * @return the total number of Velo in the Quartier
+     */
+    public int totalVeloCount(){
+        int ret = 0;
+        ArrayList<Compteur> lesCompteurs = Compteur.getCompteursByQuartier(this.idQuartier);
+        for(Compteur compteur : lesCompteurs){
+            ret += compteur.totalVeloCount();
+        }
+        return ret;
+    }
+
+    /**
+     * Compute the average number of Velo in the Quartier
+     * @return the average number of Velo in the Quartier
+     */
+    public float averageVeloCount(){
+        float ret = 0;
+        ArrayList<Compteur> lesCompteurs = Compteur.getCompteursByQuartier(this.idQuartier);
+        for(Compteur compteur : lesCompteurs){
+            ret += compteur.averageVeloCount();
+        }
+        return ret;
+    }
+
+    /**
      * To String method
      * @return the String of the Quartier
      */
     public String toString() {
-        String string = "Quartier(" + this.idQuartier + ", " + this.nomQuartier + ", " + this.longueurPisteVelo + ')';
+        String string = "Quartier(" + this.idQuartier + ", " + this.nomQuartier + ", " + this.longueurPisteVelo + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ')';
+        return string;
+    }
+
+    /**
+     * Get the String of all Quartier
+     * @return the String of all Quartier
+     */
+    public static String toStringAll(){
+        String string = "";
+        for(Quartier quartier : lesQuartiers.values()){
+            string += quartier.toString() + "\n";
+        }
         return string;
     }
 

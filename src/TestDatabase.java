@@ -8,8 +8,10 @@ public class TestDatabase {
             Database.loadCompteurs();
             Database.loadDateInfos();
             Database.loadComptages();
-            Quartier quartier = Quartier.getQuartier(1);
-            System.out.println(quartier);
+            System.out.println(Quartier.toStringAll());
+            System.out.println(Compteur.toStringAll());
+            //System.out.println(DateInfo.toStringAll());
+            //System.out.println(Comptage.toStringAll());
         } catch (Exception e) {
             e.printStackTrace();
         }

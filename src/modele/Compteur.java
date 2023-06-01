@@ -1,6 +1,7 @@
 package modele;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Compteur{
@@ -13,7 +14,7 @@ public class Compteur{
     private String sens;
     private float coord_X;
     private float coord_Y;
-    private Quartier leQuartier;
+    private int leQuartier;
 
     // ---------------- Constructors ---------------- //
 
@@ -35,7 +36,7 @@ public class Compteur{
         this.sens = sens;
         this.coord_X = coord_X;
         this.coord_Y = coord_Y;
-        this.leQuartier = Quartier.getQuartier(leQuartier);
+        this.leQuartier = leQuartier;
 
         lesCompteurs.put(idCompteur, this);
     }
@@ -51,7 +52,7 @@ public class Compteur{
         this.sens = rs.getString("sens");
         this.coord_X = rs.getFloat("coord_X");
         this.coord_Y = rs.getFloat("coord_Y");
-        this.leQuartier = Quartier.getQuartier(idCompteur);
+        this.leQuartier = rs.getInt("leQuartier");
 
         lesCompteurs.put(idCompteur, this);
     }
@@ -142,7 +143,7 @@ public class Compteur{
      * Get the Quartier of the Compteur
      * @return the Quartier of the Compteur
      */
-    public Quartier getLeQuartier() {
+    public int getLeQuartier() {
         return leQuartier;
     }
 
@@ -150,7 +151,7 @@ public class Compteur{
      * Set the Quartier of the Compteur
      * @param leQuartier the Quartier of the Compteur
      */
-    public void setLeQuartier(Quartier leQuartier) {
+    public void setLeQuartier(int leQuartier) {
         this.leQuartier = leQuartier;
     }
 
@@ -171,11 +172,65 @@ public class Compteur{
     // ---------------- Methods ---------------- //
 
     /**
+     * Compute the total of the VeloCount of the Compteur
+     * @return the total of the VeloCount of the Compteur
+     */
+    public int totalVeloCount(){
+        int ret = 0;
+        ArrayList<Comptage> lesComptages = Comptage.getComptagesByCompteur(this.idCompteur);
+        for (Comptage c : lesComptages){
+            ret += c.totalVeloCount();
+        }
+        return ret;
+    }
+
+    /**
+     * Compute the average of the VeloCount of the Compteur
+     * @return the average of the VeloCount of the Compteur
+     */
+    public float averageVeloCount(){
+        float ret = 0;
+        ArrayList<Comptage> lesComptages = Comptage.getComptagesByCompteur(this.idCompteur);
+        for (Comptage c : lesComptages){
+            ret += c.averageVeloCount();
+        }
+        ret = ret / lesComptages.size();
+        return ret;
+    }
+
+    /**
+     * Get all the compteurs by the Quartier
+     * @param idQuartier the id of the Quartier
+     * @return all the compteurs by the Quartier
+     */
+    public static ArrayList<Compteur> getCompteursByQuartier(int idQuartier){
+        ArrayList<Compteur> ret = new ArrayList<Compteur>();
+        for (Compteur c : lesCompteurs.values()){
+            if (c.getLeQuartier() == idQuartier){
+                ret.add(c);
+            }
+        }
+        return ret;
+    }
+
+    /**
      * To String method
      * @return the String of the Compteur
      */
     public String toString() {
-        String ret = "Compteur(" + idCompteur + ", " + nomCompteur + ", " + sens + ", " + coord_X + ", " + coord_Y + ", " + leQuartier + ")";
+        String ret = "Compteur(" + idCompteur + ", " + nomCompteur + ", " + sens + ", " + coord_X + ", " + coord_Y + ", " + leQuartier + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ")";
+        return ret;
+    }
+
+    /**
+     * Get the String of all the Compteurs
+     * @return the String of all the Compteurs
+     */
+    public static String toStringAll(){
+        String ret = "";
+        for (Compteur c : lesCompteurs.values()){
+            ret += c.toString() + "\n";
+        }
         return ret;
     }
 
@@ -184,7 +239,7 @@ public class Compteur{
      * @return the query to insert the Compteur as a String
      */
     public String toInsertQuery(){
-        String ret = "INSERT INTO COMPTEUR VALUES (" + idCompteur + ", '" + nomCompteur + "', '" + sens + "', " + coord_X + ", " + coord_Y + ", " + leQuartier.getIdQuartier() + ")";
+        String ret = "INSERT INTO COMPTEUR VALUES (" + idCompteur + ", '" + nomCompteur + "', '" + sens + "', " + coord_X + ", " + coord_Y + ", " + leQuartier + ")";
         return ret;
     }  
 
@@ -193,7 +248,7 @@ public class Compteur{
      * @return the query to update the Compteur as a String
      */
     public String toUpdateQuery(){
-        String ret = "UPDATE COMPTEUR SET nomCompteur = '" + nomCompteur + "', sens = '" + sens + "', coord_X = " + coord_X + ", coord_Y = " + coord_Y + ", idQuartier = " + leQuartier.getIdQuartier() + " WHERE idCompteur = " + idCompteur;
+        String ret = "UPDATE COMPTEUR SET nomCompteur = '" + nomCompteur + "', sens = '" + sens + "', coord_X = " + coord_X + ", coord_Y = " + coord_Y + ", idQuartier = " + leQuartier + " WHERE idCompteur = " + idCompteur;
         return ret;
     }
 
