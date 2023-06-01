@@ -13,7 +13,7 @@ public class DateInfo {
 
     // ---------------- Attributes ---------------- //
 
-    public static HashMap<Integer, DateInfo> lesDates = new HashMap<Integer, DateInfo>();
+    private static HashMap<Integer, DateInfo> lesDates = new HashMap<Integer, DateInfo>();
     private Date laDate;
     private float tempMoy;
     private Jour jour;

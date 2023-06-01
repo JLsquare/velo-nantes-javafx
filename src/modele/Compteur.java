@@ -13,7 +13,7 @@ public class Compteur{
 
     // ---------------- Attributes ---------------- //
 
-    public static HashMap<Integer, Compteur> lesCompteurs = new HashMap<Integer, Compteur>();
+    private static HashMap<Integer, Compteur> lesCompteurs = new HashMap<Integer, Compteur>();
     private int idCompteur;
     private String nomCompteur;
     private String sens;

@@ -5,8 +5,9 @@ import modele.*;
 public class TestDatabase {
     public static void main(String[] args) {
         try {
-            Database.openReadConnection("read", "read");
-            Database.loadDatabase();
+            Database database = new Database("jdbc:mariadb://localhost:3306/bd_velo");
+            database.openReadConnection("read", "read");
+            database.loadDatabase();
 
             ArrayList<Quartier> lesQuartiers = Quartier.getQuartiers();
             for(Quartier q : lesQuartiers){
@@ -28,7 +29,7 @@ public class TestDatabase {
                 System.out.println(c);
             }
 
-            Database.closeReadConnection();
+            database.closeReadConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }

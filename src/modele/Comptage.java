@@ -12,7 +12,7 @@ public class Comptage{
 
     // ---------------- Attributes ---------------- //
 
-    public static HashMap<Integer, Comptage> lesComptages = new HashMap<Integer, Comptage>();
+    private static HashMap<Integer, Comptage> lesComptages = new HashMap<Integer, Comptage>();
     private int[] passages;
     private PresenceAnomalie anomalie;
     private Compteur leCompteur;

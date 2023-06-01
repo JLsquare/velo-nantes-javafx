@@ -15,7 +15,7 @@ public class Quartier {
 
     // ---------------- Attributes ---------------- //
 
-    public static HashMap<Integer, Quartier> lesQuartiers = new HashMap<Integer, Quartier>();
+    private static HashMap<Integer, Quartier> lesQuartiers = new HashMap<Integer, Quartier>();
     private int idQuartier;
     private String nomQuartier;
     private float longueurPisteVelo;

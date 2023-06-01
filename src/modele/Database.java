@@ -12,17 +12,17 @@ public class Database {
 
     // ---------------- Attributes ---------------- //
 
-    private static final String URL = "jdbc:mariadb://localhost:3306/bd_velo";
-    private static Connection readConnection;
-    private static Connection writeConnection;
+    private final String URL;
+    private Connection readConnection;
+    private Connection writeConnection;
 
     // ---------------- Constructors ---------------- //
 
     /**
      * Default constructor
      */
-    public Database() {
-        // Si besoin
+    public Database(String url) {
+        this.URL = url;
     }
 
     // ---------------- Methods ---------------- //
@@ -33,7 +33,7 @@ public class Database {
      * @param password the password
      * @throws SQLException if there is an error with the connection
      */
-    public static void openReadConnection(String user, String password) throws SQLException{
+    public void openReadConnection(String user, String password) throws SQLException{
         if(readConnection != null){
             System.out.println("Read connection already open");
         } else {
@@ -47,7 +47,7 @@ public class Database {
      * @param password the password
      * @throws SQLException if there is an error with the connection
      */
-    public static void openWriteConnection(String user, String password) throws SQLException{
+    public void openWriteConnection(String user, String password) throws SQLException{
         if(writeConnection != null){
             System.out.println("Write connection already open");
         } else {
@@ -59,7 +59,7 @@ public class Database {
      * Close the connection to the database with read access
      * @throws SQLException if there is an error with the connection
      */
-    public static void closeReadConnection() throws SQLException{
+    public void closeReadConnection() throws SQLException{
         if(readConnection != null){
             readConnection.close();
             readConnection = null;
@@ -70,7 +70,7 @@ public class Database {
      * Close the connection to the database with write access
      * @throws SQLException if there is an error with the connection
      */
-    public static void closeWriteConnection() throws SQLException{
+    public void closeWriteConnection() throws SQLException{
         if(writeConnection != null){
             writeConnection.close();
             writeConnection = null;
@@ -83,7 +83,7 @@ public class Database {
      * @return the ResultSet
      * @throws SQLException if there is an error with the query
      */
-    public static ResultSet executeReadQuery(String query) throws SQLException{
+    public ResultSet executeReadQuery(String query) throws SQLException{
         Statement stmt = readConnection.createStatement();
         return stmt.executeQuery(query);
     }
@@ -93,7 +93,7 @@ public class Database {
      * @param query the query
      * @throws SQLException if there is an error with the query
      */
-    public static void executeWriteQuery(String query) throws SQLException{
+    public void executeWriteQuery(String query) throws SQLException{
         Statement stmt = writeConnection.createStatement();
         stmt.executeUpdate(query);
     }
@@ -102,7 +102,7 @@ public class Database {
      * Load all the data from the database
      * @throws SQLException if there is an error with the query
      */
-    public static void loadDatabase() throws SQLException{
+    public void loadDatabase() throws SQLException{
         new Quartier(0, "Inconnu", 0);
         ResultSet rs = executeReadQuery("SELECT * FROM QUARTIER");
         while(rs.next()){
