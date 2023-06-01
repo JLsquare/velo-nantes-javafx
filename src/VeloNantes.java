@@ -16,6 +16,7 @@ public class VeloNantes extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {
+            System.out.println("Erreur lors du chargement de la fenêtre");
             System.out.println(e);
         }
     }
