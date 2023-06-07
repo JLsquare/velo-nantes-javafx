@@ -1,8 +1,6 @@
 package modele;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * The Comptage class which represents the Comptage table in the database
@@ -12,11 +10,10 @@ public class Comptage{
 
     // ---------------- Attributes ---------------- //
 
-    private static HashMap<Integer, Comptage> lesComptages = new HashMap<Integer, Comptage>();
     private int[] passages;
     private PresenceAnomalie anomalie;
-    private Compteur leCompteur;
-    private DateInfo laDate;
+    private int leCompteur;
+    private Date laDate;
 
     // ---------------- Constructors ---------------- //
 
@@ -27,16 +24,14 @@ public class Comptage{
      * @param leCompteur the Compteur
      * @param laDate the DateInfo
      */
-    public Comptage(int[] passages, String anomalie, int leCompteur, Date laDate) throws NullPointerException {
+    public Comptage(int[] passages, PresenceAnomalie anomalie, int leCompteur, Date laDate) throws NullPointerException {
         if(passages == null || anomalie == null){
             throw new NullPointerException("passages or anomalie is null");
         }
         this.passages = passages;
-        this.anomalie = PresenceAnomalie.getPresenceAnomalie(anomalie);
-        this.leCompteur = Compteur.getCompteur(leCompteur);
-        this.laDate = DateInfo.getDateInfo(laDate);
-
-        lesComptages.put(laDate.hashCode() + leCompteur, this);
+        this.anomalie = anomalie;
+        this.leCompteur = leCompteur;
+        this.laDate = laDate;
     }
 
     /**
@@ -49,11 +44,13 @@ public class Comptage{
         for(int i = 0; i < 24; i++){
             this.passages[i] = rs.getInt("h" + String.format("%02d", i));
         }
-        this.anomalie = PresenceAnomalie.getPresenceAnomalie(rs.getString("presenceAnomalie"));
-        this.leCompteur = Compteur.getCompteur(rs.getInt("leCompteur"));
-        this.laDate = DateInfo.getDateInfo(rs.getDate("dateComptage"));
-
-        lesComptages.put(laDate.hashCode() + leCompteur.getIdCompteur(), this);
+        if(rs.getString("presenceAnomalie") != null){
+            this.anomalie = PresenceAnomalie.valueOf(rs.getString("presenceAnomalie"));
+        } else {
+            this.anomalie = PresenceAnomalie.Nulle;
+        }
+        this.leCompteur = rs.getInt("leCompteur");
+        this.laDate = rs.getDate("dateComptage");
     }
 
     // ---------------- Getters & Setters ---------------- //
@@ -63,13 +60,29 @@ public class Comptage{
      * @param heure the hour
      * @return the number of passages
      */
-    public int getPassages(int heure) {
+    public int getPassage(int heure) {
         return passages[heure];
     }
 
     /**
      * Set the number of passages
      * @param passages the number of passages
+     */
+    public void setPassage(int heure, int passages) {
+        this.passages[heure] = passages;
+    }
+
+    /**
+     * Get the number of passages for every hour
+     * @return the number of passages for every hour
+     */
+    public int[] getPassages() {
+        return passages;
+    }
+
+    /**
+     * Set the number of passages for every hour
+     * @param passages the number of passages for every hour
      */
     public void setPassages(int[] passages) {
         this.passages = passages;
@@ -95,7 +108,7 @@ public class Comptage{
      * Get the Compteur
      * @return the Compteur
      */
-    public Compteur getLeCompteur() {
+    public int getLeCompteur() {
         return leCompteur;
     }
 
@@ -103,7 +116,7 @@ public class Comptage{
      * Set the Compteur
      * @param leCompteur the Compteur
      */
-    public void setLeCompteur(Compteur leCompteur) {
+    public void setLeCompteur(int leCompteur) {
         this.leCompteur = leCompteur;
     }
 
@@ -111,7 +124,7 @@ public class Comptage{
      * Get the DateInfo
      * @return the DateInfo
      */
-    public DateInfo getLaDate() {
+    public Date getLaDate() {
         return laDate;
     }
 
@@ -119,60 +132,8 @@ public class Comptage{
      * Set the DateInfo
      * @param laDate the DateInfo
      */
-    public void setLaDate(DateInfo laDate) {
+    public void setLaDate(Date laDate) {
         this.laDate = laDate;
-    }
-
-    /**
-     * Get the Comptage
-     * @param laDate the date
-     * @param leCompteur the Compteur
-     * @return the Comptage
-     */
-    public static Comptage getComptage(Date laDate, Compteur leCompteur){
-        return lesComptages.get(laDate.hashCode() + leCompteur.getIdCompteur());
-    }
-
-    /**
-     * Get all the comptages for a compteur
-     * @param leCompteur the Compteur
-     * @return the comptages
-     */
-    public static ArrayList<Comptage> getComptagesByCompteur(Compteur leCompteur){
-        ArrayList<Comptage> comptages = new ArrayList<Comptage>();
-        for(Comptage c : lesComptages.values()){
-            if(c.getLeCompteur() == leCompteur){
-                comptages.add(c);
-            }
-        }
-        return comptages;
-    }
-
-    /**
-     * Get all the comptages for a date
-     * @param laDate the DateInfo
-     * @return the comptages
-     */
-    public static ArrayList<Comptage> getComptagesByDate(DateInfo laDate){
-        ArrayList<Comptage> comptages = new ArrayList<Comptage>();
-        for(Comptage c : lesComptages.values()){
-            if(c.getLaDate() == laDate){
-                comptages.add(c);
-            }
-        }
-        return comptages;
-    }
-
-    /**
-     * Get all the comptages
-     * @return all the comptages
-     */
-    public static ArrayList<Comptage> getComptages(){
-        ArrayList<Comptage> comptages = new ArrayList<Comptage>();
-        for(Comptage c : lesComptages.values()){
-            comptages.add(c);
-        }
-        return comptages;
     }
 
     // ---------------- Methods ---------------- //
@@ -202,53 +163,11 @@ public class Comptage{
      * @return the String
      */
     public String toString(){
-        String str = "Comptage(" + this.laDate.getLaDate() + ", " + this.leCompteur.getNomCompteur() + ", " + this.anomalie.getNom() + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ", ";
+        String str = "Comptage(" + this.laDate + ", " + this.leCompteur + ", " + this.anomalie.name() + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ", ";
         for(int i = 0; i < 24; i++){
             str += this.passages[i] + ", ";
         }
         str = str.substring(0, str.length() - 2) + ")";
         return str;
-    }
-
-    /**
-     * Generate the Comptage SQL Insert Query
-     * @return the generated SQL Insert Query as a String
-     */
-    public String toInsertQuery() {
-        String insert = "INSERT INTO COMPTAGE (leCompteur, dateComptage, ";
-        for(int i = 0; i < 24; i++){
-            insert += "h" + String.format("%02d", i) + ", ";
-        }
-        insert += "anomalie) VALUES (" + this.leCompteur.getIdCompteur() + ", '" + this.laDate + "', ";
-        for(int i = 0; i < 24; i++){
-            insert += this.passages[i] + ", ";
-        }
-        insert += "'" + this.anomalie + "')";
-
-        return insert;
-    }
-
-
-    /**
-     * Generate the Comptage SQL Update Query
-     * @return the generated SQL Update Query as a String
-     */
-    public String toUpdateQuery() {
-        String update = "UPDATE COMPTAGE SET ";
-        for(int i = 0; i < 24; i++){
-            update += "h" + String.format("%02d", i) + " = " + this.passages[i] + ", ";
-        }
-        update = update.substring(0, update.length() - 2) + "' WHERE leCompteur = " + this.leCompteur.getIdCompteur() + " AND dateComptage = '" + this.laDate + "'";
-
-        return update;
-    }
-
-    /**
-     * Generate the Comptage SQL Delete Query
-     * @return the generated SQL Delete Query as a String
-     */
-    public String toDeleteQuery() {
-        String delete = "DELETE FROM COMPTAGE WHERE leCompteur = " + this.leCompteur.getIdCompteur() + " AND dateComptage = '" + this.laDate + "'";
-        return delete;
     }
 }

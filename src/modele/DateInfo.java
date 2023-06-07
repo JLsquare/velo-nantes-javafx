@@ -1,8 +1,6 @@
 package modele;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * The DateInfo class which represents the DateInfo table in the database
@@ -13,7 +11,6 @@ public class DateInfo {
 
     // ---------------- Attributes ---------------- //
 
-    private static HashMap<Integer, DateInfo> lesDates = new HashMap<Integer, DateInfo>();
     private Date laDate;
     private float tempMoy;
     private Jour jour;
@@ -31,10 +28,8 @@ public class DateInfo {
     public DateInfo(Date laDate, float tempMoy, String jour, String vacances) {
         this.laDate = laDate;
         this.tempMoy = tempMoy;
-        this.jour = Jour.getJour(jour);
-        this.vacances = Vacances.getVacances(vacances);
-
-        lesDates.put(laDate.hashCode(), this);
+        this.jour = Jour.valueOf(vacances);
+        this.vacances = Vacances.valueOf(vacances);
     }
 
     /**
@@ -45,10 +40,12 @@ public class DateInfo {
     public DateInfo(ResultSet rs) throws SQLException {
         this.laDate = rs.getDate("laDate");
         this.tempMoy = rs.getFloat("tempMoy");
-        this.jour = Jour.getJour(rs.getString("jour"));
-        this.vacances = Vacances.getVacances(rs.getString("vacances"));
-
-        lesDates.put(laDate.hashCode(), this);
+        this.jour = Jour.valueOf(rs.getString("jour"));
+        if(rs.getString("vacances") != null){
+            this.vacances = Vacances.valueOf(rs.getString("vacances"));
+        }else{
+            this.vacances = Vacances.Nulle;
+        }
     }
 
     // ---------------- Getters & Setters ---------------- //
@@ -117,90 +114,14 @@ public class DateInfo {
         this.vacances = vacances;
     }
 
-    /**
-     * Get the DateInfo with the date
-     * @param date the date
-     * @return the DateInfo
-     */
-    public static DateInfo getDateInfo(Date date) {
-        return lesDates.get(date.hashCode());
-    }
-
-    /**
-     * Get all the DateInfo
-     * @return all the DateInfo
-     */
-    public static ArrayList<DateInfo> getDateInfos(){
-        ArrayList<DateInfo> ret = new ArrayList<DateInfo>();
-        for (DateInfo d : lesDates.values()){
-            ret.add(d);
-        }
-        return ret;
-    }
-
     // ---------------- Methods ---------------- //
-
-    /**
-     * Compute the total velo count for the date
-     * @return the total velo count for the date
-     */
-    public int totalVeloCount(){
-        int ret = 0;
-        ArrayList<Comptage> lesComptages = Comptage.getComptagesByDate(this);
-        for (Comptage c : lesComptages){
-            ret += c.totalVeloCount();
-        }
-        return ret;
-    }
-
-    /**
-     * Compute the average velo count for the date
-     * @return the average velo count for the date
-     */
-    public float averageVeloCount(){
-        float ret = 0;
-        ArrayList<Comptage> lesComptages = Comptage.getComptagesByDate(this);
-        for (Comptage c : lesComptages){
-            ret += c.averageVeloCount();
-        }
-        ret /= lesComptages.size();
-        return ret;
-    }
 
     /**
      * Get the String representation of the DateInfo
      * @return the String representation of the DateInfo
      */
     public String toString(){
-        String ret = "DateInfo(" + laDate + ", " + tempMoy + ", " + jour.getNom() + ", " + vacances.getNom() + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ")";
+        String ret = "DateInfo(" + laDate + ", " + tempMoy + ", " + jour.name() + ", " + vacances.name() + ")";
         return ret;
     }
-
-    /**
-     * Generate the DateInfo SQL Insert Query
-     * @return the DateInfo SQL Insert Query as a String
-     */
-    public String toInsertQuery(){
-        String ret = "INSERT INTO DATEINFO VALUES ('" + laDate + "', " + tempMoy + ", '" + jour + "', '" + vacances + "');";
-        return ret;
-    }
-
-    /**
-     * Generate the DateInfo SQL Update Query
-     * @return the DateInfo SQL Update Query as a String
-     */
-    public String toUpdateQuery(){
-        String ret = "UPDATE DATEINFO SET tempMoy = " + tempMoy + ", jour = '" + jour + "', vacances = '" + vacances + "' WHERE laDate = '" + laDate + "';";
-        return ret;
-    }
-
-    /**
-     * Generate the DateInfo SQL Delete Query
-     * @return the DateInfo SQL Delete Query as a String
-     */
-    public String toDeleteQuery(){
-        String ret = "DELETE FROM DATEINFO WHERE laDate = '" + laDate + "';";
-        return ret;
-    }
-
 }

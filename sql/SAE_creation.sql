@@ -14,7 +14,7 @@ CREATE TABLE QUARTIER(
 CREATE TABLE COMPTEUR(
 		idCompteur INT PRIMARY KEY,
         nomCompteur VARCHAR(50),
-        sens ENUM('NORD','SUD','EST','OUEST'),
+        sens VARCHAR(50),
 		coord_X FLOAT,
         coord_Y FLOAT,
         leQuartier INT,
@@ -24,7 +24,7 @@ CREATE TABLE COMPTEUR(
 CREATE TABLE DATEINFO(
 		laDate DATE PRIMARY KEY,
 		tempMoy FLOAT,
-        jour ENUM('LUNDI','MARDI','MERCREDI','JEUDI','VENDREDI','SAMEDI','DIMANCHE'),
+        jour ENUM('Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'),
 		vacances VARCHAR(20)
 );
 
@@ -57,7 +57,7 @@ CREATE TABLE COMPTAGE(
         h21 INT,
         h22 INT,
         h23 INT,
-        presenceAnomalie ENUM('FORTE','FAIBLE'),
+        presenceAnomalie ENUM('Forte','Faible'),
         
         PRIMARY KEY (leCompteur,dateComptage)
 );

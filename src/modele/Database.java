@@ -78,6 +78,22 @@ public class Database {
     }
 
     /**
+     * Get the read connection
+     * @return the read connection
+     */
+    public Connection getReadConnection() {
+        return readConnection;
+    }
+
+    /**
+     * Get the write connection
+     * @return the write connection
+     */
+    public Connection getWriteConnection() {
+        return writeConnection;
+    }
+
+    /**
      * Execute a read query
      * @param query the query
      * @return the ResultSet
@@ -96,32 +112,5 @@ public class Database {
     public void executeWriteQuery(String query) throws SQLException{
         Statement stmt = writeConnection.createStatement();
         stmt.executeUpdate(query);
-    }
-
-    /**
-     * Load all the data from the database
-     * @throws SQLException if there is an error with the query
-     */
-    public void loadDatabase() throws SQLException{
-        new Quartier(0, "Inconnu", 0);
-        ResultSet rs = executeReadQuery("SELECT * FROM QUARTIER");
-        while(rs.next()){
-            new Quartier(rs);
-        }
-
-        rs = executeReadQuery("SELECT * FROM COMPTEUR");
-        while(rs.next()){
-            new Compteur(rs);
-        }
-
-        rs = executeReadQuery("SELECT * FROM DATEINFO");
-        while(rs.next()){
-            new DateInfo(rs);
-        }
-
-        rs = executeReadQuery("SELECT * FROM COMPTAGE");
-        while(rs.next()){
-            new Comptage(rs);
-        }
     }
 }

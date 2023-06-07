@@ -1,7 +1,5 @@
 package modele;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.sql.*;
 
 
@@ -15,7 +13,6 @@ public class Quartier {
 
     // ---------------- Attributes ---------------- //
 
-    private static HashMap<Integer, Quartier> lesQuartiers = new HashMap<Integer, Quartier>();
     private int idQuartier;
     private String nomQuartier;
     private float longueurPisteVelo;
@@ -32,8 +29,6 @@ public class Quartier {
         this.idQuartier = idQuartier;
         this.nomQuartier = nomQuartier;
         this.longueurPisteVelo = longueurPisteVelo;
-
-        lesQuartiers.put(idQuartier, this);
     }
 
     /**
@@ -45,8 +40,6 @@ public class Quartier {
         this.idQuartier = rs.getInt("idQuartier");
         this.nomQuartier = rs.getString("nomQuartier");
         this.longueurPisteVelo = rs.getFloat("longueurPisteVelo");
-
-        lesQuartiers.put(idQuartier, this);
     }
 
     // ---------------- Getters & Setters ---------------- //
@@ -103,94 +96,14 @@ public class Quartier {
         this.longueurPisteVelo = longueurPisteVelo;
     }
 
-    /**
-     * Get the Quartier with the id
-     * @param idQuartier the id of the Quartier
-     * @return the Quartier with the id
-     * @throws NullPointerException if the Quartier doesn't exist
-     */
-    public static Quartier getQuartier(int idQuartier) throws NullPointerException{
-        Quartier quartier = lesQuartiers.get(idQuartier);
-        if(quartier == null){
-            throw new NullPointerException("The Quartier with id " + idQuartier + " doesn't exist");
-        }
-        return quartier;
-    }
-
-    /**
-     * Get all Quartier
-     * @return all Quartier
-     */
-    public static ArrayList<Quartier> getQuartiers(){
-        ArrayList<Quartier> quartiers = new ArrayList<Quartier>();
-        for(Quartier quartier : lesQuartiers.values()){
-            quartiers.add(quartier);
-        }
-        return quartiers;
-    }
-
     // ---------------- Methods ---------------- //
-
-    /**
-     * Compute the total number of Velo in the Quartier
-     * @return the total number of Velo in the Quartier
-     */
-    public int totalVeloCount(){
-        int ret = 0;
-        ArrayList<Compteur> lesCompteurs = Compteur.getCompteursByQuartier(this);
-        for(Compteur compteur : lesCompteurs){
-            ret += compteur.totalVeloCount();
-        }
-        return ret;
-    }
-
-    /**
-     * Compute the average number of Velo in the Quartier
-     * @return the average number of Velo in the Quartier
-     */
-    public float averageVeloCount(){
-        float ret = 0;
-        ArrayList<Compteur> lesCompteurs = Compteur.getCompteursByQuartier(this);
-        for(Compteur compteur : lesCompteurs){
-            ret += compteur.averageVeloCount();
-        }
-        return ret;
-    }
 
     /**
      * To String method
      * @return the String of the Quartier
      */
     public String toString() {
-        String string = "Quartier(" + this.idQuartier + ", " + this.nomQuartier + ", " + this.longueurPisteVelo + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ')';
+        String string = "Quartier(" + this.idQuartier + ", " + this.nomQuartier + ", " + this.longueurPisteVelo + ')';
         return string;
     }
-
-    /**
-     * Generate the Quartier SQL Insert Query
-     * @return the generated SQL Insert Query as a String
-     */
-    public String toInsertQuery(){
-        String query = "INSERT INTO QUARTIER VALUES(" + this.idQuartier + ", '" + this.nomQuartier + "', " + this.longueurPisteVelo + ");";
-        return query;
-    }
-
-    /**
-     * Generate the Quartier SQL Update Query
-     * @return the generated SQL Update Query as a String
-     */
-    public String toUpdateQuery(){
-        String query = "UPDATE QUARTIER SET nomQuartier = '" + this.nomQuartier + "', longueurPisteVelo = " + this.longueurPisteVelo + " WHERE idQuartier = " + this.idQuartier + ";";
-        return query;
-    }
-
-    /**
-     * Generate the Quartier SQL Delete Query
-     * @return the generated SQL Delete Query as a String
-     */
-    public String toDeleteQuery(){
-        String query = "DELETE FROM QUARTIER WHERE idQuartier = " + this.idQuartier + ";";
-        return query;
-    }
-
 }

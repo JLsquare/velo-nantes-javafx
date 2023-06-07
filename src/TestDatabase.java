@@ -7,26 +7,28 @@ public class TestDatabase {
         try {
             Database database = new Database("jdbc:mariadb://localhost:3306/bd_velo");
             database.openReadConnection("read", "read");
-            database.loadDatabase();
+            
+            QuartierDao quartierDao = new QuartierDao(database);
+            CompteurDao compteurDao = new CompteurDao(database);
+            DateInfoDao dateInfoDao = new DateInfoDao(database);
+            ComptageDao comptageDao = new ComptageDao(database);
 
-            ArrayList<Quartier> lesQuartiers = Quartier.getQuartiers();
-            for(Quartier q : lesQuartiers){
-                System.out.println(q);
+            ArrayList<Quartier> lesQuartiers = quartierDao.getAll();
+            ArrayList<Compteur> lesCompteurs = compteurDao.getAll();
+            ArrayList<DateInfo> lesDates = dateInfoDao.getAll();
+            ArrayList<Comptage> lesComptages = comptageDao.getAll();
+
+            for(Quartier quartier : lesQuartiers) {
+                System.out.println(quartier);
             }
-
-            ArrayList<Compteur> lesCompteurs = Compteur.getCompteurs();
-            for(Compteur c : lesCompteurs){
-                System.out.println(c);
+            for(Compteur compteur : lesCompteurs) {
+                System.out.println(compteur);
             }
-
-            ArrayList<DateInfo> lesDateInfos = DateInfo.getDateInfos();
-            for(DateInfo d : lesDateInfos){
-                System.out.println(d);
+            for(DateInfo date : lesDates) {
+                System.out.println(date);
             }
-
-            ArrayList<Comptage> lesComptages = Comptage.getComptages();
-            for(Comptage c : lesComptages){
-                System.out.println(c);
+            for(Comptage comptage : lesComptages) {
+                System.out.println(comptage);
             }
 
             database.closeReadConnection();
