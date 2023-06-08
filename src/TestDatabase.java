@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import modele.*;
@@ -7,33 +8,42 @@ public class TestDatabase {
         try {
             Database database = new Database("jdbc:mariadb://localhost:3306/bd_velo");
             database.openReadConnection("read", "read");
-            
-            QuartierDao quartierDao = new QuartierDao(database);
-            CompteurDao compteurDao = new CompteurDao(database);
-            DateInfoDao dateInfoDao = new DateInfoDao(database);
+
             ComptageDao comptageDao = new ComptageDao(database);
+            DateInfoDao dateInfoDao = new DateInfoDao(database, comptageDao);
+            CompteurDao compteurDao = new CompteurDao(database, comptageDao);
+            QuartierDao quartierDao = new QuartierDao(database, compteurDao);
 
-            ArrayList<Quartier> lesQuartiers = quartierDao.getAll();
-            ArrayList<Compteur> lesCompteurs = compteurDao.getAll();
-            ArrayList<DateInfo> lesDates = dateInfoDao.getAll();
-            ArrayList<Comptage> lesComptages = comptageDao.getAll();
+            comptageDao.readAll();
+            dateInfoDao.readAll();
+            compteurDao.readAll();
+            quartierDao.readAll();
+            
+            ArrayList<Comptage> comptages = comptageDao.getAll();
+            ArrayList<Compteur> compteurs = compteurDao.getAll();
+            ArrayList<DateInfo> dateInfos = dateInfoDao.getAll();
+            ArrayList<Quartier> quartiers = quartierDao.getAll();
 
-            for(Quartier quartier : lesQuartiers) {
+            for(Quartier quartier : quartiers) {
                 System.out.println(quartier);
             }
-            for(Compteur compteur : lesCompteurs) {
+
+            for(DateInfo dateInfo : dateInfos) {
+                System.out.println(dateInfo);
+            }
+
+            for(Compteur compteur : compteurs) {
                 System.out.println(compteur);
             }
-            for(DateInfo date : lesDates) {
-                System.out.println(date);
-            }
-            for(Comptage comptage : lesComptages) {
+
+            for(Comptage comptage : comptages) {
                 System.out.println(comptage);
             }
 
             database.closeReadConnection();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error with the database");
+            System.out.println(e.getMessage());
         }
     }
 }

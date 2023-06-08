@@ -1,6 +1,7 @@
 package modele;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 
 /**
@@ -16,6 +17,7 @@ public class Quartier {
     private int idQuartier;
     private String nomQuartier;
     private float longueurPisteVelo;
+    private ArrayList<Compteur> lesCompteurs;
 
     // ---------------- Constructors ---------------- //
 
@@ -25,10 +27,11 @@ public class Quartier {
      * @param nomQuartier the name of the Quartier
      * @param longueurPisteVelo the length of the bike path
      */
-    public Quartier(int idQuartier, String nomQuartier, float longueurPisteVelo) {
+    public Quartier(int idQuartier, String nomQuartier, float longueurPisteVelo, ArrayList<Compteur> lesCompteurs) {
         this.idQuartier = idQuartier;
         this.nomQuartier = nomQuartier;
         this.longueurPisteVelo = longueurPisteVelo;
+        this.lesCompteurs = lesCompteurs;
     }
 
     /**
@@ -36,10 +39,11 @@ public class Quartier {
      * @param rs the ResultSet
      * @throws SQLException if there is an error with the ResultSet
      */
-    public Quartier(ResultSet rs) throws SQLException{
+    public Quartier(ResultSet rs, ArrayList<Compteur> lesCompteurs) throws SQLException{
         this.idQuartier = rs.getInt("idQuartier");
         this.nomQuartier = rs.getString("nomQuartier");
         this.longueurPisteVelo = rs.getFloat("longueurPisteVelo");
+        this.lesCompteurs = lesCompteurs;
     }
 
     // ---------------- Getters & Setters ---------------- //
@@ -103,7 +107,35 @@ public class Quartier {
      * @return the String of the Quartier
      */
     public String toString() {
-        String string = "Quartier(" + this.idQuartier + ", " + this.nomQuartier + ", " + this.longueurPisteVelo + ')';
+        String string = "Quartier(" + this.idQuartier + ", " + this.nomQuartier + ", " + this.longueurPisteVelo + ", " + this.totalPassage() + ", " + this.averagePassages() + ')';
         return string;
+    }
+
+    /**
+     * Compute the total passage of the Quartier
+     * @return the total passage of the Quartier
+     */
+    public int totalPassage(){
+        int total = 0;
+        for(Compteur compteur : this.lesCompteurs){
+            total += compteur.totalPassage();
+        }
+        return total;
+    }
+
+    /**
+     * Compute the average passage of the Quartier
+     * @return the average passage of the Quartier
+     */
+    public float averagePassages(){
+        float total = 0;
+        for(Compteur compteur : this.lesCompteurs){
+            total += compteur.averagePassages();
+        }
+        int nbCompteurs = this.lesCompteurs.size();
+        if(nbCompteurs != 0){
+            total /= nbCompteurs;
+        }
+        return total;
     }
 }

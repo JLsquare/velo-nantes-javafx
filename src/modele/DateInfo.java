@@ -1,6 +1,7 @@
 package modele;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * The DateInfo class which represents the DateInfo table in the database
@@ -15,6 +16,7 @@ public class DateInfo {
     private float tempMoy;
     private Jour jour;
     private Vacances vacances;
+    private ArrayList<Comptage> lesComptages;
 
     // ---------------- Constructors ---------------- //
 
@@ -25,11 +27,12 @@ public class DateInfo {
      * @param jour the day
      * @param vacances the holidays
      */
-    public DateInfo(Date laDate, float tempMoy, String jour, String vacances) {
+    public DateInfo(Date laDate, float tempMoy, String jour, String vacances, ArrayList<Comptage> lesComptages) {
         this.laDate = laDate;
         this.tempMoy = tempMoy;
         this.jour = Jour.valueOf(vacances);
         this.vacances = Vacances.valueOf(vacances);
+        this.lesComptages = lesComptages;
     }
 
     /**
@@ -37,7 +40,7 @@ public class DateInfo {
      * @param rs the ResultSet
      * @throws SQLException if there is an error with the ResultSet
      */
-    public DateInfo(ResultSet rs) throws SQLException {
+    public DateInfo(ResultSet rs, ArrayList<Comptage> lesComptages) throws SQLException {
         this.laDate = rs.getDate("laDate");
         this.tempMoy = rs.getFloat("tempMoy");
         this.jour = Jour.valueOf(rs.getString("jour"));
@@ -46,6 +49,7 @@ public class DateInfo {
         }else{
             this.vacances = Vacances.Nulle;
         }
+        this.lesComptages = lesComptages;
     }
 
     // ---------------- Getters & Setters ---------------- //
@@ -121,7 +125,35 @@ public class DateInfo {
      * @return the String representation of the DateInfo
      */
     public String toString(){
-        String ret = "DateInfo(" + laDate + ", " + tempMoy + ", " + jour.name() + ", " + vacances.name() + ")";
+        String ret = "DateInfo(" + this.laDate + ", " + this.tempMoy + ", " + this.jour.name() + ", " + this.vacances.name() + ", " + this.totalPassage() + ", " + this.averagePassages() + ")";
         return ret;
+    }
+
+    /**
+     * Compute the total passage of the DateInfo
+     * @return the total passage of the DateInfo
+     */
+    public int totalPassage(){
+        int total = 0;
+        for(Comptage c : this.lesComptages){
+            total += c.totalPassages();
+        }
+        return total;
+    }
+
+    /**
+     * Compute the average passage of the DateInfo
+     * @return the average passage of the DateInfo
+     */
+    public float averagePassages(){
+        float total = 0;
+        for(Comptage c : this.lesComptages){
+            total += c.averagePassages();
+        }
+        int nbComptages = this.lesComptages.size();
+        if(nbComptages != 0){
+            total /= nbComptages;
+        }
+        return total;
     }
 }

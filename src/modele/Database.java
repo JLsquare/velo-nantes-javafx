@@ -13,6 +13,7 @@ public class Database {
     // ---------------- Attributes ---------------- //
 
     private final String URL;
+
     private Connection readConnection;
     private Connection writeConnection;
 
@@ -78,39 +79,26 @@ public class Database {
     }
 
     /**
-     * Get the read connection
-     * @return the read connection
-     */
-    public Connection getReadConnection() {
-        return readConnection;
-    }
-
-    /**
-     * Get the write connection
-     * @return the write connection
-     */
-    public Connection getWriteConnection() {
-        return writeConnection;
-    }
-
-    /**
-     * Execute a read query
+     * Return a PreparedStatement for the read connection
      * @param query the query
-     * @return the ResultSet
-     * @throws SQLException if there is an error with the query
+     * @return the PreparedStatement
      */
-    public ResultSet executeReadQuery(String query) throws SQLException{
-        Statement stmt = readConnection.createStatement();
-        return stmt.executeQuery(query);
+    public PreparedStatement preparedReadStatment(String query) throws SQLException{
+        if(readConnection == null){
+            throw new SQLException("Read connection not open");
+        }
+        return readConnection.prepareStatement(query);
     }
 
     /**
-     * Execute a write query
+     * Return a PreparedStatement for the write connection
      * @param query the query
-     * @throws SQLException if there is an error with the query
+     * @return the PreparedStatement
      */
-    public void executeWriteQuery(String query) throws SQLException{
-        Statement stmt = writeConnection.createStatement();
-        stmt.executeUpdate(query);
+    public PreparedStatement preparedWriteStatment(String query) throws SQLException{
+        if(writeConnection == null){
+            throw new SQLException("Write connection not open");
+        }
+        return writeConnection.prepareStatement(query);
     }
 }

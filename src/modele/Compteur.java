@@ -1,6 +1,7 @@
 package modele;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * The Compteur class which represents the Compteur table in the database
@@ -17,6 +18,7 @@ public class Compteur{
     private float coordX;
     private float coordY;
     private int leQuartier;
+    private ArrayList<Comptage> lesComptages;
 
     // ---------------- Constructors ---------------- //
 
@@ -29,7 +31,7 @@ public class Compteur{
      * @param coordY the Y coordinate of the Compteur
      * @param leQuartier the Quartier of the Compteur
      */
-    public Compteur(int idCompteur, String nomCompteur, String sens, float coordX, float coordY, int leQuartier) throws NullPointerException {
+    public Compteur(int idCompteur, String nomCompteur, String sens, float coordX, float coordY, int leQuartier, ArrayList<Comptage> lesComptages) throws NullPointerException {
         if(nomCompteur == null || sens == null){
             throw new NullPointerException("nomCompteur or sens is null");
         }
@@ -39,6 +41,7 @@ public class Compteur{
         this.coordX = coordX;
         this.coordY = coordY;
         this.leQuartier = leQuartier;
+        this.lesComptages = lesComptages;
     }
 
     /**
@@ -46,13 +49,14 @@ public class Compteur{
      * @param rs the ResultSet
      * @throws SQLException if there is an error with the ResultSet
      */
-    public Compteur(ResultSet rs) throws SQLException {
+    public Compteur(ResultSet rs, ArrayList<Comptage> lesComptages) throws SQLException {
         this.idCompteur = rs.getInt("idCompteur");
         this.nomCompteur = rs.getString("nomCompteur");
         this.sens = rs.getString("sens");
         this.coordX = rs.getFloat("coord_X");
         this.coordY = rs.getFloat("coord_Y");
         this.leQuartier = rs.getInt("leQuartier");
+        this.lesComptages = lesComptages;
     }
 
     // ---------------- Getters & Setters ---------------- //
@@ -160,7 +164,35 @@ public class Compteur{
      * @return the String of the Compteur
      */
     public String toString() {
-        String ret = "Compteur(" + this.idCompteur + ", " + this.nomCompteur + ", " + this.sens + ", " + this.coordX + ", " + this.coordY + ", " + this.leQuartier + ")";
+        String ret = "Compteur(" + this.idCompteur + ", " + this.nomCompteur + ", " + this.sens + ", " + this.coordX + ", " + this.coordY + ", " + this.leQuartier + ", " + this.totalPassage() + ", " + this.averagePassages() + ")";
         return ret;
+    }
+
+    /**
+     * Compute the total passage of the Compteur
+     * @return the total passage of the Compteur
+     */
+    public int totalPassage(){
+        int total = 0;
+        for(Comptage c : this.lesComptages){
+            total += c.totalPassages();
+        }
+        return total;
+    }
+
+    /**
+     * Compute the average passage of the Compteur
+     * @return the average passage of the Compteur
+     */
+    public float averagePassages(){
+        float total = 0;
+        for(Comptage c : this.lesComptages){
+            total += c.averagePassages();
+        }
+        int nbComptages = this.lesComptages.size();
+        if(nbComptages != 0){
+            total /= nbComptages;
+        }
+        return total;
     }
 }

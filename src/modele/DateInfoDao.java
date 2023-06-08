@@ -1,61 +1,101 @@
 package modele;
 
-import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class DateInfoDao implements IDao<DateInfo>{
-    private Database db;
-    public static DateInfoDao instance;
+/**
+ * Class DateInfoDao to implement the DAO pattern for DateInfo
+ * @author Groupe 4B2
+ */
+public class DateInfoDao implements IDao<DateInfo> {
 
-    public DateInfoDao(Database db) {
-        this.db = db;
-        instance = this;
+    // ---------------- Attributes ---------------- //
+
+    private Database database;
+    private ComptageDao comptageDao;
+    private ArrayList<DateInfo> lesDate;
+
+    // ---------------- Constructors ---------------- //    
+
+    /**
+     * Constructor of DateInfoDao
+     * @param db the database
+     * @param comptageDao the ComptageDao to use
+     */
+    public DateInfoDao(Database db, ComptageDao comptageDao) {
+        this.database = db;
+        this.comptageDao = comptageDao;
+        this.lesDate = new ArrayList<DateInfo>();
     }
 
-    public DateInfo get(Date date) throws SQLException{
-        DateInfo dateInfo = null;
-        String query = "SELECT * FROM DATEINFO";
-        query += " WHERE date = " + date;
-        ResultSet rs = db.executeReadQuery(query);
-        dateInfo = new DateInfo(rs);
-        return dateInfo;
+    // ---------------- Getters and Setters ---------------- //
+
+    /**
+     * Get all the DateInfo
+     * @return an ArrayList of DateInfo
+     */
+    public ArrayList<DateInfo> getAll() {
+        return lesDate;
     }
 
-    public ArrayList<DateInfo> getAll() throws SQLException {
-        ArrayList<DateInfo> lesDateInfos = new ArrayList<DateInfo>();
-        String query = "SELECT * FROM DATEINFO";
-        ResultSet rs = db.executeReadQuery(query);
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Read all the DateInfo from the database
+     */
+    public void readAll() throws SQLException {
+        PreparedStatement query = database.preparedReadStatment("SELECT * FROM DATEINFO");
+        ResultSet rs = query.executeQuery();
         while(rs.next()) {
-            lesDateInfos.add(new DateInfo(rs));
+            ArrayList<Comptage> lesComptages = new ArrayList<Comptage>();
+            for(Comptage comptage : comptageDao.getAll()) {
+                if(comptage.getLaDate() == rs.getDate("laDate")) {
+                    lesComptages.add(comptage);
+                }
+            }
+            this.lesDate.add(new DateInfo(rs, lesComptages));
         }
-        return lesDateInfos;
     }
 
+    /**
+     * Add a DateInfo to the database
+     * @param dateInfo the DateInfo to add
+     */
     public void add(DateInfo dateInfo) throws SQLException {
-        String query = "INSERT INTO DATEINFO VALUES(";
-        query += dateInfo.getLaDate() + ", ";
-        query += dateInfo.getTempMoy() + ", ";
-        query += dateInfo.getJour() + ", ";
-        query += dateInfo.getVacances() + ")";
-        db.executeWriteQuery(query);
+        String query = "INSERT INTO DATEINFO VALUES(?, ?, ?, ?)";
+        PreparedStatement stmt = database.preparedWriteStatment(query);
+        stmt.setDate(1, dateInfo.getLaDate());
+        stmt.setFloat(2, dateInfo.getTempMoy());
+        stmt.setString(3, dateInfo.getJour().name());
+        stmt.setString(4, dateInfo.getVacances().name());
+        stmt.executeUpdate();
     }
 
+    /**
+     * Remove a DateInfo from the database
+     * @param dateInfo the DateInfo to remove
+     */
     public void remove(DateInfo dateInfo) throws SQLException {
-        String query = "DELETE FROM DATEINFO";
-        query += " WHERE date = " + dateInfo.getLaDate();
-        db.executeWriteQuery(query);
+        String query = "DELETE FROM DATEINFO WHERE laDate = ?";
+        PreparedStatement stmt = database.preparedWriteStatment(query);
+        stmt.setDate(1, dateInfo.getLaDate());
+        stmt.executeUpdate();
     }
 
+    /**
+     * Update a DateInfo from the database
+     * @param dateInfo the DateInfo to update
+     */
     public void update(DateInfo dateInfo) throws SQLException {
-        String query = "UPDATE DATEINFO SET ";
-        query += "tempMoy = " + dateInfo.getTempMoy() + ", ";
-        query += "jour = " + dateInfo.getJour() + ", ";
-        query += "vacances = " + dateInfo.getVacances();
-        query += " WHERE date = " + dateInfo.getLaDate();
-        db.executeWriteQuery(query);
+        String query = "UPDATE DATEINFO SET tempMoy = ?, jour = ?, vacances = ? WHERE laDate = ?";
+        PreparedStatement stmt = database.preparedWriteStatment(query);
+        stmt.setFloat(1, dateInfo.getTempMoy());
+        stmt.setString(2, dateInfo.getJour().name());
+        stmt.setString(3, dateInfo.getVacances().name());
+        stmt.setDate(4, dateInfo.getLaDate());
+        stmt.executeUpdate();
     }
-
 
 }

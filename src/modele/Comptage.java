@@ -139,10 +139,23 @@ public class Comptage{
     // ---------------- Methods ---------------- //
 
     /**
-     * Get the total number of passages
+     * To String method
+     * @return the String
+     */
+    public String toString(){
+        String str = "Comptage(" + this.laDate + ", " + this.leCompteur + ", " + this.anomalie.name() + ", " + this.totalPassages() + ", " + this.averagePassages() + ", ";
+        for(int i = 0; i < 24; i++){
+            str += this.passages[i] + ", ";
+        }
+        str = str.substring(0, str.length() - 2) + ")";
+        return str;
+    }
+
+    /**
+     * Compute the total number of passages
      * @return the total number of passages
      */
-    public int totalVeloCount(){
+    public int totalPassages(){
         int total = 0;
         for(int i = 0; i < 24; i++){
             total += this.passages[i];
@@ -151,23 +164,10 @@ public class Comptage{
     }
 
     /**
-     * Get the average number of passages
+     * Compute the average number of passages
      * @return the average number of passages
      */
-    public float averageVeloCount(){
-        return this.totalVeloCount() / 24.0f;
-    }
-
-    /**
-     * To String method
-     * @return the String
-     */
-    public String toString(){
-        String str = "Comptage(" + this.laDate + ", " + this.leCompteur + ", " + this.anomalie.name() + ", " + this.totalVeloCount() + ", " + this.averageVeloCount() + ", ";
-        for(int i = 0; i < 24; i++){
-            str += this.passages[i] + ", ";
-        }
-        str = str.substring(0, str.length() - 2) + ")";
-        return str;
+    public float averagePassages(){
+        return this.totalPassages() / 24.0f;
     }
 }
