@@ -1,7 +1,9 @@
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import modele.*;
+import modele.dao.*;
+import modele.database.*;
+import modele.entities.*;
 
 public class TestDatabase {
     public static void main(String[] args) {
