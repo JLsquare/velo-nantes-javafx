@@ -27,11 +27,11 @@ public class Quartier {
      * @param nomQuartier the name of the Quartier
      * @param longueurPisteVelo the length of the bike path
      */
-    public Quartier(int idQuartier, String nomQuartier, float longueurPisteVelo, ArrayList<Compteur> lesCompteurs) {
+    public Quartier(int idQuartier, String nomQuartier, float longueurPisteVelo) {
         this.idQuartier = idQuartier;
         this.nomQuartier = nomQuartier;
         this.longueurPisteVelo = longueurPisteVelo;
-        this.lesCompteurs = lesCompteurs;
+        this.lesCompteurs = new ArrayList<Compteur>();
     }
 
     /**
@@ -39,11 +39,11 @@ public class Quartier {
      * @param rs the ResultSet
      * @throws SQLException if there is an error with the ResultSet
      */
-    public Quartier(ResultSet rs, ArrayList<Compteur> lesCompteurs) throws SQLException{
+    public Quartier(ResultSet rs) throws SQLException{
         this.idQuartier = rs.getInt("idQuartier");
         this.nomQuartier = rs.getString("nomQuartier");
         this.longueurPisteVelo = rs.getFloat("longueurPisteVelo");
-        this.lesCompteurs = lesCompteurs;
+        this.lesCompteurs = new ArrayList<Compteur>();
     }
 
     // ---------------- Getters & Setters ---------------- //
@@ -101,6 +101,21 @@ public class Quartier {
     }
 
     // ---------------- Methods ---------------- //
+
+    /**
+     * Add a Compteur to the Quartier
+     */
+    public void addCompteur(Compteur compteur){
+        this.lesCompteurs.add(compteur);
+    }
+
+    /**
+     * Remove a Compteur to the Quartier
+     * @param compteur the Compteur to remove
+     */
+    public void removeCompteur(Compteur compteur){
+        this.lesCompteurs.remove(compteur);
+    }
 
     /**
      * To String method

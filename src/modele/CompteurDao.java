@@ -14,7 +14,7 @@ public class CompteurDao implements IDao<Compteur> {
     // ---------------- Attributes ---------------- //
 
     private Database database;
-    private ComptageDao comptageDao;
+    private QuartierDao quartierDao;
     private ArrayList<Compteur> lesCompteurs;
 
     // ---------------- Constructors ---------------- //
@@ -24,13 +24,32 @@ public class CompteurDao implements IDao<Compteur> {
      * @param db the database
      * @param comptageDao the ComptageDao to use
      */
-    public CompteurDao(Database db, ComptageDao comptageDao) {
+    public CompteurDao(Database db, QuartierDao quartierDao) {
         this.database = db;
-        this.comptageDao = comptageDao;
+        this.quartierDao = quartierDao;
         this.lesCompteurs = new ArrayList<Compteur>();
     }
 
     // ---------------- Getters and Setters ---------------- //
+
+    /**
+     * Get a Compteur by its id
+     * @param id the id of the Compteur
+     * @return the Compteur
+     */
+    public Compteur get(int leCompteur) {
+        Compteur compteur = null;
+        boolean found = false;
+        int i = 0;
+        while(!found && i < lesCompteurs.size()) {
+            if(lesCompteurs.get(i).getIdCompteur() == leCompteur) {
+                compteur = lesCompteurs.get(i);
+                found = true;
+            }
+            i++;
+        }
+        return compteur;
+    }
 
     /**
      * Get all the Compteur
@@ -49,13 +68,13 @@ public class CompteurDao implements IDao<Compteur> {
         PreparedStatement preparedStatement = database.preparedReadStatment("SELECT * FROM COMPTEUR");
         ResultSet rs = preparedStatement.executeQuery();
         while(rs.next()) {
-            ArrayList<Comptage> lesComptages = new ArrayList<Comptage>();
-            for(Comptage comptage : comptageDao.getAll()) {
-                if(comptage.getLeCompteur() == rs.getInt("idCompteur")) {
-                    lesComptages.add(comptage);
-                }
+            Compteur compteur = new Compteur(rs);
+            this.lesCompteurs.add(compteur);
+            try {
+                this.quartierDao.get(compteur.getLeQuartier()).addCompteur(compteur);
+            } catch (NullPointerException e) {
+                System.out.println("Le quartier " + compteur.getLeQuartier() + " n'existe pas");
             }
-            this.lesCompteurs.add(new Compteur(rs, lesComptages));
         }
     }
 

@@ -1,5 +1,6 @@
 package modele;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +15,6 @@ public class DateInfoDao implements IDao<DateInfo> {
     // ---------------- Attributes ---------------- //
 
     private Database database;
-    private ComptageDao comptageDao;
     private ArrayList<DateInfo> lesDate;
 
     // ---------------- Constructors ---------------- //    
@@ -24,13 +24,31 @@ public class DateInfoDao implements IDao<DateInfo> {
      * @param db the database
      * @param comptageDao the ComptageDao to use
      */
-    public DateInfoDao(Database db, ComptageDao comptageDao) {
+    public DateInfoDao(Database db) {
         this.database = db;
-        this.comptageDao = comptageDao;
         this.lesDate = new ArrayList<DateInfo>();
     }
 
     // ---------------- Getters and Setters ---------------- //
+
+    /**
+     * Get a DateInfo by its id
+     * @param id the id of the DateInfo
+     * @return the DateInfo
+     */
+    public DateInfo get(Date laDate) {
+        DateInfo dateInfo = null;
+        boolean found = false;
+        int i = 0;
+        while(!found && i < lesDate.size()) {
+            if(lesDate.get(i).getLaDate().equals(laDate)) {
+                dateInfo = lesDate.get(i);
+                found = true;
+            }
+            i++;
+        }
+        return dateInfo;
+    }
 
     /**
      * Get all the DateInfo
@@ -49,13 +67,8 @@ public class DateInfoDao implements IDao<DateInfo> {
         PreparedStatement query = database.preparedReadStatment("SELECT * FROM DATEINFO");
         ResultSet rs = query.executeQuery();
         while(rs.next()) {
-            ArrayList<Comptage> lesComptages = new ArrayList<Comptage>();
-            for(Comptage comptage : comptageDao.getAll()) {
-                if(comptage.getLaDate() == rs.getDate("laDate")) {
-                    lesComptages.add(comptage);
-                }
-            }
-            this.lesDate.add(new DateInfo(rs, lesComptages));
+            DateInfo dateInfo = new DateInfo(rs);
+            this.lesDate.add(dateInfo);
         }
     }
 

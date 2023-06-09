@@ -27,12 +27,12 @@ public class DateInfo {
      * @param jour the day
      * @param vacances the holidays
      */
-    public DateInfo(Date laDate, float tempMoy, String jour, String vacances, ArrayList<Comptage> lesComptages) {
+    public DateInfo(Date laDate, float tempMoy, String jour, String vacances) {
         this.laDate = laDate;
         this.tempMoy = tempMoy;
         this.jour = Jour.valueOf(vacances);
         this.vacances = Vacances.valueOf(vacances);
-        this.lesComptages = lesComptages;
+        this.lesComptages = new ArrayList<Comptage>();
     }
 
     /**
@@ -40,7 +40,7 @@ public class DateInfo {
      * @param rs the ResultSet
      * @throws SQLException if there is an error with the ResultSet
      */
-    public DateInfo(ResultSet rs, ArrayList<Comptage> lesComptages) throws SQLException {
+    public DateInfo(ResultSet rs) throws SQLException {
         this.laDate = rs.getDate("laDate");
         this.tempMoy = rs.getFloat("tempMoy");
         this.jour = Jour.valueOf(rs.getString("jour"));
@@ -49,7 +49,7 @@ public class DateInfo {
         }else{
             this.vacances = Vacances.Nulle;
         }
-        this.lesComptages = lesComptages;
+        this.lesComptages = new ArrayList<Comptage>();
     }
 
     // ---------------- Getters & Setters ---------------- //
@@ -119,6 +119,13 @@ public class DateInfo {
     }
 
     // ---------------- Methods ---------------- //
+
+    /**
+     * Add a Comptage to the DateInfo
+     */
+    public void addComptage(Comptage c){
+        this.lesComptages.add(c);
+    }
 
     /**
      * Get the String representation of the DateInfo

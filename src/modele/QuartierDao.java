@@ -14,7 +14,6 @@ public class QuartierDao implements IDao<Quartier>{
     // ---------------- Attributes ---------------- //
 
     private Database database;
-    private CompteurDao compteurDao;
     private ArrayList<Quartier> lesQuartiers;
 
     // ---------------- Constructors ---------------- //
@@ -24,13 +23,31 @@ public class QuartierDao implements IDao<Quartier>{
      * @param db the database
      * @param compteurDao the CompteurDao to use
      */
-    public QuartierDao(Database db, CompteurDao compteurDao) {
+    public QuartierDao(Database db) {
         this.database = db;
-        this.compteurDao = compteurDao;
         this.lesQuartiers = new ArrayList<Quartier>();
     }
 
     // ---------------- Getters and Setters ---------------- //
+
+    /**
+     * Get a Quartier by its id
+     * @param id the id of the Quartier
+     * @return the Quartier
+     */
+    public Quartier get(int leQuartier) {
+        Quartier quartier = null;
+        boolean found = false;
+        int i = 0;
+        while(!found && i < lesQuartiers.size()) {
+            if(lesQuartiers.get(i).getIdQuartier() == leQuartier) {
+                quartier = lesQuartiers.get(i);
+                found = true;
+            }
+            i++;
+        }
+        return quartier;
+    }
 
     /**
      * Get all the Quartier
@@ -49,13 +66,8 @@ public class QuartierDao implements IDao<Quartier>{
         PreparedStatement preparedStatement = database.preparedReadStatment("SELECT * FROM QUARTIER");
         ResultSet rs = preparedStatement.executeQuery();
         while(rs.next()) {
-            ArrayList<Compteur> lesCompteurs = new ArrayList<Compteur>();
-            for(Compteur compteur : compteurDao.getAll()) {
-                if(compteur.getLeQuartier() == rs.getInt("idQuartier")) {
-                    lesCompteurs.add(compteur);
-                }
-            }
-            this.lesQuartiers.add(new Quartier(rs, lesCompteurs));
+            Quartier quartier = new Quartier(rs);            
+            this.lesQuartiers.add(quartier);
         }
     }
 

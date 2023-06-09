@@ -31,7 +31,7 @@ public class Compteur{
      * @param coordY the Y coordinate of the Compteur
      * @param leQuartier the Quartier of the Compteur
      */
-    public Compteur(int idCompteur, String nomCompteur, String sens, float coordX, float coordY, int leQuartier, ArrayList<Comptage> lesComptages) throws NullPointerException {
+    public Compteur(int idCompteur, String nomCompteur, String sens, float coordX, float coordY, int leQuartier) throws NullPointerException {
         if(nomCompteur == null || sens == null){
             throw new NullPointerException("nomCompteur or sens is null");
         }
@@ -41,7 +41,7 @@ public class Compteur{
         this.coordX = coordX;
         this.coordY = coordY;
         this.leQuartier = leQuartier;
-        this.lesComptages = lesComptages;
+        this.lesComptages = new ArrayList<Comptage>();
     }
 
     /**
@@ -49,14 +49,14 @@ public class Compteur{
      * @param rs the ResultSet
      * @throws SQLException if there is an error with the ResultSet
      */
-    public Compteur(ResultSet rs, ArrayList<Comptage> lesComptages) throws SQLException {
+    public Compteur(ResultSet rs) throws SQLException {
         this.idCompteur = rs.getInt("idCompteur");
         this.nomCompteur = rs.getString("nomCompteur");
         this.sens = rs.getString("sens");
         this.coordX = rs.getFloat("coord_X");
         this.coordY = rs.getFloat("coord_Y");
         this.leQuartier = rs.getInt("leQuartier");
-        this.lesComptages = lesComptages;
+        this.lesComptages = new ArrayList<Comptage>();
     }
 
     // ---------------- Getters & Setters ---------------- //
@@ -158,6 +158,22 @@ public class Compteur{
     }
 
     // ---------------- Methods ---------------- //
+
+    /**
+     * Add a Comptage to the Compteur
+     * @param comptage the Comptage to add
+     */
+    public void addComptage(Comptage comptage){
+        this.lesComptages.add(comptage);
+    }
+
+    /**
+     * Remove a Comptage to the Compteur
+     * @param comptage the Comptage to remove
+     */
+    public void removeComptage(Comptage comptage){
+        this.lesComptages.remove(comptage);
+    }
 
     /**
      * To String method

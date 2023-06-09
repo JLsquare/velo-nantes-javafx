@@ -1,5 +1,6 @@
 package modele;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +15,8 @@ public class ComptageDao implements IDao<Comptage>{
     // ---------------- Attributes ---------------- //
 
     private Database database;
+    private CompteurDao compteurDao;
+    private DateInfoDao dateInfoDao;
     private ArrayList<Comptage> lesComptages;
 
     // ---------------- Constructors ---------------- //
@@ -22,12 +25,33 @@ public class ComptageDao implements IDao<Comptage>{
      * Constructor of ComptageDao
      * @param db the database
      */
-    public ComptageDao(Database db) {
+    public ComptageDao(Database db, CompteurDao compteurDao, DateInfoDao dateInfoDao) {
         this.database = db;
+        this.compteurDao = compteurDao;
+        this.dateInfoDao = dateInfoDao;
         this.lesComptages = new ArrayList<Comptage>();
     }
 
     // ---------------- Getters and Setters ---------------- //
+
+    /**
+     * Get a Comptage by its id
+     * @param id the id of the Comptage
+     * @return the Comptage
+     */
+    public Comptage get(Date laDate, int leCompteur) {
+        Comptage comptage = null;
+        boolean found = false;
+        int i = 0;
+        while(!found && i < lesComptages.size()) {
+            if(lesComptages.get(i).getLaDate().equals(laDate) && lesComptages.get(i).getLeCompteur() == leCompteur) {
+                comptage = lesComptages.get(i);
+                found = true;
+            }
+            i++;
+        }
+        return comptage;
+    }
 
     /**
      * Get all the Comptage
@@ -46,7 +70,10 @@ public class ComptageDao implements IDao<Comptage>{
         PreparedStatement preparedStatement = database.preparedReadStatment("SELECT * FROM COMPTAGE");
         ResultSet rs = preparedStatement.executeQuery();
         while(rs.next()) {
-            this.lesComptages.add(new Comptage(rs));
+            Comptage comptage = new Comptage(rs);
+            this.lesComptages.add(comptage);
+            this.compteurDao.get(comptage.getLeCompteur()).addComptage(comptage);
+            this.dateInfoDao.get(comptage.getLaDate()).addComptage(comptage);
         }
     }
 

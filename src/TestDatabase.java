@@ -9,34 +9,31 @@ public class TestDatabase {
             Database database = new Database("jdbc:mariadb://localhost:3306/bd_velo");
             database.openReadConnection("read", "read");
 
-            ComptageDao comptageDao = new ComptageDao(database);
-            DateInfoDao dateInfoDao = new DateInfoDao(database, comptageDao);
-            CompteurDao compteurDao = new CompteurDao(database, comptageDao);
-            QuartierDao quartierDao = new QuartierDao(database, compteurDao);
+            QuartierDao quartierDao = new QuartierDao(database);
+            DateInfoDao dateInfoDao = new DateInfoDao(database);
+            CompteurDao compteurDao = new CompteurDao(database, quartierDao);
+            ComptageDao comptageDao = new ComptageDao(database, compteurDao, dateInfoDao);
 
-            comptageDao.readAll();
+            quartierDao.readAll();
             dateInfoDao.readAll();
             compteurDao.readAll();
-            quartierDao.readAll();
+            comptageDao.readAll();
             
-            ArrayList<Comptage> comptages = comptageDao.getAll();
-            ArrayList<Compteur> compteurs = compteurDao.getAll();
-            ArrayList<DateInfo> dateInfos = dateInfoDao.getAll();
-            ArrayList<Quartier> quartiers = quartierDao.getAll();
+            ArrayList<Quartier> lesQuartiers = quartierDao.getAll();
+            ArrayList<DateInfo> lesDates = dateInfoDao.getAll();
+            ArrayList<Compteur> lesCompteurs = compteurDao.getAll();
+            ArrayList<Comptage> lesComptages = comptageDao.getAll();
 
-            for(Quartier quartier : quartiers) {
+            for(Quartier quartier : lesQuartiers) {
                 System.out.println(quartier);
             }
-
-            for(DateInfo dateInfo : dateInfos) {
-                System.out.println(dateInfo);
+            for(DateInfo date : lesDates) {
+                System.out.println(date);
             }
-
-            for(Compteur compteur : compteurs) {
+            for(Compteur compteur : lesCompteurs) {
                 System.out.println(compteur);
             }
-
-            for(Comptage comptage : comptages) {
+            for(Comptage comptage : lesComptages) {
                 System.out.println(comptage);
             }
 
