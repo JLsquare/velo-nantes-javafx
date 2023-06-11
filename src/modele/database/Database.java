@@ -1,4 +1,4 @@
-package modele;
+package modele.database;
 
 import java.sql.*;
 
@@ -21,6 +21,7 @@ public class Database {
 
     /**
      * Default constructor
+     * @param url the url of the database
      */
     public Database(String url) {
         this.URL = url;
@@ -82,6 +83,7 @@ public class Database {
      * Return a PreparedStatement for the read connection
      * @param query the query
      * @return the PreparedStatement
+     * @throws SQLException if the read connection is not open
      */
     public PreparedStatement preparedReadStatment(String query) throws SQLException{
         if(readConnection == null){
@@ -94,6 +96,7 @@ public class Database {
      * Return a PreparedStatement for the write connection
      * @param query the query
      * @return the PreparedStatement
+     * @throws SQLException if the write connection is not open
      */
     public PreparedStatement preparedWriteStatment(String query) throws SQLException{
         if(writeConnection == null){

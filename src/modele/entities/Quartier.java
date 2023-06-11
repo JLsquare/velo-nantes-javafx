@@ -1,6 +1,5 @@
-package modele;
+package modele.entities;
 
-import java.sql.*;
 import java.util.ArrayList;
 
 
@@ -31,18 +30,6 @@ public class Quartier {
         this.idQuartier = idQuartier;
         this.nomQuartier = nomQuartier;
         this.longueurPisteVelo = longueurPisteVelo;
-        this.lesCompteurs = new ArrayList<Compteur>();
-    }
-
-    /**
-     * Constructor with ResultSet
-     * @param rs the ResultSet
-     * @throws SQLException if there is an error with the ResultSet
-     */
-    public Quartier(ResultSet rs) throws SQLException{
-        this.idQuartier = rs.getInt("idQuartier");
-        this.nomQuartier = rs.getString("nomQuartier");
-        this.longueurPisteVelo = rs.getFloat("longueurPisteVelo");
         this.lesCompteurs = new ArrayList<Compteur>();
     }
 
@@ -100,10 +87,11 @@ public class Quartier {
         this.longueurPisteVelo = longueurPisteVelo;
     }
 
-    // ---------------- Methods ---------------- //
+    // ---------------- Add & Remove ---------------- //
 
     /**
      * Add a Compteur to the Quartier
+     * @param compteur the Compteur to add
      */
     public void addCompteur(Compteur compteur){
         this.lesCompteurs.add(compteur);
@@ -117,39 +105,124 @@ public class Quartier {
         this.lesCompteurs.remove(compteur);
     }
 
+    // ---------------- Methods ---------------- //
+
     /**
      * To String method
      * @return the String of the Quartier
      */
     public String toString() {
-        String string = "Quartier(" + this.idQuartier + ", " + this.nomQuartier + ", " + this.longueurPisteVelo + ", " + this.totalPassage() + ", " + this.averagePassages() + ')';
-        return string;
+        String ret = "Quartier(";
+        ret += "idQuartier : " + this.idQuartier + ", ";
+        ret += "nomQuartier : " + this.nomQuartier + ", ";
+        ret += "longueurPisteVelo : " + this.longueurPisteVelo + ", ";
+        ret += "totalPassages : " + this.totalPassages(null) + ", ";
+        ret += "averagePassages : " + this.averagePassages(null) + ")";
+        return ret;
     }
 
     /**
      * Compute the total passage of the Quartier
+     * @param laDate the date to compute, if null, compute for all dates
      * @return the total passage of the Quartier
      */
-    public int totalPassage(){
+    public int totalPassages(DateInfo laDate){
         int total = 0;
         for(Compteur compteur : this.lesCompteurs){
-            total += compteur.totalPassage();
+            total += compteur.totalPassages(laDate);
         }
         return total;
     }
 
     /**
      * Compute the average passage of the Quartier
+     * @param laDate the date to compute, if null, compute for all dates
      * @return the average passage of the Quartier
      */
-    public float averagePassages(){
+    public float averagePassages(DateInfo laDate){
         float total = 0;
         for(Compteur compteur : this.lesCompteurs){
-            total += compteur.averagePassages();
+            total += compteur.averagePassages(laDate);
         }
         int nbCompteurs = this.lesCompteurs.size();
         if(nbCompteurs != 0){
             total /= nbCompteurs;
+        }
+        return total;
+    }
+
+    /**
+     * Compute the total passage per hour of the Quartier
+     * @param laDate the date to compute, if null, compute for all dates
+     * @return the total passage per hour of the Quartier
+     */
+    public int[] totalPassagesPerHour(DateInfo laDate){
+        int[] total = new int[24];
+        for(Compteur compteur : this.lesCompteurs){
+            int[] totalCompteur = compteur.totalPassagesPerHour(laDate);
+            for(int i = 0; i < 24; i++){
+                total[i] += totalCompteur[i];
+            }
+        }
+        return total;
+    }
+
+    /**
+     * Compute the average passage per hour of the Quartier
+     * @param laDate the date to compute, if null, compute for all dates
+     * @return the average passage per hour of the Quartier
+     */
+    public float[] averagePassagesPerHour(DateInfo laDate){
+        float[] total = new float[24];
+        for(Compteur compteur : this.lesCompteurs){
+            float[] totalCompteur = compteur.averagePassagesPerHour(laDate);
+            for(int i = 0; i < 24; i++){
+                total[i] += totalCompteur[i];
+            }
+        }
+        int nbCompteurs = this.lesCompteurs.size();
+        if(nbCompteurs != 0){
+            for(int i = 0; i < 24; i++){
+                total[i] /= nbCompteurs;
+            }
+        }
+        return total;
+    }
+
+    /**
+     * Compute the total passage per day of the Quartier
+     * @param laDate the date to compute, if null, compute for all dates
+     * @return the total passage per day of the Quartier
+     */
+    public int[] totalPassagesPerDay(DateInfo laDate){
+        int[] total = new int[7];
+        for(Compteur compteur : this.lesCompteurs){
+            int[] totalCompteur = compteur.totalPassagesPerDay(laDate);
+            for(int i = 0; i < 7; i++){
+                total[i] += totalCompteur[i];
+            }
+        }
+        return total;
+    }
+
+    /**
+     * Compute the average passage per day of the Quartier
+     * @param laDate the date to compute, if null, compute for all dates
+     * @return the average passage per day of the Quartier
+     */
+    public float[] averagePassagesPerDay(DateInfo laDate){
+        float[] total = new float[7];
+        for(Compteur compteur : this.lesCompteurs){
+            float[] totalCompteur = compteur.averagePassagesPerDay(laDate);
+            for(int i = 0; i < 7; i++){
+                total[i] += totalCompteur[i];
+            }
+        }
+        int nbCompteurs = this.lesCompteurs.size();
+        if(nbCompteurs != 0){
+            for(int i = 0; i < 7; i++){
+                total[i] /= nbCompteurs;
+            }
         }
         return total;
     }

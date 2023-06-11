@@ -1,4 +1,4 @@
-package modele;
+package modele.entities;
 
 /**
  * The PresenceAnomalie enum which represents the presence of an anomaly in the data

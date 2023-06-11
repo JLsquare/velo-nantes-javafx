@@ -1,4 +1,4 @@
-package modele;
+package modele.entities;
 
 /**
  * The Vacances enum which represents the holidays in the data

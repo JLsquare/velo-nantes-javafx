@@ -1,10 +1,10 @@
-package modele;
+package modele.dao;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+
+import modele.database.Database;
+import modele.entities.*;
 
 /**
  * Class ComptageDao to implement the DAO pattern for Comptage
@@ -24,6 +24,8 @@ public class ComptageDao implements IDao<Comptage>{
     /**
      * Constructor of ComptageDao
      * @param db the database
+     * @param compteurDao the CompteurDao to use
+     * @param dateInfoDao the DateInfoDao to use
      */
     public ComptageDao(Database db, CompteurDao compteurDao, DateInfoDao dateInfoDao) {
         this.database = db;
@@ -35,16 +37,17 @@ public class ComptageDao implements IDao<Comptage>{
     // ---------------- Getters and Setters ---------------- //
 
     /**
-     * Get a Comptage by its id
-     * @param id the id of the Comptage
+     * Get a Comptage by it's DateInfo and Compteur
+     * @param laDate the DateInfo of the Comptage
+     * @param leCompteur the Compteur of the Comptage 
      * @return the Comptage
      */
-    public Comptage get(Date laDate, int leCompteur) {
+    public Comptage get(DateInfo laDate, Compteur leCompteur) {
         Comptage comptage = null;
         boolean found = false;
         int i = 0;
         while(!found && i < lesComptages.size()) {
-            if(lesComptages.get(i).getLaDate().equals(laDate) && lesComptages.get(i).getLeCompteur() == leCompteur) {
+            if(lesComptages.get(i).getLaDate() == laDate && lesComptages.get(i).getLeCompteur() == leCompteur) {
                 comptage = lesComptages.get(i);
                 found = true;
             }
@@ -65,68 +68,90 @@ public class ComptageDao implements IDao<Comptage>{
 
     /**
      * Get all the Comptage from the database
+     * @throws SQLException if an error occurs
      */
     public void readAll() throws SQLException {
-        PreparedStatement preparedStatement = database.preparedReadStatment("SELECT * FROM COMPTAGE");
-        ResultSet rs = preparedStatement.executeQuery();
+        PreparedStatement ps = database.preparedReadStatment("SELECT * FROM COMPTAGE");
+        ResultSet rs = ps.executeQuery();
         while(rs.next()) {
-            Comptage comptage = new Comptage(rs);
+            int[] passages = new int[24];
+            for(int i = 0; i < 24; i++) {
+                passages[i] = rs.getInt("h" + String.format("%02d", i));            
+            }
+            PresenceAnomalie anomalie;
+            if(rs.getString("presenceAnomalie") != null){
+                anomalie = PresenceAnomalie.valueOf(rs.getString("presenceAnomalie"));
+            } else {
+                anomalie = PresenceAnomalie.Nulle;
+            }
+            Compteur leCompteur = compteurDao.get(rs.getInt("leCompteur"));
+            DateInfo laDate = dateInfoDao.get(rs.getDate("dateComptage"));
+            Comptage comptage = new Comptage(passages, anomalie, leCompteur, laDate);
+
             this.lesComptages.add(comptage);
-            this.compteurDao.get(comptage.getLeCompteur()).addComptage(comptage);
-            this.dateInfoDao.get(comptage.getLaDate()).addComptage(comptage);
+            leCompteur.addComptage(comptage);
+            laDate.addComptage(comptage);
         }
+        rs.close();
     }
 
     /**
      * Add a Comptage to the database
      * @param comptage the Comptage to add
+     * @throws SQLException if an error occurs
      */
     public void add(Comptage comptage) throws SQLException {
-        StringBuilder query = new StringBuilder("INSERT INTO COMPTAGE VALUES(?, ?, ");
+        String query = "INSERT INTO COMPTAGE VALUES(?, ?, ";
         for(int i = 0; i < 24; i++) {
-            query.append("?, ");
+            query += "?, ";
         }
-        query.append("?)");
-        PreparedStatement preparedStatement = database.preparedWriteStatment(query.toString());
-        preparedStatement.setInt(1, comptage.getLeCompteur());
-        preparedStatement.setDate(2, comptage.getLaDate());
+        query += "?)";
+        PreparedStatement ps = database.preparedWriteStatment(query.toString());
+        ps.setInt(1, comptage.getLeCompteur().getIdCompteur());
+        ps.setDate(2, comptage.getLaDate().getLaDate());
         for(int i = 0; i < 24; i++) {
-            preparedStatement.setInt(i + 3, comptage.getPassages()[i]);
+            ps.setInt(i + 3, comptage.getPassages()[i]);
         }
-        preparedStatement.setObject(27, comptage.getAnomalie());
-        preparedStatement.executeUpdate();
+        ps.setObject(27, comptage.getAnomalie());
+        ps.executeUpdate();
+        ps.close();
+
     }
 
     /**
      * Remove a Comptage from the database
      * @param comptage the Comptage to remove
+     * @throws SQLException if an error occurs
      */
     public void remove(Comptage comptage) throws SQLException {
         String query = "DELETE FROM COMPTAGE WHERE leCompteur = ? AND dateComptage = ?";
-        PreparedStatement preparedStatement = database.preparedWriteStatment(query);
-        preparedStatement.setInt(1, comptage.getLeCompteur());
-        preparedStatement.setDate(2, comptage.getLaDate());
-        preparedStatement.executeUpdate();
+        PreparedStatement ps = database.preparedWriteStatment(query);
+        ps.setInt(1, comptage.getLeCompteur().getIdCompteur());
+        ps.setDate(2, comptage.getLaDate().getLaDate());
+        ps.executeUpdate();
+        ps.close();
     }
 
     /**
      * Update a Comptage from the database
      * @param comptage the Comptage to update
+     * @throws SQLException if an error occurs
      */
     public void update(Comptage comptage) throws SQLException {
-        StringBuilder query = new StringBuilder("UPDATE COMPTAGE SET ");
+        String query = "UPDATE COMPTAGE SET ";
         for(int i = 0; i < 24; i++){
-            query.append("h").append(String.format("%02d", i)).append(" = ?, ");
+            query += "h" + String.format("%02d", i) + " = ?, ";
         }
-        query.append("anomalie = ? ");
-        query.append(" WHERE leCompteur = ? AND dateComptage = ?");
-        PreparedStatement preparedStatement = database.preparedWriteStatment(query.toString());
+        query += "anomalie = ? ";
+        query += " WHERE leCompteur = ? AND dateComptage = ?";
+        PreparedStatement ps = database.preparedWriteStatment(query);
         for(int i = 0; i < 24; i++){
-            preparedStatement.setInt(i + 1, comptage.getPassage(i));
+            ps.setInt(i + 1, comptage.getPassage(i));
         }
-        preparedStatement.setString(25, comptage.getAnomalie().toString());
-        preparedStatement.setInt(26, comptage.getLeCompteur());
-        preparedStatement.setDate(27, comptage.getLaDate());
-        preparedStatement.executeUpdate();
+        ps.setString(25, comptage.getAnomalie().toString());
+        ps.setInt(26, comptage.getLeCompteur().getIdCompteur());
+        ps.setDate(27, comptage.getLaDate().getLaDate());
+        ps.executeUpdate();
+        ps.close();
     }
 }

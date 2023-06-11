@@ -1,6 +1,6 @@
-package modele;
+package modele.entities;
 
-import java.sql.*;
+import java.util.Arrays;
 
 /**
  * The Comptage class which represents the Comptage table in the database
@@ -12,8 +12,8 @@ public class Comptage{
 
     private int[] passages;
     private PresenceAnomalie anomalie;
-    private int leCompteur;
-    private Date laDate;
+    private Compteur leCompteur;
+    private DateInfo laDate;
 
     // ---------------- Constructors ---------------- //
 
@@ -24,7 +24,7 @@ public class Comptage{
      * @param leCompteur the Compteur
      * @param laDate the DateInfo
      */
-    public Comptage(int[] passages, PresenceAnomalie anomalie, int leCompteur, Date laDate) throws NullPointerException {
+    public Comptage(int[] passages, PresenceAnomalie anomalie, Compteur leCompteur, DateInfo laDate) throws NullPointerException {
         if(passages == null || anomalie == null){
             throw new NullPointerException("passages or anomalie is null");
         }
@@ -32,25 +32,6 @@ public class Comptage{
         this.anomalie = anomalie;
         this.leCompteur = leCompteur;
         this.laDate = laDate;
-    }
-
-    /**
-     * Constructor with ResultSet
-     * @param rs the ResultSet
-     * @throws SQLException if there is an error with the ResultSet
-     */
-    public Comptage(ResultSet rs) throws SQLException {
-        this.passages = new int[24];
-        for(int i = 0; i < 24; i++){
-            this.passages[i] = rs.getInt("h" + String.format("%02d", i));
-        }
-        if(rs.getString("presenceAnomalie") != null){
-            this.anomalie = PresenceAnomalie.valueOf(rs.getString("presenceAnomalie"));
-        } else {
-            this.anomalie = PresenceAnomalie.Nulle;
-        }
-        this.leCompteur = rs.getInt("leCompteur");
-        this.laDate = rs.getDate("dateComptage");
     }
 
     // ---------------- Getters & Setters ---------------- //
@@ -66,6 +47,7 @@ public class Comptage{
 
     /**
      * Set the number of passages
+     * @param heure the hour
      * @param passages the number of passages
      */
     public void setPassage(int heure, int passages) {
@@ -108,7 +90,7 @@ public class Comptage{
      * Get the Compteur
      * @return the Compteur
      */
-    public int getLeCompteur() {
+    public Compteur getLeCompteur() {
         return leCompteur;
     }
 
@@ -116,7 +98,7 @@ public class Comptage{
      * Set the Compteur
      * @param leCompteur the Compteur
      */
-    public void setLeCompteur(int leCompteur) {
+    public void setLeCompteur(Compteur leCompteur) {
         this.leCompteur = leCompteur;
     }
 
@@ -124,7 +106,7 @@ public class Comptage{
      * Get the DateInfo
      * @return the DateInfo
      */
-    public Date getLaDate() {
+    public DateInfo getLaDate() {
         return laDate;
     }
 
@@ -132,7 +114,7 @@ public class Comptage{
      * Set the DateInfo
      * @param laDate the DateInfo
      */
-    public void setLaDate(Date laDate) {
+    public void setLaDate(DateInfo laDate) {
         this.laDate = laDate;
     }
 
@@ -143,12 +125,12 @@ public class Comptage{
      * @return the String
      */
     public String toString(){
-        String str = "Comptage(" + this.laDate + ", " + this.leCompteur + ", " + this.anomalie.name() + ", " + this.totalPassages() + ", " + this.averagePassages() + ", ";
-        for(int i = 0; i < 24; i++){
-            str += this.passages[i] + ", ";
-        }
-        str = str.substring(0, str.length() - 2) + ")";
-        return str;
+        String ret = "Comptage(";
+        ret += "laDate : " + this.laDate.getLaDate() + ", ";
+        ret += "leCompteur : " + this.leCompteur.getIdCompteur() + ", ";
+        ret += "anomalie : " + this.anomalie.name() + ", ";
+        ret += "passages : " + Arrays.toString(this.passages) + ")";
+        return ret;
     }
 
     /**

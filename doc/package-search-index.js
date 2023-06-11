@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"modele"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"modele.dao"},{"l":"modele.database"},{"l":"modele.entities"}]

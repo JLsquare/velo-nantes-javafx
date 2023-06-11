@@ -1,4 +1,4 @@
-package modele;
+package modele.entities;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -27,28 +27,11 @@ public class DateInfo {
      * @param jour the day
      * @param vacances the holidays
      */
-    public DateInfo(Date laDate, float tempMoy, String jour, String vacances) {
+    public DateInfo(Date laDate, float tempMoy, Jour jour, Vacances vacances) {
         this.laDate = laDate;
         this.tempMoy = tempMoy;
-        this.jour = Jour.valueOf(vacances);
-        this.vacances = Vacances.valueOf(vacances);
-        this.lesComptages = new ArrayList<Comptage>();
-    }
-
-    /**
-     * Constructor with ResultSet
-     * @param rs the ResultSet
-     * @throws SQLException if there is an error with the ResultSet
-     */
-    public DateInfo(ResultSet rs) throws SQLException {
-        this.laDate = rs.getDate("laDate");
-        this.tempMoy = rs.getFloat("tempMoy");
-        this.jour = Jour.valueOf(rs.getString("jour"));
-        if(rs.getString("vacances") != null){
-            this.vacances = Vacances.valueOf(rs.getString("vacances"));
-        }else{
-            this.vacances = Vacances.Nulle;
-        }
+        this.jour = jour;
+        this.vacances = vacances;
         this.lesComptages = new ArrayList<Comptage>();
     }
 
@@ -118,21 +101,38 @@ public class DateInfo {
         this.vacances = vacances;
     }
 
-    // ---------------- Methods ---------------- //
+    // ---------------- Add & Remove ---------------- //
 
     /**
      * Add a Comptage to the DateInfo
+     * @param comptage the Comptage
      */
-    public void addComptage(Comptage c){
-        this.lesComptages.add(c);
+    public void addComptage(Comptage comptage){
+        this.lesComptages.add(comptage);
     }
+
+    /**
+     * Remove a Comptage to the DateInfo
+     * @param comptage the Comptage
+     */
+    public void removeComptage(Comptage comptage){
+        this.lesComptages.remove(comptage);
+    }
+
+    // ---------------- Methods ---------------- //
 
     /**
      * Get the String representation of the DateInfo
      * @return the String representation of the DateInfo
      */
     public String toString(){
-        String ret = "DateInfo(" + this.laDate + ", " + this.tempMoy + ", " + this.jour.name() + ", " + this.vacances.name() + ", " + this.totalPassage() + ", " + this.averagePassages() + ")";
+        String ret = "DateInfo(";
+        ret += "laDate : " + this.laDate + ", ";
+        ret += "tempMoy : " + this.tempMoy + ", ";
+        ret += "jour : " + this.jour.name() + ", ";
+        ret += "vacances : " + this.vacances.name() + ", ";
+        ret += "totalPassages : " + this.totalPassage() + ", ";
+        ret += "averagePassages : " + this.averagePassages() + ")";
         return ret;
     }
 
@@ -160,6 +160,42 @@ public class DateInfo {
         int nbComptages = this.lesComptages.size();
         if(nbComptages != 0){
             total /= nbComptages;
+        }
+        return total;
+    }
+    
+    /**
+     * Compute the total passage per hour of the DateInfo
+     * @return the total passage per hour of the DateInfo
+     */
+    public int[] totalPassagesPerHour(){
+        int[] total = new int[24];
+        for(Comptage c : this.lesComptages){
+            int[] totalComptage = c.getPassages();
+            for(int i = 0; i < 24; i++){
+                total[i] += totalComptage[i];
+            }
+        }
+        return total;
+    }
+
+    /**
+     * Compute the average passage per hour of the DateInfo
+     * @return the average passage per hour of the DateInfo
+     */
+    public float[] averagePassagesPerHour(){
+        float[] total = new float[24];
+        for(Comptage c : this.lesComptages){
+            int[] totalComptage = c.getPassages();
+            for(int i = 0; i < 24; i++){
+                total[i] += totalComptage[i];
+            }
+        }
+        int nbComptages = this.lesComptages.size();
+        if(nbComptages != 0){
+            for(int i = 0; i < 24; i++){
+                total[i] /= nbComptages;
+            }
         }
         return total;
     }

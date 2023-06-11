@@ -1,4 +1,4 @@
-package modele;
+package modele.entities;
 
 /**
  * The Jour enum which represents the day of the week

@@ -1,9 +1,12 @@
-package modele;
+package modele.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import modele.database.Database;
+import modele.entities.*;
 
 /**
  * Class CompteurDao to implement the DAO pattern for Compteur
@@ -22,7 +25,7 @@ public class CompteurDao implements IDao<Compteur> {
     /**
      * Constructor of CompteurDao
      * @param db the database
-     * @param comptageDao the ComptageDao to use
+     * @param quartierDao the QuartierDao to use
      */
     public CompteurDao(Database db, QuartierDao quartierDao) {
         this.database = db;
@@ -34,7 +37,7 @@ public class CompteurDao implements IDao<Compteur> {
 
     /**
      * Get a Compteur by its id
-     * @param id the id of the Compteur
+     * @param leCompteur the id of the Compteur
      * @return the Compteur
      */
     public Compteur get(int leCompteur) {
@@ -63,35 +66,40 @@ public class CompteurDao implements IDao<Compteur> {
 
     /**
      * Read all the Compteur from the database
+     * @throws SQLException if an error occurs
      */
     public void readAll() throws SQLException {
-        PreparedStatement preparedStatement = database.preparedReadStatment("SELECT * FROM COMPTEUR");
-        ResultSet rs = preparedStatement.executeQuery();
+        PreparedStatement ps = database.preparedReadStatment("SELECT * FROM COMPTEUR");
+        ResultSet rs = ps.executeQuery();
         while(rs.next()) {
-            Compteur compteur = new Compteur(rs);
+            int idCompteur = rs.getInt("idCompteur");
+            String nomCompteur = rs.getString("nomCompteur");
+            String sens = rs.getString("sens");
+            float coordX = rs.getFloat("coord_x");
+            float coordY = rs.getFloat("coord_y");
+            Quartier leQuartier = quartierDao.get(rs.getInt("leQuartier"));
+            Compteur compteur = new Compteur(idCompteur, nomCompteur, sens, coordX, coordY, leQuartier);
+
             this.lesCompteurs.add(compteur);
-            try {
-                this.quartierDao.get(compteur.getLeQuartier()).addCompteur(compteur);
-            } catch (NullPointerException e) {
-                System.out.println("Le quartier " + compteur.getLeQuartier() + " n'existe pas");
-            }
+            leQuartier.addCompteur(compteur);
         }
     }
 
     /**
      * Add a Compteur to the database
      * @param compteur the Compteur to add
+     * @throws SQLException if an error occurs
      */
     public void add(Compteur compteur) throws SQLException {
         String query = "INSERT INTO COMPTEUR VALUES(?, ?, ?, ?, ?, ?)";
-        PreparedStatement preparedStatement = database.preparedReadStatment(query);
-        preparedStatement.setInt(1, compteur.getIdCompteur());
-        preparedStatement.setString(2, compteur.getNomCompteur());
-        preparedStatement.setString(3, compteur.getSens());
-        preparedStatement.setFloat(4, compteur.getCoordX());
-        preparedStatement.setFloat(5, compteur.getCoordY());
-        preparedStatement.setInt(6, compteur.getLeQuartier());
-        preparedStatement.executeUpdate();
+        PreparedStatement ps = database.preparedReadStatment(query);
+        ps.setInt(1, compteur.getIdCompteur());
+        ps.setString(2, compteur.getNomCompteur());
+        ps.setString(3, compteur.getSens());
+        ps.setFloat(4, compteur.getCoordX());
+        ps.setFloat(5, compteur.getCoordY());
+        ps.setInt(6, compteur.getLeQuartier().getIdQuartier());
+        ps.executeUpdate();
     }
 
     /**
@@ -100,24 +108,25 @@ public class CompteurDao implements IDao<Compteur> {
      */
     public void remove(Compteur compteur) throws SQLException {
         String query = "DELETE FROM COMPTEUR WHERE idCompteur = ?";
-        PreparedStatement preparedStatement = database.preparedWriteStatment(query);
-        preparedStatement.setInt(1, compteur.getIdCompteur());
-        preparedStatement.executeUpdate();
+        PreparedStatement ps = database.preparedWriteStatment(query);
+        ps.setInt(1, compteur.getIdCompteur());
+        ps.executeUpdate();
     }
 
     /**
      * Update a Compteur from the database
      * @param compteur the Compteur to update
+     * @throws SQLException if an error occurs
      */
     public void update(Compteur compteur) throws SQLException {
         String query = "UPDATE COMPTEUR SET nomCompteur = ?, sens = ?, coordX = ?, coordY = ?, leQuartier = ? WHERE idCompteur = ?";
-        PreparedStatement preparedStatement = database.preparedWriteStatment(query);
-        preparedStatement.setString(1, compteur.getNomCompteur());
-        preparedStatement.setString(2, compteur.getSens());
-        preparedStatement.setFloat(3, compteur.getCoordX());
-        preparedStatement.setFloat(4, compteur.getCoordY());
-        preparedStatement.setInt(5, compteur.getLeQuartier());
-        preparedStatement.setInt(6, compteur.getIdCompteur());
-        preparedStatement.executeUpdate();
+        PreparedStatement ps = database.preparedWriteStatment(query);
+        ps.setString(1, compteur.getNomCompteur());
+        ps.setString(2, compteur.getSens());
+        ps.setFloat(3, compteur.getCoordX());
+        ps.setFloat(4, compteur.getCoordY());
+        ps.setInt(5, compteur.getLeQuartier().getIdQuartier());
+        ps.setInt(6, compteur.getIdCompteur());
+        ps.executeUpdate();
     }
 }

@@ -40,6 +40,10 @@ public class TestDatabase {
             }
 
             database.closeReadConnection();
+
+            /*while(true){
+                // Do nothing (for checking ram usage)
+            }*/
         } catch (SQLException e) {
             System.out.println("Error with the database");
             System.out.println(e.getMessage());

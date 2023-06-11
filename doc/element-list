@@ -1,2 +1,4 @@
 unnamed package
-modele
+modele.dao
+modele.database
+modele.entities

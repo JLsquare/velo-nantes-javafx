@@ -1,4 +1,4 @@
-package modele;
+package modele.dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,24 +18,28 @@ public interface IDao<T> {
 
     /**
      * Read all the T from the database
+     * @throws SQLException if an error occurs
      */
     public void readAll() throws SQLException;
 
     /**
      * Add a T to the database
      * @param t the T to add
+     * @throws SQLException if an error occurs
      */
     public void add(T t) throws SQLException;
 
     /**
      * Remove a T from the database
      * @param t the T to remove
+     * @throws SQLException if an error occurs
      */
     public void remove(T t) throws SQLException;
 
     /**
      * Update a T from the database
      * @param t the T to update
+     * @throws SQLException if an error occurs
      */
     public void update(T t) throws SQLException;
 }
