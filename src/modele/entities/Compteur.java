@@ -1,5 +1,6 @@
 package modele.entities;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -176,47 +177,62 @@ public class Compteur{
 
     /**
      * To String method
+     * Use a StringBuilder to concatenate String
      * @return the String of the Compteur
      */
     public String toString() {
-        String ret = "Compteur(";
-        ret += "idCompteur : " + this.idCompteur + ", ";
-        ret += "nomCompteur : " + this.nomCompteur + ", ";
-        ret += "sens : " + this.sens + ", ";
-        ret += "coordX : " + this.coordX + ", ";
-        ret += "coordY : " + this.coordY + ", ";
-        ret += "leQuartier : " + this.leQuartier.getIdQuartier() + ", ";
-        ret += "totalPassages : " + this.totalPassages(null) + ", ";
-        ret += "averagePassages : " + this.averagePassages(null) + ")";
-        return ret;
+        StringBuilder ret = new StringBuilder("Compteur(");
+        ret.append("idCompteur : ").append(this.idCompteur).append(", ");
+        ret.append("nomCompteur : ").append(this.nomCompteur).append(", ");
+        ret.append("sens : ").append(this.sens).append(", ");
+        ret.append("coordX : ").append(this.coordX).append(", ");
+        ret.append("coordY : ").append(this.coordY).append(", ");
+        ret.append("leQuartier : ").append(this.leQuartier.getIdQuartier()).append(")");
+        return ret.toString();
     }
+
 
     /**
      * Compute the total passage of the Compteur
-     * @param laDate the date to compute, if null compute for all dates
+     * @param dateDebut the start date to compute
+     * @param dateFin the end date to compute
      * @return the total passage of the Compteur
+     * @throws IllegalArgumentException if dateDebut or dateFin is null
      */
-    public int totalPassages(DateInfo laDate){
+    public int totalPassages(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
+        if(dateDebut == null || dateFin == null){
+            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        }
         int total = 0;
+        Date debut = dateDebut.getDate();
+        Date fin = dateFin.getDate();
         for(Comptage c : this.lesComptages){
-            if(c.getLaDate() == laDate || laDate == null){
+            Date date = c.getLaDate().getDate();
+            if((date.after(debut) && date.before(fin))){
                 total += c.totalPassages();
             }
-            total += c.totalPassages();
         }
         return total;
     }
 
     /**
      * Compute the average passage of the Compteur
-     * @param laDate the date to compute, if null compute for all dates
+     * @param dateDebut the start date to compute
+     * @param dateFin the end date to compute
      * @return the average passage of the Compteur
+     * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
-    public float averagePassages(DateInfo laDate){
+    public float averagePassages(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException{
+        if(dateDebut == null || dateFin == null){
+            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        }
         float total = 0;
         int nbComptages = 0;
+        Date debut = dateDebut.getDate();
+        Date fin = dateFin.getDate();
         for(Comptage c : this.lesComptages){
-            if(c.getLaDate() == laDate || laDate == null){
+            Date date = c.getLaDate().getDate();
+            if(date.after(debut) && date.before(fin)){
                 nbComptages++;
                 total += c.averagePassages();
             }
@@ -227,15 +243,24 @@ public class Compteur{
         return total;
     }
 
+
     /**
      * Compute the total passage per hour of the Compteur
-     * @param laDate the date to compute, if null compute for all dates
+     * @param dateDebut the start date to compute
+     * @param dateFin the end date to compute
      * @return the total passage per hour of the Compteur
+     * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
-    public int[] totalPassagesPerHour(DateInfo laDate){
+    public int[] totalPassagesPerHour(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
+        if(dateDebut == null || dateFin == null){
+            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        }
         int[] total = new int[24];
+        Date debut = dateDebut.getDate();
+        Date fin = dateFin.getDate();
         for(Comptage c : this.lesComptages){
-            if(c.getLaDate() == laDate || laDate == null){
+            Date date = c.getLaDate().getDate();
+            if(date.after(debut) && date.before(fin)){
                 int[] passages = c.getPassages();
                 for(int i = 0; i < 24; i++){
                     total[i] += passages[i];
@@ -243,18 +268,26 @@ public class Compteur{
             }
         }
         return total;
-    } 
+    }
 
     /**
      * Compute the average passage per hour of the Compteur
-     * @param laDate the date to compute, if null compute for all dates
+     * @param dateDebut the start date to compute
+     * @param dateFin the end date to compute
      * @return the average passage per hour of the Compteur
+     * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
-    public float[] averagePassagesPerHour(DateInfo laDate){
+    public float[] averagePassagesPerHour(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
+        if(dateDebut == null || dateFin == null){
+            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        }
         float[] total = new float[24];
         int nbComptages = 0;
+        Date debut = dateDebut.getDate();
+        Date fin = dateFin.getDate();
         for(Comptage c : this.lesComptages){
-            if(c.getLaDate() == laDate || laDate == null){
+            Date date = c.getLaDate().getDate();
+            if(date.after(debut) && date.before(fin)){
                 nbComptages++;
                 int[] passages = c.getPassages();
                 for(int i = 0; i < 24; i++){
@@ -270,15 +303,24 @@ public class Compteur{
         return total;
     }
 
+
     /**
      * Compute the total passage per day of the Compteur
-     * @param laDate the date to compute, if null compute for all dates
+     * @param dateDebut the start date to compute
+     * @param dateFin the end date to compute
      * @return the total passage per day of the Compteur
+     * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
-    public int[] totalPassagesPerDay(DateInfo laDate){
+    public int[] totalPassagesPerDay(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
+        if(dateDebut == null || dateFin == null){
+            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        }
         int[] total = new int[7];
+        Date debut = dateDebut.getDate();
+        Date fin = dateFin.getDate();
         for(Comptage c : this.lesComptages){
-            if(c.getLaDate() == laDate || laDate == null){
+            Date date = c.getLaDate().getDate();
+            if(date.after(debut) && date.before(fin)){
                 int[] passages = c.getPassages();
                 Jour jour = c.getLaDate().getJour();
                 for(int i = 0; i < 24; i++){
@@ -289,16 +331,25 @@ public class Compteur{
         return total;
     }
 
+
     /**
      * Compute the average passage per day of the Compteur
-     * @param laDate the date to compute, if null compute for all dates
+     * @param dateDebut the start date to compute
+     * @param dateFin the end date to compute
      * @return the average passage per day of the Compteur
+     * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
-    public float[] averagePassagesPerDay(DateInfo laDate){
+    public float[] averagePassagesPerDay(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
+        if(dateDebut == null || dateFin == null){
+            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        }
         float[] total = new float[7];
         int nbComptages = 0;
+        Date debut = dateDebut.getDate();
+        Date fin = dateFin.getDate();
         for(Comptage c : this.lesComptages){
-            if(c.getLaDate() == laDate || laDate == null){
+            Date date = c.getLaDate().getDate();
+            if(date.after(debut) && date.before(fin)){
                 nbComptages++;
                 int[] passages = c.getPassages();
                 Jour jour = c.getLaDate().getJour();

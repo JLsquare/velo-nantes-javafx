@@ -109,40 +109,51 @@ public class Quartier {
 
     /**
      * To String method
+     * Use a StringBuilder to concatenate String
      * @return the String of the Quartier
      */
     public String toString() {
-        String ret = "Quartier(";
-        ret += "idQuartier : " + this.idQuartier + ", ";
-        ret += "nomQuartier : " + this.nomQuartier + ", ";
-        ret += "longueurPisteVelo : " + this.longueurPisteVelo + ", ";
-        ret += "totalPassages : " + this.totalPassages(null) + ", ";
-        ret += "averagePassages : " + this.averagePassages(null) + ")";
-        return ret;
+        StringBuilder ret = new StringBuilder("Quartier(");
+        ret.append("idQuartier : ").append(this.idQuartier).append(", ");
+        ret.append("nomQuartier : ").append(this.nomQuartier).append(", ");
+        ret.append("longueurPisteVelo : ").append(this.longueurPisteVelo).append(")");
+        return ret.toString();
     }
+
 
     /**
      * Compute the total passage of the Quartier
-     * @param laDate the date to compute, if null, compute for all dates
+     * @param dateDebut the start date to compute
+     * @param dateFin the end date to compute
      * @return the total passage of the Quartier
+     * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
-    public int totalPassages(DateInfo laDate){
+    public int totalPassages(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
+        if(dateDebut == null || dateFin == null){
+            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        }
         int total = 0;
         for(Compteur compteur : this.lesCompteurs){
-            total += compteur.totalPassages(laDate);
+            total += compteur.totalPassages(dateDebut, dateFin);
         }
         return total;
     }
 
+
     /**
      * Compute the average passage of the Quartier
-     * @param laDate the date to compute, if null, compute for all dates
+     * @param dateDebut the start date to compute
+     * @param dateFin the end date to compute
      * @return the average passage of the Quartier
+     * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
-    public float averagePassages(DateInfo laDate){
+    public float averagePassages(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
+        if(dateDebut == null || dateFin == null){
+            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        }
         float total = 0;
         for(Compteur compteur : this.lesCompteurs){
-            total += compteur.averagePassages(laDate);
+            total += compteur.averagePassages(dateDebut, dateFin);
         }
         int nbCompteurs = this.lesCompteurs.size();
         if(nbCompteurs != 0){
@@ -151,31 +162,43 @@ public class Quartier {
         return total;
     }
 
+
     /**
      * Compute the total passage per hour of the Quartier
-     * @param laDate the date to compute, if null, compute for all dates
+     * @param dateDebut the start date to compute
+     * @param dateFin the end date to compute
      * @return the total passage per hour of the Quartier
+     * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
-    public int[] totalPassagesPerHour(DateInfo laDate){
+    public int[] totalPassagesPerHour(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
+        if(dateDebut == null || dateFin == null){
+            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        }
         int[] total = new int[24];
         for(Compteur compteur : this.lesCompteurs){
-            int[] totalCompteur = compteur.totalPassagesPerHour(laDate);
+            int[] totalCompteur = compteur.totalPassagesPerHour(dateDebut, dateFin);
             for(int i = 0; i < 24; i++){
                 total[i] += totalCompteur[i];
             }
         }
         return total;
     }
+
 
     /**
      * Compute the average passage per hour of the Quartier
-     * @param laDate the date to compute, if null, compute for all dates
+     * @param dateDebut the start date to compute
+     * @param dateFin the end date to compute
      * @return the average passage per hour of the Quartier
+     * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
-    public float[] averagePassagesPerHour(DateInfo laDate){
+    public float[] averagePassagesPerHour(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
+        if(dateDebut == null || dateFin == null){
+            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        }
         float[] total = new float[24];
         for(Compteur compteur : this.lesCompteurs){
-            float[] totalCompteur = compteur.averagePassagesPerHour(laDate);
+            float[] totalCompteur = compteur.averagePassagesPerHour(dateDebut, dateFin);
             for(int i = 0; i < 24; i++){
                 total[i] += totalCompteur[i];
             }
@@ -188,16 +211,22 @@ public class Quartier {
         }
         return total;
     }
+
 
     /**
      * Compute the total passage per day of the Quartier
-     * @param laDate the date to compute, if null, compute for all dates
+     * @param dateDebut the start date to compute
+     * @param dateFin the end date to compute
      * @return the total passage per day of the Quartier
+     * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
-    public int[] totalPassagesPerDay(DateInfo laDate){
+    public int[] totalPassagesPerDay(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
+        if(dateDebut == null || dateFin == null){
+            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        }
         int[] total = new int[7];
         for(Compteur compteur : this.lesCompteurs){
-            int[] totalCompteur = compteur.totalPassagesPerDay(laDate);
+            int[] totalCompteur = compteur.totalPassagesPerDay(dateDebut, dateFin);
             for(int i = 0; i < 7; i++){
                 total[i] += totalCompteur[i];
             }
@@ -205,15 +234,21 @@ public class Quartier {
         return total;
     }
 
+
     /**
      * Compute the average passage per day of the Quartier
-     * @param laDate the date to compute, if null, compute for all dates
+     * @param dateDebut the start date to compute
+     * @param dateFin the end date to compute
      * @return the average passage per day of the Quartier
+     * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
-    public float[] averagePassagesPerDay(DateInfo laDate){
+    public float[] averagePassagesPerDay(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
+        if(dateDebut == null || dateFin == null){
+            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        }
         float[] total = new float[7];
         for(Compteur compteur : this.lesCompteurs){
-            float[] totalCompteur = compteur.averagePassagesPerDay(laDate);
+            float[] totalCompteur = compteur.averagePassagesPerDay(dateDebut, dateFin);
             for(int i = 0; i < 7; i++){
                 total[i] += totalCompteur[i];
             }
@@ -226,4 +261,5 @@ public class Quartier {
         }
         return total;
     }
+
 }

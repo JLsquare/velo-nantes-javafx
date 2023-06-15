@@ -12,7 +12,7 @@ public class DateInfo {
 
     // ---------------- Attributes ---------------- //
 
-    private Date laDate;
+    private Date date;
     private float tempMoy;
     private Jour jour;
     private Vacances vacances;
@@ -28,7 +28,7 @@ public class DateInfo {
      * @param vacances the holidays
      */
     public DateInfo(Date laDate, float tempMoy, Jour jour, Vacances vacances) {
-        this.laDate = laDate;
+        this.date = laDate;
         this.tempMoy = tempMoy;
         this.jour = jour;
         this.vacances = vacances;
@@ -41,16 +41,16 @@ public class DateInfo {
      * Get the date
      * @return the date
      */
-    public Date getLaDate() {
-        return laDate;
+    public Date getDate() {
+        return date;
     }
 
     /**
      * Set the date
-     * @param laDate the date
+     * @param date the date
      */
-    public void setLaDate(Date laDate) {
-        this.laDate = laDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     /**
@@ -123,16 +123,40 @@ public class DateInfo {
 
     /**
      * Get the String representation of the DateInfo
+     * Use a StringBuilder to concatenate String
      * @return the String representation of the DateInfo
      */
-    public String toString(){
-        String ret = "DateInfo(";
-        ret += "laDate : " + this.laDate + ", ";
-        ret += "tempMoy : " + this.tempMoy + ", ";
-        ret += "jour : " + this.jour.name() + ", ";
-        ret += "vacances : " + this.vacances.name() + ", ";
-        ret += "totalPassages : " + this.totalPassage() + ", ";
-        ret += "averagePassages : " + this.averagePassages() + ")";
+    public String toString() {
+        StringBuilder ret = new StringBuilder("DateInfo(");
+        ret.append("laDate : ").append(this.date).append(", ");
+        ret.append("tempMoy : ").append(this.tempMoy).append(", ");
+        ret.append("jour : ").append(this.jour.name()).append(", ");
+        ret.append("vacances : ").append(this.vacances.name()).append(")");
+        return ret.toString();
+    }
+
+    /**
+     * Check if the DateInfo is in holidays
+     * @return true if the DateInfo is in holidays, false otherwise
+     */
+    public boolean isInVacances(){
+        boolean ret = true;
+        if(this.vacances == Vacances.Nulle){
+            ret = false;
+        }
+        return ret;
+    }
+
+
+    /**
+     * Check if the DateInfo is in weekend
+     * @return true if the DateInfo is in weekend, false otherwise
+     */
+    public boolean isInWeekend(){
+        boolean ret = false;
+        if(this.jour == Jour.Samedi || this.jour == Jour.Dimanche){
+            ret = true;
+        }
         return ret;
     }
 

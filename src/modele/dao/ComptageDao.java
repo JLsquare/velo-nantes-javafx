@@ -108,7 +108,7 @@ public class ComptageDao implements IDao<Comptage>{
         query += "?)";
         PreparedStatement ps = database.preparedWriteStatment(query.toString());
         ps.setInt(1, comptage.getLeCompteur().getIdCompteur());
-        ps.setDate(2, comptage.getLaDate().getLaDate());
+        ps.setDate(2, comptage.getLaDate().getDate());
         for(int i = 0; i < 24; i++) {
             ps.setInt(i + 3, comptage.getPassages()[i]);
         }
@@ -127,7 +127,7 @@ public class ComptageDao implements IDao<Comptage>{
         String query = "DELETE FROM COMPTAGE WHERE leCompteur = ? AND dateComptage = ?";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setInt(1, comptage.getLeCompteur().getIdCompteur());
-        ps.setDate(2, comptage.getLaDate().getLaDate());
+        ps.setDate(2, comptage.getLaDate().getDate());
         ps.executeUpdate();
         ps.close();
     }
@@ -150,7 +150,7 @@ public class ComptageDao implements IDao<Comptage>{
         }
         ps.setString(25, comptage.getAnomalie().toString());
         ps.setInt(26, comptage.getLeCompteur().getIdCompteur());
-        ps.setDate(27, comptage.getLaDate().getLaDate());
+        ps.setDate(27, comptage.getLaDate().getDate());
         ps.executeUpdate();
         ps.close();
     }

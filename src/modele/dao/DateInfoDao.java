@@ -45,7 +45,7 @@ public class DateInfoDao implements IDao<DateInfo> {
         boolean found = false;
         int i = 0;
         while(!found && i < lesDate.size()) {
-            if(lesDate.get(i).getLaDate().equals(laDate)) {
+            if(lesDate.get(i).getDate().equals(laDate)) {
                 dateInfo = lesDate.get(i);
                 found = true;
             }
@@ -95,7 +95,7 @@ public class DateInfoDao implements IDao<DateInfo> {
     public void add(DateInfo dateInfo) throws SQLException {
         String query = "INSERT INTO DATEINFO VALUES(?, ?, ?, ?)";
         PreparedStatement ps = database.preparedWriteStatment(query);
-        ps.setDate(1, dateInfo.getLaDate());
+        ps.setDate(1, dateInfo.getDate());
         ps.setFloat(2, dateInfo.getTempMoy());
         ps.setString(3, dateInfo.getJour().name());
         ps.setString(4, dateInfo.getVacances().name());
@@ -110,7 +110,7 @@ public class DateInfoDao implements IDao<DateInfo> {
     public void remove(DateInfo dateInfo) throws SQLException {
         String query = "DELETE FROM DATEINFO WHERE laDate = ?";
         PreparedStatement ps = database.preparedWriteStatment(query);
-        ps.setDate(1, dateInfo.getLaDate());
+        ps.setDate(1, dateInfo.getDate());
         ps.executeUpdate();
     }
 
@@ -125,7 +125,7 @@ public class DateInfoDao implements IDao<DateInfo> {
         ps.setFloat(1, dateInfo.getTempMoy());
         ps.setString(2, dateInfo.getJour().name());
         ps.setString(3, dateInfo.getVacances().name());
-        ps.setDate(4, dateInfo.getLaDate());
+        ps.setDate(4, dateInfo.getDate());
         ps.executeUpdate();
     }
 

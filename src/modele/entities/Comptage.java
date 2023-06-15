@@ -122,16 +122,18 @@ public class Comptage{
 
     /**
      * To String method
+     * Use a StringBuilder to concatenate String
      * @return the String
      */
-    public String toString(){
-        String ret = "Comptage(";
-        ret += "laDate : " + this.laDate.getLaDate() + ", ";
-        ret += "leCompteur : " + this.leCompteur.getIdCompteur() + ", ";
-        ret += "anomalie : " + this.anomalie.name() + ", ";
-        ret += "passages : " + Arrays.toString(this.passages) + ")";
-        return ret;
+    public String toString() {
+        StringBuilder ret = new StringBuilder("Comptage(");
+        ret.append("laDate : ").append(this.laDate.getDate()).append(", ");
+        ret.append("leCompteur : ").append(this.leCompteur.getIdCompteur()).append(", ");
+        ret.append("anomalie : ").append(this.anomalie.name()).append(", ");
+        ret.append("passages : ").append(Arrays.toString(this.passages)).append(")");
+        return ret.toString();
     }
+
 
     /**
      * Compute the total number of passages
