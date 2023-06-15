@@ -207,7 +207,8 @@ public class Compteur{
         Date debut = dateDebut.getDate();
         Date fin = dateFin.getDate();
         for(Comptage c : this.lesComptages){
-            Date date = c.getLaDate().getDate();
+            DateInfo laDate = c.getLaDate();
+            Date date = laDate.getDate();
             if((date.after(debut) && date.before(fin))){
                 total += c.totalPassages();
             }
