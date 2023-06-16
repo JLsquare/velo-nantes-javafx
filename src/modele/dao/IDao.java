@@ -27,19 +27,19 @@ public interface IDao<T> {
      * @param t the T to add
      * @throws SQLException if an error occurs
      */
-    public void add(T t) throws SQLException;
+    public void add(T t) throws SQLException, IllegalArgumentException;
 
     /**
      * Remove a T from the database
      * @param t the T to remove
      * @throws SQLException if an error occurs
      */
-    public void remove(T t) throws SQLException;
+    public void remove(T t) throws SQLException, IllegalArgumentException;
 
     /**
      * Update a T from the database
      * @param t the T to update
      * @throws SQLException if an error occurs
      */
-    public void update(T t) throws SQLException;
+    public void update(T t) throws SQLException, IllegalArgumentException;
 }

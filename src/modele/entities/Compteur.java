@@ -12,12 +12,41 @@ public class Compteur{
 
     // ---------------- Attributes ---------------- //
 
+    /**
+     * L'id du compteur
+     * On utilise un int comme dans la base de données
+     */
     private int idCompteur;
+    /**
+     * Le nom du compteur
+     * On utilise un String car c'est un VARCHAR dans la base de données
+     */
     private String nomCompteur;
+    /**
+     * Le sens du compteur
+     * On utilise un String car c'est un VARCHAR dans la base de données
+     * On utilise pas d'enum car il y a plus de sens que les simples 4 directions
+     */
     private String sens;
+    /**
+     * La coordonnée X (latitude) du compteur
+     * On utilise un float car c'est un FLOAT dans la base de données
+     */
     private float coordX;
+    /**
+     * La coordonnée Y (longitude) du compteur
+     * On utilise un float car c'est un FLOAT dans la base de données
+     */
     private float coordY;
+    /**
+     * Le quartier du compteur
+     * On utilise une reference vers un objet Quartier car c'est un FOREIGN KEY dans la base de données
+     */
     private Quartier leQuartier;
+    /**
+     * Les comptages associes
+     * On utilise une liste de Comptage en plus de la reference vers le compteur pour simplifier l'acces aux donnees
+     */
     private ArrayList<Comptage> lesComptages;
 
     // ---------------- Constructors ---------------- //
@@ -30,12 +59,19 @@ public class Compteur{
      * @param coordX the X coordinate of the Compteur
      * @param coordY the Y coordinate of the Compteur
      * @param leQuartier the Quartier of the Compteur
-     * @throws NullPointerException if one of the parameters is null
+     * @throws IllegalArgumentException if one of the parameters is null
      */
-    public Compteur(int idCompteur, String nomCompteur, String sens, float coordX, float coordY, Quartier leQuartier) throws NullPointerException {
-        if(nomCompteur == null || sens == null || leQuartier == null){
-            throw new NullPointerException("nomCompteur or sens is null");
+    public Compteur(int idCompteur, String nomCompteur, String sens, float coordX, float coordY, Quartier leQuartier) throws IllegalArgumentException {
+        if(nomCompteur == null){
+            throw new IllegalArgumentException("nomCompteur must not be null");
         }
+        if(sens == null){
+            throw new IllegalArgumentException("sens must not be null");
+        }
+        if(leQuartier == null){
+            throw new IllegalArgumentException("leQuartier must not be null");
+        }
+
         this.idCompteur = idCompteur;
         this.nomCompteur = nomCompteur;
         this.sens = sens;
@@ -74,12 +110,13 @@ public class Compteur{
     /**
      * Set the name of the Compteur
      * @param nomCompteur the name of the Compteur
-     * @throws NullPointerException if nomCompteur is null
+     * @throws IllegalArgumentException if nomCompteur is null
      */
-    public void setNomCompteur(String nomCompteur) throws NullPointerException{
+    public void setNomCompteur(String nomCompteur) throws IllegalArgumentException{
         if(nomCompteur == null){
-            throw new NullPointerException("nomCompteur is null");
+            throw new IllegalArgumentException("nomCompteur is null");
         }
+
         this.nomCompteur = nomCompteur;
     }
 
@@ -94,8 +131,13 @@ public class Compteur{
     /**
      * Set the direction of the Compteur
      * @param sens the direction of the Compteur
+     * @throws IllegalArgumentException if sens is null
      */
-    public void setSens(String sens) {
+    public void setSens(String sens) throws IllegalArgumentException{
+        if(sens == null){
+            throw new IllegalArgumentException("sens is null");
+        }
+
         this.sens = sens;
     }
 
@@ -142,9 +184,54 @@ public class Compteur{
     /**
      * Set the Quartier of the Compteur
      * @param leQuartier the Quartier of the Compteur
+     * @throws IllegalArgumentException if leQuartier is null
      */
-    public void setLeQuartier(Quartier leQuartier) {
+    public void setLeQuartier(Quartier leQuartier) throws IllegalArgumentException{
+        if(leQuartier == null){
+            throw new IllegalArgumentException("leQuartier is null");
+        }
+
         this.leQuartier = leQuartier;
+    }
+
+    /**
+     * Get the Comptage of the Compteur by date
+     * @param laDate the date of the Comptage
+     * @return the Comptage of the Compteur by date
+     * @throws IllegalArgumentException if laDate is null
+     */
+    public Comptage getComptageByDate(DateInfo laDate) throws IllegalArgumentException{
+        if(laDate == null){
+            throw new IllegalArgumentException("laDate is null");
+        }
+
+        for(Comptage c : lesComptages){
+            if(c.getLaDate().equals(laDate)){
+                return c;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the Comptages of the Compteur
+     * @return the Comptages of the Compteur
+     */
+    public ArrayList<Comptage> getLesComptages() {
+        return lesComptages;
+    }
+
+    /**
+     * Set the Comptages of the Compteur
+     * @param lesComptages the Comptages of the Compteur
+     * @throws IllegalArgumentException if lesComptages is null
+     */
+    public void setLesComptages(ArrayList<Comptage> lesComptages) throws IllegalArgumentException{
+        if(lesComptages == null){
+            throw new IllegalArgumentException("lesComptages is null");
+        }
+
+        this.lesComptages = lesComptages;
     }
 
     // ---------------- Add & Remove ---------------- //
@@ -152,11 +239,11 @@ public class Compteur{
     /**
      * Add a Comptage to the Compteur
      * @param comptage the Comptage to add
-     * @throws NullPointerException if comptage is null
+     * @throws IllegalArgumentException if comptage is null
      */
-    public void addComptage(Comptage comptage) throws NullPointerException{
+    public void addComptage(Comptage comptage) throws IllegalArgumentException{
         if(comptage == null){
-            throw new NullPointerException("comptage is null");
+            throw new IllegalArgumentException("comptage is null");
         }
         this.lesComptages.add(comptage);
     }
@@ -164,11 +251,11 @@ public class Compteur{
     /**
      * Remove a Comptage to the Compteur
      * @param comptage the Comptage to remove
-     * @throws NullPointerException if comptage is null
+     * @throws IllegalArgumentException if comptage is null
      */
-    public void removeComptage(Comptage comptage) throws NullPointerException{
+    public void removeComptage(Comptage comptage) throws IllegalArgumentException{
         if(comptage == null){
-            throw new NullPointerException("comptage is null");
+            throw new IllegalArgumentException("comptage is null");
         }
         this.lesComptages.remove(comptage);
     }
@@ -200,9 +287,13 @@ public class Compteur{
      * @throws IllegalArgumentException if dateDebut or dateFin is null
      */
     public int totalPassages(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
-        if(dateDebut == null || dateFin == null){
-            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        if(dateDebut == null){
+            throw new IllegalArgumentException("dateDebut is null");
         }
+        if(dateFin == null){
+            throw new IllegalArgumentException("dateFin is null");
+        }
+
         int total = 0;
         Date debut = dateDebut.getDate();
         Date fin = dateFin.getDate();
@@ -224,9 +315,13 @@ public class Compteur{
      * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
     public float averagePassages(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException{
-        if(dateDebut == null || dateFin == null){
-            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        if(dateDebut == null){
+            throw new IllegalArgumentException("dateDebut is null");
         }
+        if(dateFin == null){
+            throw new IllegalArgumentException("dateFin is null");
+        }
+
         float total = 0;
         int nbComptages = 0;
         Date debut = dateDebut.getDate();
@@ -253,9 +348,13 @@ public class Compteur{
      * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
     public int[] totalPassagesPerHour(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
-        if(dateDebut == null || dateFin == null){
-            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        if(dateDebut == null){
+            throw new IllegalArgumentException("dateDebut is null");
         }
+        if(dateFin == null){
+            throw new IllegalArgumentException("dateFin is null");
+        }
+
         int[] total = new int[24];
         Date debut = dateDebut.getDate();
         Date fin = dateFin.getDate();
@@ -279,9 +378,13 @@ public class Compteur{
      * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
     public float[] averagePassagesPerHour(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
-        if(dateDebut == null || dateFin == null){
-            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        if(dateDebut == null){
+            throw new IllegalArgumentException("dateDebut is null");
         }
+        if(dateFin == null){
+            throw new IllegalArgumentException("dateFin is null");
+        }
+
         float[] total = new float[24];
         int nbComptages = 0;
         Date debut = dateDebut.getDate();
@@ -313,9 +416,13 @@ public class Compteur{
      * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
     public int[] totalPassagesPerDay(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
-        if(dateDebut == null || dateFin == null){
-            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        if(dateDebut == null){
+            throw new IllegalArgumentException("dateDebut is null");
         }
+        if(dateFin == null){
+            throw new IllegalArgumentException("dateFin is null");
+        }
+
         int[] total = new int[7];
         Date debut = dateDebut.getDate();
         Date fin = dateFin.getDate();
@@ -341,9 +448,13 @@ public class Compteur{
      * @throws IllegalArgumentException if either dateDebut or dateFin is null
      */
     public float[] averagePassagesPerDay(DateInfo dateDebut, DateInfo dateFin) throws IllegalArgumentException {
-        if(dateDebut == null || dateFin == null){
-            throw new IllegalArgumentException("dateDebut or dateFin is null");
+        if(dateDebut == null){
+            throw new IllegalArgumentException("dateDebut is null");
         }
+        if(dateFin == null){
+            throw new IllegalArgumentException("dateFin is null");
+        }
+
         float[] total = new float[7];
         int nbComptages = 0;
         Date debut = dateDebut.getDate();

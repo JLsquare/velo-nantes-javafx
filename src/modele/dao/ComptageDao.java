@@ -26,8 +26,19 @@ public class ComptageDao implements IDao<Comptage>{
      * @param db the database
      * @param compteurDao the CompteurDao to use
      * @param dateInfoDao the DateInfoDao to use
+     * @throws IllegalArgumentException if db, compteurDao or dateInfoDao is null
      */
-    public ComptageDao(Database db, CompteurDao compteurDao, DateInfoDao dateInfoDao) {
+    public ComptageDao(Database db, CompteurDao compteurDao, DateInfoDao dateInfoDao) throws IllegalArgumentException{
+        if(db == null){
+            throw new IllegalArgumentException("Database cannot be null");
+        }
+        if(compteurDao == null){
+            throw new IllegalArgumentException("CompteurDao cannot be null");
+        }
+        if(dateInfoDao == null){
+            throw new IllegalArgumentException("DateInfoDao cannot be null");
+        }
+
         this.database = db;
         this.compteurDao = compteurDao;
         this.dateInfoDao = dateInfoDao;
@@ -41,8 +52,16 @@ public class ComptageDao implements IDao<Comptage>{
      * @param laDate the DateInfo of the Comptage
      * @param leCompteur the Compteur of the Comptage 
      * @return the Comptage
+     * @throws IllegalArgumentException if laDate or leCompteur is null
      */
-    public Comptage get(DateInfo laDate, Compteur leCompteur) {
+    public Comptage get(DateInfo laDate, Compteur leCompteur) throws IllegalArgumentException {
+        if(laDate == null){
+            throw new IllegalArgumentException("DateInfo cannot be null");
+        }
+        if(leCompteur == null){
+            throw new IllegalArgumentException("Compteur cannot be null");
+        }
+
         Comptage comptage = null;
         boolean found = false;
         int i = 0;
@@ -99,8 +118,13 @@ public class ComptageDao implements IDao<Comptage>{
      * Add a Comptage to the database
      * @param comptage the Comptage to add
      * @throws SQLException if an error occurs
+     * @throws IllegalArgumentException if comptage is null
      */
-    public void add(Comptage comptage) throws SQLException {
+    public void add(Comptage comptage) throws SQLException, IllegalArgumentException {
+        if(comptage == null){
+            throw new IllegalArgumentException("Comptage cannot be null");
+        }
+
         String query = "INSERT INTO COMPTAGE VALUES(?, ?, ";
         for(int i = 0; i < 24; i++) {
             query += "?, ";
@@ -122,8 +146,13 @@ public class ComptageDao implements IDao<Comptage>{
      * Remove a Comptage from the database
      * @param comptage the Comptage to remove
      * @throws SQLException if an error occurs
+     * @throws IllegalArgumentException if comptage is null
      */
-    public void remove(Comptage comptage) throws SQLException {
+    public void remove(Comptage comptage) throws SQLException, IllegalArgumentException {
+        if(comptage == null){
+            throw new IllegalArgumentException("Comptage cannot be null");
+        }
+
         String query = "DELETE FROM COMPTAGE WHERE leCompteur = ? AND dateComptage = ?";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setInt(1, comptage.getLeCompteur().getIdCompteur());
@@ -136,19 +165,28 @@ public class ComptageDao implements IDao<Comptage>{
      * Update a Comptage from the database
      * @param comptage the Comptage to update
      * @throws SQLException if an error occurs
+     * @throws IllegalArgumentException if comptage is null
      */
-    public void update(Comptage comptage) throws SQLException {
+    public void update(Comptage comptage) throws SQLException, IllegalArgumentException {
+        if(comptage == null){
+            throw new IllegalArgumentException("Comptage cannot be null");
+        }
+
         String query = "UPDATE COMPTAGE SET ";
         for(int i = 0; i < 24; i++){
             query += "h" + String.format("%02d", i) + " = ?, ";
         }
-        query += "anomalie = ? ";
+        query += "presenceAnomalie = ? ";
         query += " WHERE leCompteur = ? AND dateComptage = ?";
         PreparedStatement ps = database.preparedWriteStatment(query);
         for(int i = 0; i < 24; i++){
             ps.setInt(i + 1, comptage.getPassage(i));
         }
-        ps.setString(25, comptage.getAnomalie().toString());
+        if(comptage.getAnomalie() == PresenceAnomalie.Nulle){
+            ps.setNull(25, Types.VARCHAR);
+        } else {
+            ps.setString(25, comptage.getAnomalie().toString());
+        }
         ps.setInt(26, comptage.getLeCompteur().getIdCompteur());
         ps.setDate(27, comptage.getLaDate().getDate());
         ps.executeUpdate();

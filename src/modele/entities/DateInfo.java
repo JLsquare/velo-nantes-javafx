@@ -12,10 +12,30 @@ public class DateInfo {
 
     // ---------------- Attributes ---------------- //
 
+    /**
+     * La date
+     * On utilise une date sql car elle est compatible avec JDBC
+     */
     private Date date;
+    /**
+     * La température moyenne
+     * On utilise un float car c'est un FLOAT dans la base de données
+     */
     private float tempMoy;
+    /**
+     * Le jour associe
+     * On utilise un enum car on a que 7 valeurs possibles
+     */
     private Jour jour;
+    /**
+     * Les vacances associees
+     * On utilise un enum car il y a que 6 vacances differentes + 1 pour la valeur "Nulle"
+     */
     private Vacances vacances;
+    /**
+     * Les comptages associes
+     * On utilise une liste de Comptage en plus de la reference vers la date pour simplifier l'acces aux donnees
+     */
     private ArrayList<Comptage> lesComptages;
 
     // ---------------- Constructors ---------------- //
@@ -26,8 +46,19 @@ public class DateInfo {
      * @param tempMoy the average temperature
      * @param jour the day
      * @param vacances the holidays
+     * @throws IllegalArgumentException if laDate, jour or vacances is null
      */
-    public DateInfo(Date laDate, float tempMoy, Jour jour, Vacances vacances) {
+    public DateInfo(Date laDate, float tempMoy, Jour jour, Vacances vacances) throws IllegalArgumentException {
+        if(laDate == null){
+            throw new IllegalArgumentException("laDate must not be null");
+        }
+        if(jour == null){
+            throw new IllegalArgumentException("jour must not be null");
+        }
+        if(vacances == null){
+            throw new IllegalArgumentException("vacances must not be null");
+        }
+
         this.date = laDate;
         this.tempMoy = tempMoy;
         this.jour = jour;
@@ -48,8 +79,13 @@ public class DateInfo {
     /**
      * Set the date
      * @param date the date
+     * @throws IllegalArgumentException if date is null
      */
-    public void setDate(Date date) {
+    public void setDate(Date date) throws IllegalArgumentException{
+        if(date == null){
+            throw new IllegalArgumentException("date must not be null");
+        }
+
         this.date = date;
     }
 
@@ -80,8 +116,13 @@ public class DateInfo {
     /**
      * Set the day
      * @param jour the day
+     * @throws IllegalArgumentException if jour is null
      */
-    public void setJour(Jour jour) {
+    public void setJour(Jour jour) throws IllegalArgumentException{
+        if(jour == null){
+            throw new IllegalArgumentException("jour must not be null");
+        }
+
         this.jour = jour;
     }
 
@@ -97,7 +138,11 @@ public class DateInfo {
      * Set the holidays
      * @param vacances the holidays
      */
-    public void setVacances(Vacances vacances) {
+    public void setVacances(Vacances vacances) throws IllegalArgumentException{
+        if(vacances == null){
+            throw new IllegalArgumentException("vacances must not be null");
+        }
+
         this.vacances = vacances;
     }
 
@@ -107,7 +152,11 @@ public class DateInfo {
      * Add a Comptage to the DateInfo
      * @param comptage the Comptage
      */
-    public void addComptage(Comptage comptage){
+    public void addComptage(Comptage comptage) throws IllegalArgumentException{
+        if(comptage == null){
+            throw new IllegalArgumentException("comptage must not be null");
+        }
+
         this.lesComptages.add(comptage);
     }
 
@@ -115,7 +164,11 @@ public class DateInfo {
      * Remove a Comptage to the DateInfo
      * @param comptage the Comptage
      */
-    public void removeComptage(Comptage comptage){
+    public void removeComptage(Comptage comptage) throws IllegalArgumentException{
+        if(comptage == null){
+            throw new IllegalArgumentException("comptage must not be null");
+        }
+
         this.lesComptages.remove(comptage);
     }
 
@@ -164,7 +217,7 @@ public class DateInfo {
      * Compute the total passage of the DateInfo
      * @return the total passage of the DateInfo
      */
-    public int totalPassage(){
+    public int totalPassages(){
         int total = 0;
         for(Comptage c : this.lesComptages){
             total += c.totalPassages();

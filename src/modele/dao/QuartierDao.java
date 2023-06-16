@@ -24,8 +24,13 @@ public class QuartierDao implements IDao<Quartier>{
     /**
      * Constructor of QuartierDao
      * @param db the database
+     * @throws IllegalArgumentException if db is null
      */
-    public QuartierDao(Database db) {
+    public QuartierDao(Database db) throws IllegalArgumentException{
+        if(db == null){
+            throw new IllegalArgumentException("Database cannot be null");
+        }
+
         this.database = db;
         this.lesQuartiers = new ArrayList<Quartier>();
     }
@@ -83,8 +88,13 @@ public class QuartierDao implements IDao<Quartier>{
      * Add a Quartier to the database
      * @param quartier the Quartier to add
      * @throws SQLException if an error occurs
+     * @throws IllegalArgumentException if quartier is null
      */
-    public void add(Quartier quartier) throws SQLException {
+    public void add(Quartier quartier) throws SQLException, IllegalArgumentException {
+        if(quartier == null){
+            throw new IllegalArgumentException("Quartier cannot be null");
+        }
+
         String query = "INSERT INTO QUARTIER VALUES(?, ?, ?)";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setInt(1, quartier.getIdQuartier());
@@ -97,8 +107,13 @@ public class QuartierDao implements IDao<Quartier>{
      * Remove a Quartier from the database
      * @param quartier the Quartier to remove
      * @throws SQLException if an error occurs
+     * @throws IllegalArgumentException if quartier is null
      */
-    public void remove(Quartier quartier) throws SQLException {
+    public void remove(Quartier quartier) throws SQLException, IllegalArgumentException {
+        if(quartier == null){
+            throw new IllegalArgumentException("Quartier cannot be null");
+        }
+
         String query = "DELETE FROM QUARTIER WHERE idQuartier = ?";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setInt(1, quartier.getIdQuartier());
@@ -110,8 +125,13 @@ public class QuartierDao implements IDao<Quartier>{
      * Update a Quartier from the database
      * @param quartier the Quartier to update
      * @throws SQLException if an error occurs
+     * @throws IllegalArgumentException if quartier is null
      */
-    public void update(Quartier quartier) throws SQLException {
+    public void update(Quartier quartier) throws SQLException, IllegalArgumentException {
+        if(quartier == null){
+            throw new IllegalArgumentException("Quartier cannot be null");
+        }
+
         String query = "UPDATE QUARTIER SET nomQuartier = ?, longueurPisteVelo = ? WHERE idQuartier = ?";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setString(1, quartier.getNomQuartier());

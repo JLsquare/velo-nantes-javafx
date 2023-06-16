@@ -26,8 +26,16 @@ public class CompteurDao implements IDao<Compteur> {
      * Constructor of CompteurDao
      * @param db the database
      * @param quartierDao the QuartierDao to use
+     * @throws IllegalArgumentException if db or quartierDao is null
      */
-    public CompteurDao(Database db, QuartierDao quartierDao) {
+    public CompteurDao(Database db, QuartierDao quartierDao) throws IllegalArgumentException{
+        if(db == null){
+            throw new IllegalArgumentException("Database cannot be null");
+        }
+        if(quartierDao == null){
+            throw new IllegalArgumentException("QuartierDao cannot be null");
+        }
+
         this.database = db;
         this.quartierDao = quartierDao;
         this.lesCompteurs = new ArrayList<Compteur>();
@@ -89,8 +97,16 @@ public class CompteurDao implements IDao<Compteur> {
      * Add a Compteur to the database
      * @param compteur the Compteur to add
      * @throws SQLException if an error occurs
+     * @throws IllegalArgumentException if compteur is null
      */
-    public void add(Compteur compteur) throws SQLException {
+    public void add(Compteur compteur) throws SQLException, IllegalArgumentException {
+        if(compteur == null) {
+            throw new IllegalArgumentException("Compteur cannot be null");
+        }
+
+        if(this.get(compteur.getIdCompteur()) == null) {
+            this.lesCompteurs.add(compteur);
+        }
         String query = "INSERT INTO COMPTEUR VALUES(?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = database.preparedReadStatment(query);
         ps.setInt(1, compteur.getIdCompteur());
@@ -106,7 +122,11 @@ public class CompteurDao implements IDao<Compteur> {
      * Remove a Compteur from the database
      * @param compteur the Compteur to remove
      */
-    public void remove(Compteur compteur) throws SQLException {
+    public void remove(Compteur compteur) throws SQLException, IllegalArgumentException {
+        if(compteur == null) {
+            throw new IllegalArgumentException("Compteur cannot be null");
+        }
+
         String query = "DELETE FROM COMPTEUR WHERE idCompteur = ?";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setInt(1, compteur.getIdCompteur());
@@ -118,14 +138,22 @@ public class CompteurDao implements IDao<Compteur> {
      * @param compteur the Compteur to update
      * @throws SQLException if an error occurs
      */
-    public void update(Compteur compteur) throws SQLException {
-        String query = "UPDATE COMPTEUR SET nomCompteur = ?, sens = ?, coordX = ?, coordY = ?, leQuartier = ? WHERE idCompteur = ?";
+    public void update(Compteur compteur) throws SQLException, IllegalArgumentException {
+        if(compteur == null) {
+            throw new IllegalArgumentException("Compteur cannot be null");
+        }
+        
+        String query = "UPDATE COMPTEUR SET nomCompteur = ?, sens = ?, coord_x = ?, coord_y = ?, leQuartier = ? WHERE idCompteur = ?";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setString(1, compteur.getNomCompteur());
         ps.setString(2, compteur.getSens());
         ps.setFloat(3, compteur.getCoordX());
         ps.setFloat(4, compteur.getCoordY());
-        ps.setInt(5, compteur.getLeQuartier().getIdQuartier());
+        if(compteur.getLeQuartier().getIdQuartier() == 0){
+            ps.setNull(5, java.sql.Types.INTEGER);
+        } else {
+            ps.setInt(5, compteur.getLeQuartier().getIdQuartier());
+        }
         ps.setInt(6, compteur.getIdCompteur());
         ps.executeUpdate();
     }

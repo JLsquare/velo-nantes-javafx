@@ -13,9 +13,25 @@ public class Quartier {
 
     // ---------------- Attributes ---------------- //
 
+    /**
+     * L'id du quartier
+     * On utilise un int car c'est un INT dans la base de données
+     */
     private int idQuartier;
+    /**
+     * Le nom du quartier
+     * On utilise un String car c'est un VARCHAR dans la base de données
+     */
     private String nomQuartier;
+    /**
+     * La longueur de la piste cyclable
+     * On utilise un float car c'est un FLOAT dans la base de données
+     */
     private float longueurPisteVelo;
+    /**
+     * Les compteurs associes
+     * On utilise une liste de Compteur en plus de la reference vers le quartier pour simplifier l'acces aux donnees
+     */
     private ArrayList<Compteur> lesCompteurs;
 
     // ---------------- Constructors ---------------- //
@@ -25,8 +41,16 @@ public class Quartier {
      * @param idQuartier the id of the Quartier
      * @param nomQuartier the name of the Quartier
      * @param longueurPisteVelo the length of the bike path
+     * @throws IllegalArgumentException if nomQuartier is null, or if longueurPisteVelo is negative
      */
-    public Quartier(int idQuartier, String nomQuartier, float longueurPisteVelo) {
+    public Quartier(int idQuartier, String nomQuartier, float longueurPisteVelo) throws IllegalArgumentException{
+        if(nomQuartier == null){
+            throw new IllegalArgumentException("nomQuartier must not be null");
+        }
+        if(longueurPisteVelo < 0){
+            throw new IllegalArgumentException("longueurPisteVelo must not be negative");
+        }
+
         this.idQuartier = idQuartier;
         this.nomQuartier = nomQuartier;
         this.longueurPisteVelo = longueurPisteVelo;
@@ -62,11 +86,11 @@ public class Quartier {
     /**
      * Set the name of the Quartier
      * @param nomQuartier the name of the Quartier
-     * @throws NullPointerException if nomQuartier is null
+     * @throws IllegalArgumentException if nomQuartier is null
      */
-    public void setNomQuartier(String nomQuartier) throws NullPointerException{
+    public void setNomQuartier(String nomQuartier) throws IllegalArgumentException{
         if(nomQuartier == null){
-            throw new NullPointerException("nomQuartier ne peut pas être null");
+            throw new IllegalArgumentException("nomQuartier must not be null");
         }
         this.nomQuartier = nomQuartier;
     }
@@ -82,8 +106,13 @@ public class Quartier {
     /**
      * Set the length of the bike path
      * @param longueurPisteVelo the length of the bike path
+     * @throws IllegalArgumentException if longueurPisteVelo is negative
      */
-    public void setLongueurPisteVelo(float longueurPisteVelo) {
+    public void setLongueurPisteVelo(float longueurPisteVelo) throws IllegalArgumentException{
+        if(longueurPisteVelo < 0){
+            throw new IllegalArgumentException("longueurPisteVelo must not be negative");
+        }
+
         this.longueurPisteVelo = longueurPisteVelo;
     }
 
@@ -92,16 +121,26 @@ public class Quartier {
     /**
      * Add a Compteur to the Quartier
      * @param compteur the Compteur to add
+     * @throws IllegalArgumentException if compteur is null
      */
-    public void addCompteur(Compteur compteur){
+    public void addCompteur(Compteur compteur) throws IllegalArgumentException{
+        if(compteur == null){
+            throw new IllegalArgumentException("compteur must not be null");
+        }
+
         this.lesCompteurs.add(compteur);
     }
 
     /**
      * Remove a Compteur to the Quartier
      * @param compteur the Compteur to remove
+     * @throws IllegalArgumentException if compteur is null
      */
-    public void removeCompteur(Compteur compteur){
+    public void removeCompteur(Compteur compteur) throws IllegalArgumentException{
+        if(compteur == null){
+            throw new IllegalArgumentException("compteur must not be null");
+        }
+
         this.lesCompteurs.remove(compteur);
     }
 

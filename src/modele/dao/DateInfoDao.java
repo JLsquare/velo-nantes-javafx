@@ -27,8 +27,13 @@ public class DateInfoDao implements IDao<DateInfo> {
     /**
      * Constructor of DateInfoDao
      * @param db the database
+     * @throws IllegalArgumentException if db is null
      */
-    public DateInfoDao(Database db) {
+    public DateInfoDao(Database db) throws IllegalArgumentException {
+        if(db == null){
+            throw new IllegalArgumentException("Database cannot be null");
+        }
+
         this.database = db;
         this.lesDate = new ArrayList<DateInfo>();
     }
@@ -39,8 +44,13 @@ public class DateInfoDao implements IDao<DateInfo> {
      * Get a DateInfo by its date
      * @param laDate the date of the DateInfo
      * @return the DateInfo
+     * @throws IllegalArgumentException if laDate is null
      */
-    public DateInfo get(Date laDate) {
+    public DateInfo get(Date laDate) throws IllegalArgumentException{
+        if(laDate == null){
+            throw new IllegalArgumentException("Date cannot be null");
+        }
+
         DateInfo dateInfo = null;
         boolean found = false;
         int i = 0;
@@ -91,8 +101,13 @@ public class DateInfoDao implements IDao<DateInfo> {
      * Add a DateInfo to the database
      * @param dateInfo the DateInfo to add
      * @throws SQLException if an error occurs
+     * @throws IllegalArgumentException if dateInfo is null
      */
-    public void add(DateInfo dateInfo) throws SQLException {
+    public void add(DateInfo dateInfo) throws SQLException, IllegalArgumentException {
+        if(dateInfo == null){
+            throw new IllegalArgumentException("DateInfo cannot be null");
+        }
+
         String query = "INSERT INTO DATEINFO VALUES(?, ?, ?, ?)";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setDate(1, dateInfo.getDate());
@@ -106,8 +121,9 @@ public class DateInfoDao implements IDao<DateInfo> {
      * Remove a DateInfo from the database
      * @param dateInfo the DateInfo to remove
      * @throws SQLException if an error occurs
+     * @throws IllegalArgumentException if dateInfo is null
      */
-    public void remove(DateInfo dateInfo) throws SQLException {
+    public void remove(DateInfo dateInfo) throws SQLException, IllegalArgumentException {
         String query = "DELETE FROM DATEINFO WHERE laDate = ?";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setDate(1, dateInfo.getDate());
@@ -118,8 +134,13 @@ public class DateInfoDao implements IDao<DateInfo> {
      * Update a DateInfo from the database
      * @param dateInfo the DateInfo to update
      * @throws SQLException if an error occurs
+     * @throws IllegalArgumentException if dateInfo is null
      */
-    public void update(DateInfo dateInfo) throws SQLException {
+    public void update(DateInfo dateInfo) throws SQLException, IllegalArgumentException {
+        if(dateInfo == null){
+            throw new IllegalArgumentException("DateInfo cannot be null");
+        }
+        
         String query = "UPDATE DATEINFO SET tempMoy = ?, jour = ?, vacances = ? WHERE laDate = ?";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setFloat(1, dateInfo.getTempMoy());
