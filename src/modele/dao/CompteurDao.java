@@ -108,7 +108,7 @@ public class CompteurDao implements IDao<Compteur> {
             this.lesCompteurs.add(compteur);
         }
         String query = "INSERT INTO COMPTEUR VALUES(?, ?, ?, ?, ?, ?)";
-        PreparedStatement ps = database.preparedReadStatment(query);
+        PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setInt(1, compteur.getIdCompteur());
         ps.setString(2, compteur.getNomCompteur());
         ps.setString(3, compteur.getSens());
@@ -142,7 +142,7 @@ public class CompteurDao implements IDao<Compteur> {
         if(compteur == null) {
             throw new IllegalArgumentException("Compteur cannot be null");
         }
-        
+
         String query = "UPDATE COMPTEUR SET nomCompteur = ?, sens = ?, coord_x = ?, coord_y = ?, leQuartier = ? WHERE idCompteur = ?";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setString(1, compteur.getNomCompteur());

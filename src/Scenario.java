@@ -9,6 +9,13 @@ import modele.dao.*;
 import modele.database.*;
 import modele.entities.*;
 
+/**
+ * Scenario presentant le modele 
+ * Après etre lancé, des updates sont effectués sur la base de données
+ * Donc il faut relancer le script SQL pour retrouver la base de données initiale
+ * Le scenario marche sans mais les modifications ne seront pas visibles
+ * @author Groupe 4B2
+ */
 public class Scenario {
     public static void main(String[] args) {
         try {
@@ -135,6 +142,9 @@ public class Scenario {
             System.out.println("Creation d'un nouveau compteur");
             Compteur compteur = new Compteur(2000, "Nouveau compteur", "Sud", 0, 0, lesQuartiers.get(1));
             compteurDao.add(compteur);
+            lesQuartiers.get(1).addCompteur(compteur);
+            System.out.println(compteur);
+            System.out.println("Insertion dans la base de données effectué");
 
             database.closeReadConnection();
             database.closeWriteConnection();

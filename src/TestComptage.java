@@ -1,3 +1,4 @@
+
 import org.junit.*;
 import org.junit.runner.*;
 import static org.junit.Assert.*;
@@ -7,6 +8,11 @@ import modele.entities.*;
 import java.sql.Date;
 import java.util.Arrays;
 
+/**
+ * Classe de test de la classe Comptage
+ * Utilise JUnit et test les cas normaux, les cas limites et les cas d'erreurs
+ * @author Groupe 4B2
+ */
 @FixMethodOrder(MethodSorters.JVM)
 public class TestComptage {
     private Comptage comptage;
