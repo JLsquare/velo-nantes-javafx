@@ -167,7 +167,7 @@ public class ComptageDao implements IDao<Comptage>{
      * @throws SQLException if an error occurs
      * @throws IllegalArgumentException if comptage is null
      */
-    public void update(Comptage comptage) throws SQLException, IllegalArgumentException {
+    public void update(Comptage comptage) throws SQLException, IllegalArgumentException{
         if(comptage == null){
             throw new IllegalArgumentException("Comptage cannot be null");
         }

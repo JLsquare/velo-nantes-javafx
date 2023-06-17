@@ -22,8 +22,13 @@ public class Database {
     /**
      * Default constructor
      * @param url the url of the database
+     * @throws IllegalArgumentException if url is null
      */
-    public Database(String url) {
+    public Database(String url) throws IllegalArgumentException{
+        if(url == null){
+            throw new IllegalArgumentException("URL cannot be null");
+        }
+
         this.URL = url;
     }
 
@@ -34,8 +39,16 @@ public class Database {
      * @param user the user
      * @param password the password
      * @throws SQLException if there is an error with the connection
+     * @throws IllegalArgumentException if user or password is null
      */
-    public void openReadConnection(String user, String password) throws SQLException{
+    public void openReadConnection(String user, String password) throws SQLException, IllegalArgumentException{
+        if(user == null){
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        if(password == null){
+            throw new IllegalArgumentException("Password cannot be null");
+        }
+
         if(readConnection != null){
             System.out.println("Read connection already open");
         } else {
@@ -48,8 +61,16 @@ public class Database {
      * @param user the user
      * @param password the password
      * @throws SQLException if there is an error with the connection
+     * @throws IllegalArgumentException if user or password is null
      */
-    public void openWriteConnection(String user, String password) throws SQLException{
+    public void openWriteConnection(String user, String password) throws SQLException, IllegalArgumentException{
+        if(user == null){
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        if(password == null){
+            throw new IllegalArgumentException("Password cannot be null");
+        }
+
         if(writeConnection != null){
             System.out.println("Write connection already open");
         } else {
@@ -84,8 +105,13 @@ public class Database {
      * @param query the query
      * @return the PreparedStatement
      * @throws SQLException if the read connection is not open
+     * @throws IllegalArgumentException if query is null
      */
-    public PreparedStatement preparedReadStatment(String query) throws SQLException{
+    public PreparedStatement preparedReadStatment(String query) throws SQLException, IllegalArgumentException{
+        if(query == null){
+            throw new IllegalArgumentException("Query cannot be null");
+        }
+
         if(readConnection == null){
             throw new SQLException("Read connection not open");
         }
@@ -97,8 +123,13 @@ public class Database {
      * @param query the query
      * @return the PreparedStatement
      * @throws SQLException if the write connection is not open
+     * @throws IllegalArgumentException if query is null
      */
-    public PreparedStatement preparedWriteStatment(String query) throws SQLException{
+    public PreparedStatement preparedWriteStatment(String query) throws SQLException, IllegalArgumentException{
+        if(query == null){
+            throw new IllegalArgumentException("Query cannot be null");
+        }
+
         if(writeConnection == null){
             throw new SQLException("Write connection not open");
         }
