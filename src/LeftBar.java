@@ -53,8 +53,10 @@ public class LeftBar extends VBox{
     private ArrayList<Compteur> compteurs;
 
     private LeftBarListener listener;
+    VeloNantes veloNantes;
 
-    public LeftBar(ArrayList<Quartier> quartiers, ArrayList<Compteur> compteurs) {
+    public LeftBar(VeloNantes veloNantes, ArrayList<Quartier> quartiers, ArrayList<Compteur> compteurs) {
+        this.veloNantes = veloNantes;
         this.quartiers = quartiers;
         this.compteurs = compteurs;
 
@@ -107,6 +109,7 @@ public class LeftBar extends VBox{
 
         this.counterLabel = new Label("Compteur:");
         this.counterField = new ComboBox<>();
+        this.counterField.valueProperty().addListener(this.listener);
 
         this.updateCompteurs();
 
@@ -187,11 +190,19 @@ public class LeftBar extends VBox{
         return this.neighborhoodField.getValue();
     }
 
+    public ComboBox<String> getNeighborhoodField() {
+        return this.neighborhoodField;
+    }
+
     public String getCounter() {
         return this.counterField.getValue();
     }
 
     public String getType() {
         return ((RadioButton) this.group.getSelectedToggle()).getText();
+    }
+
+    public void updateGraph() {
+        this.veloNantes.updateGraph();
     }
 }

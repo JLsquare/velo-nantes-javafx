@@ -26,9 +26,9 @@ public class VeloNantes extends Application {
         this.initializeData();
         primaryStage.setTitle("Velo de Nantes");
 
-        this.leftBar = new LeftBar(quartierDao.getAll(), compteurDao.getAll());
+        this.leftBar = new LeftBar(this, quartierDao.getAll(), compteurDao.getAll());
         this.menu = new LeMenu();
-        this.graph = new Graph(this.leftBar);
+        this.graph = new Graph(this.leftBar, quartierDao.getAll(), compteurDao.getAll(), dateInfoDao.getAll());
 
         VBox rightPane = new VBox();
         rightPane.setPadding(new Insets(15, 12, 15, 12));
@@ -69,5 +69,9 @@ public class VeloNantes extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void updateGraph(){
+        this.graph.update();
     }
 }

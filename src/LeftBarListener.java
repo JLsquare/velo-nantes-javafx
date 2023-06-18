@@ -9,7 +9,10 @@ public class LeftBarListener implements ChangeListener<String> {
 
     @Override
     public void changed(javafx.beans.value.ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        this.leftBar.updateCompteurs();
+        if(observable == this.leftBar.getNeighborhoodField().valueProperty()){
+            this.leftBar.updateCompteurs();
+        }
         System.out.println("LeftBarListener: " + oldValue);
+        leftBar.updateGraph();
     }    
 }
