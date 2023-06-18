@@ -1,7 +1,6 @@
 import javafx.scene.layout.VBox;
 import modele.entities.*;
 
-import java.lang.reflect.Array;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -39,9 +38,7 @@ public class Graph extends VBox{
 
     public void totalPassages(){
         this.barChart.getData().clear();
-        this.barChart.getData().add(new XYChart.Series<String, Number>());
-        this.barChart.getData().get(0).setName("Total passages");
-        int total = 0;
+
         DateInfo startDate = null;
         DateInfo endDate = null;
 
@@ -56,22 +53,41 @@ public class Graph extends VBox{
 
         if(leftBar.getNeighborhood() == "Tous" && leftBar.getCounter() == "Tous"){
             for(Quartier quartier : this.quartiers){
-                total += quartier.totalPassages(startDate, endDate);
+                int total = quartier.totalPassages(startDate, endDate);
+                XYChart.Series<String, Number> series = new XYChart.Series<>();
+                series.setName(quartier.getNomQuartier());
+                series.getData().add(new XYChart.Data<String, Number>(quartier.getNomQuartier(), total));
+                this.barChart.getData().add(series);
             }
         } else if (leftBar.getNeighborhood() != "Tous" && leftBar.getCounter() == "Tous"){
+            Quartier selectedQuartier = null;
             for(Quartier quartier : this.quartiers){
                 if(quartier.getNomQuartier().equals(leftBar.getNeighborhood())){
-                    total += quartier.totalPassages(startDate, endDate);
+                    selectedQuartier = quartier;
+                    break;
+                }
+            }
+            if(selectedQuartier != null) {
+                for(Compteur compteur : selectedQuartier.getLesCompteurs()){
+                    String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
+                    int total = compteur.totalPassages(startDate, endDate);
+                    XYChart.Series<String, Number> series = new XYChart.Series<>();
+                    series.setName(compteur.getNomCompteur() + compteur.getSens());
+                    series.getData().add(new XYChart.Data<String, Number>(counter, total));
+                    this.barChart.getData().add(series);
                 }
             }
         } else if (leftBar.getCounter() != "Tous"){
             for(Compteur compteur : this.compteurs){
-                if(compteur.getNomCompteur().equals(leftBar.getCounter())){
-                    total += compteur.totalPassages(startDate, endDate);
+                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
+                if(counter.equals(leftBar.getCounter())){
+                    int total = compteur.totalPassages(startDate, endDate);
+                    XYChart.Series<String, Number> series = new XYChart.Series<>();
+                    series.setName(compteur.getNomCompteur() + compteur.getSens());
+                    series.getData().add(new XYChart.Data<String, Number>(counter, total));
+                    this.barChart.getData().add(series);
                 }
             }
         }
-
-        this.barChart.getData().get(0).getData().add(new XYChart.Data<String, Number>("Total passages", total));
     }
 }

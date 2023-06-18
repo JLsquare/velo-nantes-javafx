@@ -1,15 +1,11 @@
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import modele.dao.*;
 import modele.database.Database;
-
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 public class VeloNantes extends Application {
     private LeftBar leftBar;
@@ -30,14 +26,20 @@ public class VeloNantes extends Application {
         this.menu = new LeMenu();
         this.graph = new Graph(this.leftBar, quartierDao.getAll(), compteurDao.getAll(), dateInfoDao.getAll());
 
-        VBox rightPane = new VBox();
+        AnchorPane rightPane = new AnchorPane();
         rightPane.setPadding(new Insets(15, 12, 15, 12));
-        rightPane.getChildren().add(menu);
-        rightPane.getChildren().add(graph);
+        rightPane.getChildren().addAll(menu, graph);
+
+        // Set menu to top right
+        AnchorPane.setTopAnchor(menu, 0.0);
+        AnchorPane.setRightAnchor(menu, 0.0);
+
+        // Set graph to below the menu with some padding
+        AnchorPane.setTopAnchor(graph, 30.0);  // Change this value according to your menu's height
 
         BorderPane root = new BorderPane();
         root.setLeft(this.leftBar);
-        root.setRight(rightPane);
+        root.setCenter(rightPane);  // Changed from setRight to setCenter to use the remaining space for the rightPane
 
         Scene scene = new Scene(root, 1280, 720);
         primaryStage.setScene(scene);

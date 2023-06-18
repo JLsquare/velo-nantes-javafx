@@ -1,9 +1,9 @@
 import javafx.beans.value.ChangeListener;
 
-public class LeftBarListener implements ChangeListener<String> {
+public class StringListener implements ChangeListener<String> {
     private LeftBar leftBar;
 
-    public LeftBarListener(LeftBar leftBar) {
+    public StringListener(LeftBar leftBar) {
         this.leftBar = leftBar;
     }
 
@@ -12,7 +12,7 @@ public class LeftBarListener implements ChangeListener<String> {
         if(observable == this.leftBar.getNeighborhoodField().valueProperty()){
             this.leftBar.updateCompteurs();
         }
-        System.out.println("LeftBarListener: " + oldValue);
+        System.out.println("StringListener: " + oldValue + " " + newValue);
         leftBar.updateGraph();
     }    
 }

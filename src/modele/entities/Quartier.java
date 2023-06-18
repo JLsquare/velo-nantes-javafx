@@ -116,6 +116,14 @@ public class Quartier {
         this.longueurPisteVelo = longueurPisteVelo;
     }
 
+    /**
+     * Get the Compteurs of the Quartier
+     * @return the Compteurs of the Quartier
+     */
+    public ArrayList<Compteur> getLesCompteurs() {
+        return lesCompteurs;
+    }
+
     // ---------------- Add & Remove ---------------- //
 
     /**

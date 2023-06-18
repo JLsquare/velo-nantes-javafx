@@ -52,7 +52,8 @@ public class LeftBar extends VBox{
     private ArrayList<Quartier> quartiers;
     private ArrayList<Compteur> compteurs;
 
-    private LeftBarListener listener;
+    private StringListener stringListener;
+    private DateListener dateListener;
     VeloNantes veloNantes;
 
     public LeftBar(VeloNantes veloNantes, ArrayList<Quartier> quartiers, ArrayList<Compteur> compteurs) {
@@ -60,7 +61,8 @@ public class LeftBar extends VBox{
         this.quartiers = quartiers;
         this.compteurs = compteurs;
 
-        this.listener = new LeftBarListener(this);
+        this.stringListener = new StringListener(this);
+        this.dateListener = new DateListener(this);
 
         this.setPadding(new Insets(15, 12, 15, 12));
         this.setSpacing(10);
@@ -92,11 +94,13 @@ public class LeftBar extends VBox{
         this.startDatePicker = new DatePicker();
         LocalDate startDate = LocalDate.of(2020, 1, 1);
         this.startDatePicker.setValue(startDate);
+        this.startDatePicker.valueProperty().addListener(this.dateListener);
 
         this.endDateLabel = new Label("Date fin:");
         this.endDatePicker = new DatePicker();
         LocalDate endDate = LocalDate.of(2023, 01, 24);
         this.endDatePicker.setValue(endDate);
+        this.endDatePicker.valueProperty().addListener(this.dateListener);
 
         this.neighborhoodLabel = new Label("Quartier:");
         this.neighborhoodField = new ComboBox<>();
@@ -105,11 +109,11 @@ public class LeftBar extends VBox{
             this.neighborhoodField.getItems().add(quartier.getNomQuartier());
         }
         this.neighborhoodField.setValue("Tous");
-        this.neighborhoodField.valueProperty().addListener(this.listener);
+        this.neighborhoodField.valueProperty().addListener(this.stringListener);
 
         this.counterLabel = new Label("Compteur:");
         this.counterField = new ComboBox<>();
-        this.counterField.valueProperty().addListener(this.listener);
+        this.counterField.valueProperty().addListener(this.stringListener);
 
         this.updateCompteurs();
 
@@ -172,7 +176,8 @@ public class LeftBar extends VBox{
         this.counterField.getItems().add("Tous");
         for(Compteur compteur : this.compteurs) {
             if(compteur.getLeQuartier().getNomQuartier().equals(this.neighborhoodField.getValue()) || this.neighborhoodField.getValue().equals("Tous")) {
-                this.counterField.getItems().add(compteur.getNomCompteur());
+                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
+                this.counterField.getItems().add(counter);
             }
         }
         this.counterField.setValue("Tous");
@@ -192,6 +197,10 @@ public class LeftBar extends VBox{
 
     public ComboBox<String> getNeighborhoodField() {
         return this.neighborhoodField;
+    }
+
+    public DatePicker getStartDatePicker() {
+        return this.startDatePicker;
     }
 
     public String getCounter() {
