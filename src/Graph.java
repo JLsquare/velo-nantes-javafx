@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 
 public class Graph extends VBox{
     private LeftBar leftBar;
@@ -16,7 +17,19 @@ public class Graph extends VBox{
     private ArrayList<Compteur> compteurs;
     private ArrayList<DateInfo> dateInfos;
     
-    public Graph(LeftBar leftBar, ArrayList<Quartier> quartiers, ArrayList<Compteur> compteurs, ArrayList<DateInfo> dateInfos) {
+    /**
+     * Constructor of the Graph class
+     * @param leftBar the left bar of the application
+     * @param quartiers the list of all the neighborhoods
+     * @param compteurs the list of all the counters
+     * @param dateInfos the list of all the date infos
+     * @throws IllegalArgumentException if one of the arguments is null
+     */
+    public Graph(LeftBar leftBar, ArrayList<Quartier> quartiers, ArrayList<Compteur> compteurs, ArrayList<DateInfo> dateInfos) throws IllegalArgumentException {
+        if(leftBar == null || quartiers == null || compteurs == null || dateInfos == null){
+            throw new IllegalArgumentException("Null argument");
+        }
+
         this.quartiers = quartiers;
         this.compteurs = compteurs;
         this.dateInfos = dateInfos;
@@ -24,15 +37,15 @@ public class Graph extends VBox{
         this.update(GraphType.totalPassages);
     }
 
-    public void update(GraphType graphType){
-        this.getChildren().clear();
-        this.barChart = new BarChart<String, Number>(new CategoryAxis(), new NumberAxis());
-        this.barChart.setTitle("Graphique");
-        this.barChart.setLegendVisible(false);
-        this.barChart.setMinWidth(800);
-        this.barChart.setMinHeight(576);
-        this.barChart.getData().add(new XYChart.Series<String, Number>());
-        this.getChildren().add(this.barChart);
+    /**
+     * Update the graph
+     * @param graphType the type of the graph
+     * @throws IllegalArgumentException if the argument is null
+     */
+    public void update(GraphType graphType) throws IllegalArgumentException{
+        if(graphType == null){
+            throw new IllegalArgumentException("Null argument");
+        }
 
         DateInfo startDate = null;
         DateInfo endDate = null;
@@ -54,76 +67,144 @@ public class Graph extends VBox{
             this.passagesPerHour(false, startDate, endDate);
         } else if(graphType == GraphType.averagePassagesPerHour){
             this.passagesPerHour(true, startDate, endDate);
+        } else if(graphType == GraphType.totalPassagesPerDay){
+            this.passagesPerDay(false, startDate, endDate);
+        } else if(graphType == GraphType.averagePassagesPerDay){
+            this.passagesPerDay(true, startDate, endDate);
         }
-        /*else if(graphType == GraphType.totalPassagesPerDay)
-            this.totalPassagesPerDay();
-        else if(graphType == GraphType.averagePassagesPerDay)
-            this.averagePassagesPerDay();*/
     }
 
-    public void simplePassages(boolean isAverage, DateInfo startDate, DateInfo endDate){
-        this.barChart.getData().clear();
+    /**
+     * Setup the chart
+     * @param title the title of the chart
+     * @param xAxisLabel the label of the x axis
+     * @param yAxisLabel the label of the y axis
+     * @throws IllegalArgumentException if one of the arguments is null
+     */
+    public void setupChart(String title, String xAxisLabel, String yAxisLabel) throws IllegalArgumentException{
+        if(title == null || xAxisLabel == null || yAxisLabel == null){
+            throw new IllegalArgumentException("Null argument");
+        }
 
-        if(leftBar.getNeighborhood() == "Tous" && leftBar.getCounter() == "Tous"){
+        this.getChildren().clear();
+        this.barChart = new BarChart<>(new CategoryAxis(), new NumberAxis());
+        this.barChart.setTitle(title);
+        this.barChart.getXAxis().setLabel(xAxisLabel);
+        this.barChart.getYAxis().setLabel(yAxisLabel);
+        this.barChart.setLegendVisible(false);
+        this.barChart.setMinWidth(800);
+        this.barChart.setMinHeight(576);
+        this.getChildren().add(this.barChart);
+        this.barChart.getData().clear();
+    }
+
+    /**
+     * Get the selected neighborhood
+     * @return the selected neighborhood
+     */
+    public Quartier getQuartier(){
+        Quartier selectedQuartier = null;
+        for(Quartier quartier : this.quartiers){
+            if(quartier.getNomQuartier().equals(leftBar.getNeighborhood())){
+                selectedQuartier = quartier;
+            }
+        }
+        return selectedQuartier;
+    }
+
+    /**
+     * Get the selected counter
+     * @return the selected counter
+     * @throws IllegalArgumentException if the selected neighborhood is null
+     */
+    public void addData(String name, float value) throws IllegalArgumentException{
+        if(name == null){
+            throw new IllegalArgumentException("Null argument");
+        }
+
+        Series<String, Number> series = new Series<>();
+        series.setName(name);
+        series.getData().add(new Data<String, Number>(name, value));
+        this.barChart.getData().add(series);
+    }
+
+    /**
+     * Display the total or average passages
+     * @param isAverage true if we want the average, false if we want the total
+     * @param startDate the start date
+     * @param endDate the end date
+     * @throws IllegalArgumentException if one of the arguments is null
+     */
+    public void simplePassages(boolean isAverage, DateInfo startDate, DateInfo endDate) throws IllegalArgumentException{
+        if(startDate == null || endDate == null){
+            throw new IllegalArgumentException("Null argument");
+        }
+
+        // Tous les quartiers, tous les compteurs
+        if(leftBar.getNeighborhood().equals("Tous") && leftBar.getCounter().equals("Tous")){
+            this.setupChart("Passages totaux", "Quartiers", "Passages");
             for(Quartier quartier : this.quartiers){
-                XYChart.Series<String, Number> series = new XYChart.Series<>();
-                series.setName(quartier.getNomQuartier());
                 if(isAverage){
                     float average = quartier.averagePassages(startDate, endDate);
-                    series.getData().add(new XYChart.Data<String, Number>(quartier.getNomQuartier(), average));
+                    this.addData(quartier.getNomQuartier(), average);
                 } else {
                     int total = quartier.totalPassages(startDate, endDate);
-                    series.getData().add(new XYChart.Data<String, Number>(quartier.getNomQuartier(), total));
-                }
-                this.barChart.getData().add(series);
-            }
-        } else if (leftBar.getNeighborhood() != "Tous" && leftBar.getCounter() == "Tous"){
-            Quartier selectedQuartier = null;
-            for(Quartier quartier : this.quartiers){
-                if(quartier.getNomQuartier().equals(leftBar.getNeighborhood())){
-                    selectedQuartier = quartier;
-                    break;
+                    this.addData(quartier.getNomQuartier(), total);
                 }
             }
-            if(selectedQuartier != null) {
-                for(Compteur compteur : selectedQuartier.getLesCompteurs()){
-                    String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
-                    XYChart.Series<String, Number> series = new XYChart.Series<>();
-                    series.setName(compteur.getNomCompteur() + compteur.getSens());
-                    if(isAverage){
-                        float average = compteur.averagePassages(startDate, endDate);
-                        series.getData().add(new XYChart.Data<String, Number>(counter, average));
-                    } else {
-                        int total = compteur.totalPassages(startDate, endDate);
-                        series.getData().add(new XYChart.Data<String, Number>(counter, total));
-                    }
-                    this.barChart.getData().add(series);
+        } 
+        
+        // Quartier sélectionné, tous les compteurs du quartier
+        if (!leftBar.getNeighborhood().equals("Tous") && leftBar.getCounter().equals("Tous")){
+            this.setupChart("Passages totaux", "Compteurs", "Passages");
+            Quartier selectedQuartier = this.getQuartier();
+            for(Compteur compteur : selectedQuartier.getLesCompteurs()){
+                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
+                if(isAverage){
+                    float average = compteur.averagePassages(startDate, endDate);
+                    this.addData(counter, average);
+                } else {
+                    int total = compteur.totalPassages(startDate, endDate);
+                    this.addData(counter, total);
                 }
             }
-        } else if (leftBar.getCounter() != "Tous"){
+        } 
+        
+        // compteur sélectionné
+        if (!leftBar.getCounter().equals("Tous")){
+            this.setupChart("Passages totaux", "Compteur", "Passages");
             for(Compteur compteur : this.compteurs){
                 String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
                 if(counter.equals(leftBar.getCounter())){
-                    XYChart.Series<String, Number> series = new XYChart.Series<>();
-                    series.setName(compteur.getNomCompteur() + compteur.getSens());
                     if(isAverage){
                         float average = compteur.averagePassages(startDate, endDate);
-                        series.getData().add(new XYChart.Data<String, Number>(counter, average));
+                        this.addData(counter, average);
                     } else {
                         int total = compteur.totalPassages(startDate, endDate);
-                        series.getData().add(new XYChart.Data<String, Number>(counter, total));
+                        this.addData(counter, total);
                     }
-                    this.barChart.getData().add(series);
                 }
             }
         }
     }
 
-    public void passagesPerHour(boolean isAverage, DateInfo startDate, DateInfo endDate){
-        this.barChart.getData().clear();
-        float[] totalPerHour = new float[24];
+    /**
+     * Display the total or average passages per hour
+     * @param isAverage true if we want the average, false if we want the total
+     * @param startDate the start date
+     * @param endDate the end date
+     * @throws IllegalArgumentException if one of the arguments is null
+     */
+    public void passagesPerHour(boolean isAverage, DateInfo startDate, DateInfo endDate) throws IllegalArgumentException{
+        if(startDate == null || endDate == null){
+            throw new IllegalArgumentException("Null argument");
+        }
 
-        if(leftBar.getNeighborhood() == "Tous" && leftBar.getCounter() == "Tous"){
+        float[] totalPerHour = new float[24];
+        this.setupChart("Passages par heure", "Heures", "Passages");
+
+        // Tous les quartiers, tous les compteurs
+        if(leftBar.getNeighborhood().equals("Tous") && leftBar.getCounter().equals("Tous")){
             for(Quartier quartier : this.quartiers){
                 if(isAverage){
                     float[] average = quartier.averagePassagesPerHour(startDate, endDate);
@@ -137,30 +218,28 @@ public class Graph extends VBox{
                     }
                 }
             }
-        } else if(leftBar.getNeighborhood() != "Tous" && leftBar.getCounter() == "Tous"){
-            Quartier selectedQuartier = null;
-            for(Quartier quartier : this.quartiers){
-                if(quartier.getNomQuartier().equals(leftBar.getNeighborhood())){
-                    selectedQuartier = quartier;
-                    break;
-                }
-            }
-            if(selectedQuartier != null) {
-                for(Compteur compteur : selectedQuartier.getLesCompteurs()){
-                    if(isAverage){
-                        float[] average = compteur.averagePassagesPerHour(startDate, endDate);
-                        for(int i = 0; i < 24; i++){
-                            totalPerHour[i] += average[i];
-                        }
-                    } else {
-                        int[] total = compteur.totalPassagesPerHour(startDate, endDate);
-                        for(int i = 0; i < 24; i++){
-                            totalPerHour[i] += total[i];
-                        }
+        } 
+        
+        // Quartier sélectionné, tous les compteurs du quartier
+        if(!leftBar.getNeighborhood().equals("Tous") && leftBar.getCounter().equals("Tous")){
+            Quartier selectedQuartier = this.getQuartier();
+            for(Compteur compteur : selectedQuartier.getLesCompteurs()){
+                if(isAverage){
+                    float[] average = compteur.averagePassagesPerHour(startDate, endDate);
+                    for(int i = 0; i < 24; i++){
+                        totalPerHour[i] += average[i];
+                    }
+                } else {
+                    int[] total = compteur.totalPassagesPerHour(startDate, endDate);
+                    for(int i = 0; i < 24; i++){
+                        totalPerHour[i] += total[i];
                     }
                 }
             }
-        } else if (leftBar.getCounter() != "Tous"){
+        } 
+        
+        // compteur sélectionné
+        if (!leftBar.getCounter().equals("Tous")){
             for(Compteur compteur : this.compteurs){
                 String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
                 if(counter.equals(leftBar.getCounter())){
@@ -179,11 +258,83 @@ public class Graph extends VBox{
             }
         }
 
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Passages par heure");
         for(int i = 0; i < 24; i++){
-            series.getData().add(new XYChart.Data<String, Number>(Integer.toString(i), totalPerHour[i]));
+            this.addData(Integer.toString(i), totalPerHour[i]);
         }
-        this.barChart.getData().add(series);
+    }
+
+    /**
+     * Display the total or average passages per day
+     * @param isAverage true if we want the average, false if we want the total
+     * @param startDate the start date
+     * @param endDate the end date
+     * @throws IllegalArgumentException if one of the arguments is null
+     */
+    public void passagesPerDay(boolean isAverage, DateInfo startDate, DateInfo endDate) throws IllegalArgumentException{
+        if(startDate == null || endDate == null){
+            throw new IllegalArgumentException("Null argument");
+        }
+
+        float[] totalPerDay = new float[7];
+        this.setupChart("Passages par jour", "Jours", "Passages");
+
+        // Tous les quartiers, tous les compteurs
+        if(leftBar.getNeighborhood().equals("Tous") && leftBar.getCounter().equals("Tous")){
+            for(Quartier quartier : this.quartiers){
+                if(isAverage){
+                    float[] average = quartier.averagePassagesPerDay(startDate, endDate);
+                    for(int i = 0; i < 7; i++){
+                        totalPerDay[i] += average[i];
+                    }
+                } else {
+                    int[] total = quartier.totalPassagesPerDay(startDate, endDate);
+                    for(int i = 0; i < 7; i++){
+                        totalPerDay[i] += total[i];
+                    }
+                }
+            }
+        } 
+        
+        // Quartier sélectionné, tous les compteurs du quartier
+        if(!leftBar.getNeighborhood().equals("Tous") && leftBar.getCounter().equals("Tous")){
+            Quartier selectedQuartier = getQuartier();
+            for(Compteur compteur : selectedQuartier.getLesCompteurs()){
+                if(isAverage){
+                    float[] average = compteur.averagePassagesPerDay(startDate, endDate);
+                    for(int i = 0; i < 7; i++){
+                        totalPerDay[i] += average[i];
+                    }
+                } else {
+                    int[] total = compteur.totalPassagesPerDay(startDate, endDate);
+                    for(int i = 0; i < 7; i++){
+                        totalPerDay[i] += total[i];
+                    }
+                }
+            }
+        } 
+        
+        // compteur sélectionné
+        if(!leftBar.getCounter().equals("Tous")){
+            for(Compteur compteur : this.compteurs){
+                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
+                if(counter.equals(leftBar.getCounter())){
+                    if(isAverage){
+                        float[] average = compteur.averagePassagesPerDay(startDate, endDate);
+                        for(int i = 0; i < 7; i++){
+                            totalPerDay[i] += average[i];
+                        }
+                    } else {
+                        int[] total = compteur.totalPassagesPerDay(startDate, endDate);
+                        for(int i = 0; i < 7; i++){
+                            totalPerDay[i] += total[i];
+                        }
+                    }
+                }
+            }
+        }
+
+        for(int i = 0; i < 7; i++){
+            this.addData(Integer.toString(i), totalPerDay[i]);
+        }
     }
 }
