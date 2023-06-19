@@ -17,7 +17,7 @@ import modele.entities.Compteur;
 import modele.entities.Quartier;
 
 public class Filters extends VBox implements IFilters{
-        private GridPane topFiltersGrid;
+    private GridPane topFiltersGrid;
     private GridPane bottomFiltersGrid;
 
     private Label startDateLabel;
