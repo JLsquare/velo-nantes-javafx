@@ -3,16 +3,11 @@ package view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import modele.dao.*;
 import modele.database.Database;
-import modele.entities.*;
 
 public class DataMenu extends HBox {
     private String mode;
@@ -22,6 +17,8 @@ public class DataMenu extends HBox {
     private DateInfoDao dateInfoDao;
     private ComptageDao comptageDao;
     private InsertQuartier insertQuartier;
+    private RemoveQuartier removeQuartier;
+    private RemoveCompteur removeCompteur;
     private VBox menuList;
 
     public DataMenu(Database database, QuartierDao quartierDao, CompteurDao compteurDao, DateInfoDao dateInfoDao, ComptageDao comptageDao) throws IllegalArgumentException{
@@ -86,6 +83,8 @@ public class DataMenu extends HBox {
         }
 
         this.insertQuartier = new InsertQuartier(this.quartierDao);
+        this.removeQuartier = new RemoveQuartier(this.quartierDao);
+        this.removeCompteur = new RemoveCompteur(this.quartierDao, this.compteurDao);
 
         this.getChildren().addAll(menuList);
     }
@@ -96,6 +95,12 @@ public class DataMenu extends HBox {
         if(this.mode.equals("Saisie")){
             if(this.table.equals("Quartier")){
                 this.getChildren().add(this.insertQuartier);
+            }
+        } else if(this.mode.equals("Suppression")){
+            if(this.table.equals("Quartier")){
+                this.getChildren().add(this.removeQuartier);
+            } else if(this.table.equals("Compteur")){
+                this.getChildren().add(this.removeCompteur);
             }
         }
     }
