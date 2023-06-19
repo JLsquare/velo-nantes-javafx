@@ -33,23 +33,6 @@ public class Graph extends VBox{
         this.barChart.setMinHeight(576);
         this.barChart.getData().add(new XYChart.Series<String, Number>());
         this.getChildren().add(this.barChart);
-        if(graphType == GraphType.totalPassages){
-            this.simplePassages(false);
-        } else if (graphType == GraphType.averagePassages){
-            this.simplePassages(true);
-        }
-        /*else if(graphType == GraphType.totalPassagesPerHour)
-            this.totalPassagesPerHour();
-        else if(graphType == GraphType.averagePassagesPerHour)
-            this.averagePassagesPerHour();
-        else if(graphType == GraphType.totalPassagesPerDay)
-            this.totalPassagesPerDay();
-        else if(graphType == GraphType.averagePassagesPerDay)
-            this.averagePassagesPerDay();*/
-    }
-
-    public void simplePassages(boolean isAverage){
-        this.barChart.getData().clear();
 
         DateInfo startDate = null;
         DateInfo endDate = null;
@@ -62,6 +45,24 @@ public class Graph extends VBox{
                 endDate = dateInfo;
             }
         }
+
+        if(graphType == GraphType.totalPassages){
+            this.simplePassages(false, startDate, endDate);
+        } else if (graphType == GraphType.averagePassages){
+            this.simplePassages(true, startDate, endDate);
+        } else if(graphType == GraphType.totalPassagesPerHour){
+            this.passagesPerHour(false, startDate, endDate);
+        } else if(graphType == GraphType.averagePassagesPerHour){
+            this.passagesPerHour(true, startDate, endDate);
+        }
+        /*else if(graphType == GraphType.totalPassagesPerDay)
+            this.totalPassagesPerDay();
+        else if(graphType == GraphType.averagePassagesPerDay)
+            this.averagePassagesPerDay();*/
+    }
+
+    public void simplePassages(boolean isAverage, DateInfo startDate, DateInfo endDate){
+        this.barChart.getData().clear();
 
         if(leftBar.getNeighborhood() == "Tous" && leftBar.getCounter() == "Tous"){
             for(Quartier quartier : this.quartiers){
@@ -116,5 +117,73 @@ public class Graph extends VBox{
                 }
             }
         }
+    }
+
+    public void passagesPerHour(boolean isAverage, DateInfo startDate, DateInfo endDate){
+        this.barChart.getData().clear();
+        float[] totalPerHour = new float[24];
+
+        if(leftBar.getNeighborhood() == "Tous" && leftBar.getCounter() == "Tous"){
+            for(Quartier quartier : this.quartiers){
+                if(isAverage){
+                    float[] average = quartier.averagePassagesPerHour(startDate, endDate);
+                    for(int i = 0; i < 24; i++){
+                        totalPerHour[i] += average[i];
+                    }
+                } else {
+                    int[] total = quartier.totalPassagesPerHour(startDate, endDate);
+                    for(int i = 0; i < 24; i++){
+                        totalPerHour[i] += total[i];
+                    }
+                }
+            }
+        } else if(leftBar.getNeighborhood() != "Tous" && leftBar.getCounter() == "Tous"){
+            Quartier selectedQuartier = null;
+            for(Quartier quartier : this.quartiers){
+                if(quartier.getNomQuartier().equals(leftBar.getNeighborhood())){
+                    selectedQuartier = quartier;
+                    break;
+                }
+            }
+            if(selectedQuartier != null) {
+                for(Compteur compteur : selectedQuartier.getLesCompteurs()){
+                    if(isAverage){
+                        float[] average = compteur.averagePassagesPerHour(startDate, endDate);
+                        for(int i = 0; i < 24; i++){
+                            totalPerHour[i] += average[i];
+                        }
+                    } else {
+                        int[] total = compteur.totalPassagesPerHour(startDate, endDate);
+                        for(int i = 0; i < 24; i++){
+                            totalPerHour[i] += total[i];
+                        }
+                    }
+                }
+            }
+        } else if (leftBar.getCounter() != "Tous"){
+            for(Compteur compteur : this.compteurs){
+                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
+                if(counter.equals(leftBar.getCounter())){
+                    if(isAverage){
+                        float[] average = compteur.averagePassagesPerHour(startDate, endDate);
+                        for(int i = 0; i < 24; i++){
+                            totalPerHour[i] = average[i];
+                        }
+                    } else {
+                        int[] total = compteur.totalPassagesPerHour(startDate, endDate);
+                        for(int i = 0; i < 24; i++){
+                            totalPerHour[i] = total[i];
+                        }
+                    }
+                }
+            }
+        }
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Passages par heure");
+        for(int i = 0; i < 24; i++){
+            series.getData().add(new XYChart.Data<String, Number>(Integer.toString(i), totalPerHour[i]));
+        }
+        this.barChart.getData().add(series);
     }
 }
