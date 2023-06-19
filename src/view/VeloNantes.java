@@ -20,17 +20,45 @@ public class VeloNantes extends Application {
     private CompteurDao compteurDao;
     private DateInfoDao dateInfoDao;
     private ComptageDao comptageDao;
+    private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
         this.initializeData();
         primaryStage.setTitle("Velo de Nantes");
+        this.initializeComponents();
 
+    }
+
+    private void initializeComponents(){
         this.menu = new MenuButton();
         this.menu.setText("Menu");
         this.menu.getItems().add(new javafx.scene.control.MenuItem("Graphes"));
         this.menu.getItems().add(new javafx.scene.control.MenuItem("Map"));
         this.menu.getItems().add(new javafx.scene.control.MenuItem("Données"));
+        this.menu.getItems().add(new javafx.scene.control.MenuItem("Quitter"));
+        //listener
+        this.menu.getItems().get(0).setOnAction(e -> {
+            System.out.println("Graphes");
+            this.graph.setVisible(true);
+            this.leftBar.getFilters().setVisible(true);
+        });
+        this.menu.getItems().get(1).setOnAction(e -> {
+            System.out.println("Map");
+            //hide graph
+            this.graph.setVisible(false);
+            this.leftBar.getFilters().setVisible(false);
+        });
+        this.menu.getItems().get(2).setOnAction(e -> {
+            System.out.println("Données");
+            this.graph.setVisible(false);
+            this.leftBar.getFilters().setVisible(false);
+        });
+        this.menu.getItems().get(3).setOnAction(e -> {
+            System.out.println("Quitter");
+            this.primaryStage.close();
+        });
 
         this.graph = new Graph(this.quartierDao.getAll(), this.compteurDao.getAll(), this.dateInfoDao.getAll());
         this.leftBar = new LeftBar(this.graph, this.quartierDao.getAll(), this.compteurDao.getAll());
@@ -39,20 +67,18 @@ public class VeloNantes extends Application {
         rightPane.setPadding(new Insets(15, 12, 15, 12));
         rightPane.getChildren().addAll(menu, graph);
 
-        // Set menu to top right
         AnchorPane.setTopAnchor(menu, 0.0);
         AnchorPane.setRightAnchor(menu, 0.0);
 
-        // Set graph to below the menu with some padding
-        AnchorPane.setTopAnchor(graph, 30.0);  // Change this value according to your menu's height
+        AnchorPane.setTopAnchor(graph, 30.0);
 
         BorderPane root = new BorderPane();
         root.setLeft(this.leftBar);
-        root.setCenter(rightPane);  // Changed from setRight to setCenter to use the remaining space for the rightPane
+        root.setCenter(rightPane);
 
         Scene scene = new Scene(root, 1280, 720);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        this.primaryStage.setScene(scene);
+        this.primaryStage.show();
     }
 
     private void initializeData(){

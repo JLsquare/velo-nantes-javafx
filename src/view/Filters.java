@@ -95,7 +95,7 @@ public class Filters extends VBox implements IFilters{
         this.neighborhoodField = new ComboBox<>();
         this.neighborhoodField.getItems().add("Tous");
         for(Quartier quartier : this.quartiers) {
-            this.neighborhoodField.getItems().add(quartier.getNomQuartier());
+            this.neighborhoodField.getItems().add(quartier.getNomQuartier() + " " + quartier.getIdQuartier());
         }
         this.neighborhoodField.setValue("Tous");
 

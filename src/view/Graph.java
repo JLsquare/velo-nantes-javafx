@@ -121,7 +121,7 @@ public class Graph extends VBox{
     public Quartier getQuartier(){
         Quartier selectedQuartier = null;
         for(Quartier quartier : this.quartiers){
-            if(quartier.getNomQuartier().equals(this.neighborhoodName)){
+            if((quartier.getNomQuartier() + " " + quartier.getIdQuartier()).equals(this.neighborhoodName)){
                 selectedQuartier = quartier;
             }
         }
@@ -162,10 +162,10 @@ public class Graph extends VBox{
             for(Quartier quartier : this.quartiers){
                 if(isAverage){
                     float average = quartier.averagePassages(startDate, endDate);
-                    this.addData(quartier.getNomQuartier(), average);
+                    this.addData(quartier.getNomQuartier() + " " + quartier.getIdQuartier(), average);
                 } else {
                     int total = quartier.totalPassages(startDate, endDate);
-                    this.addData(quartier.getNomQuartier(), total);
+                    this.addData(quartier.getNomQuartier() + " " + quartier.getIdQuartier(), total);
                 }
             }
         } 
