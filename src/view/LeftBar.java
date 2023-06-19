@@ -13,11 +13,12 @@ public class LeftBar extends VBox{
     private Label title;
     private Line separator;
     private Pane spacer;
-    private Filters filters;
-    private Authentification authentification;
     private ArrayList<Quartier> quartiers;
     private ArrayList<Compteur> compteurs;
     private Graph graph;
+    private Filters filters;
+    private Authentification authentification;
+    private Connected connected;
     private Database database;
 
     public LeftBar(Graph graph, ArrayList<Quartier> quartiers, ArrayList<Compteur> compteurs, Database database) throws IllegalArgumentException{
@@ -53,7 +54,7 @@ public class LeftBar extends VBox{
         this.filters = new Filters(this.graph, this.quartiers, this.compteurs);
         this.getChildren().add(this.filters);
 
-        this.authentification = new Authentification(this.database);
+        this.authentification = new Authentification(this.database, this);
     }
 
     public Filters getFilters(){
@@ -67,6 +68,7 @@ public class LeftBar extends VBox{
     public void removeAll(){
         this.getChildren().remove(this.filters);
         this.getChildren().remove(this.authentification);
+        this.getChildren().remove(this.connected);
     }
 
     public void toGraph(){
@@ -74,8 +76,18 @@ public class LeftBar extends VBox{
         this.getChildren().add(this.filters);
     }
 
-    public void toData(){
+    public void toAuthentification(){
         this.removeAll();
-        this.getChildren().add(this.authentification);
+        if(this.connected != null){
+            this.getChildren().add(this.connected);
+        } else {
+            this.getChildren().add(this.authentification);
+        }
+    }
+
+    public void toConnected(String login){
+        this.removeAll();
+        this.connected = new Connected(login);
+        this.getChildren().add(this.connected);
     }
 }

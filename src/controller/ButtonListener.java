@@ -30,6 +30,7 @@ public class ButtonListener implements EventHandler<ActionEvent> {
         try{
             this.database.openWriteConnection(login, password);
             this.authentification.setError("Authentification réussie.");
+            this.authentification.connected();
         }catch(Exception e){
             this.authentification.setError(e.getMessage());
             return;

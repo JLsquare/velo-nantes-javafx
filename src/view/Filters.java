@@ -106,27 +106,33 @@ public class Filters extends VBox implements IFilters{
         this.group = new ToggleGroup();
 
         this.totalPassagesLabel = new Label("Total passages:");
-        this.totalPassages = new RadioButton("totalPassages");
+        this.totalPassages = new RadioButton();
+        this.totalPassages.setUserData("totalPassages");
         this.totalPassages.setToggleGroup(this.group);
         
         this.averagePassagesLabel = new Label("Moyenne passages:");
-        this.averagePassages = new RadioButton("averagePassages");
+        this.averagePassages = new RadioButton();
+        this.averagePassages.setUserData("averagePassages");
         this.averagePassages.setToggleGroup(this.group);
         
         this.totalPassagesPerHourLabel = new Label("Total passages par heure:");
-        this.totalPassagesPerHour = new RadioButton("totalPassagesPerHour");
+        this.totalPassagesPerHour = new RadioButton();
+        this.totalPassagesPerHour.setUserData("totalPassagesPerHour");
         this.totalPassagesPerHour.setToggleGroup(this.group);
         
         this.averagePassagesPerHourLabel = new Label("Moyenne passages par heure:");
-        this.averagePassagesPerHour = new RadioButton("averagePassagesPerHour");
+        this.averagePassagesPerHour = new RadioButton();
+        this.averagePassagesPerHour.setUserData("averagePassagesPerHour");
         this.averagePassagesPerHour.setToggleGroup(this.group);
         
         this.totalPassagesPerDayLabel = new Label("Total passage par jour:");
-        this.totalPassagesPerDay = new RadioButton("totalPassagesPerDay");
+        this.totalPassagesPerDay = new RadioButton();
+        this.totalPassagesPerDay.setUserData("totalPassagesPerDay");
         this.totalPassagesPerDay.setToggleGroup(this.group);
         
         this.averagePassagesPerDayLabel = new Label("Moyenne passages par jour:");
-        this.averagePassagesPerDay = new RadioButton("averagePassagesPerDay");
+        this.averagePassagesPerDay = new RadioButton();
+        this.averagePassagesPerDay.setUserData("averagePassagesPerDay");
         this.averagePassagesPerDay.setToggleGroup(this.group);
 
         this.group.selectToggle(this.totalPassages);
@@ -210,6 +216,6 @@ public class Filters extends VBox implements IFilters{
     }
 
     public String getType() {
-        return ((RadioButton) this.group.getSelectedToggle()).getText();
+        return (String)this.group.getSelectedToggle().getUserData();
     }
 }

@@ -15,6 +15,7 @@ public class VeloNantes extends Application {
     private LeftBar leftBar;
     private MenuButton menu;
     private Graph graph;
+    private DataMenu dataMenu;
     private Database database;
     private QuartierDao quartierDao;
     private CompteurDao compteurDao;
@@ -38,22 +39,29 @@ public class VeloNantes extends Application {
         this.menu.getItems().add(new javafx.scene.control.MenuItem("Map"));
         this.menu.getItems().add(new javafx.scene.control.MenuItem("Données"));
         this.menu.getItems().add(new javafx.scene.control.MenuItem("Quitter"));
-        //listener
+
+        AnchorPane rightPane = new AnchorPane();
+
         this.menu.getItems().get(0).setOnAction(e -> {
             System.out.println("Graphes");
-            this.graph.setVisible(true);
+            rightPane.getChildren().clear();
+            rightPane.getChildren().addAll(menu, graph); 
             this.leftBar.toGraph();
         });
+
         this.menu.getItems().get(1).setOnAction(e -> {
             System.out.println("Map");
-            this.graph.setVisible(false);
-            //
+            rightPane.getChildren().clear(); 
+            rightPane.getChildren().add(menu);
         });
+
         this.menu.getItems().get(2).setOnAction(e -> {
             System.out.println("Données");
-            this.graph.setVisible(false);
-            this.leftBar.toData();
+            rightPane.getChildren().clear(); 
+            rightPane.getChildren().addAll(menu, dataMenu); 
+            this.leftBar.toAuthentification();
         });
+
         this.menu.getItems().get(3).setOnAction(e -> {
             System.out.println("Quitter");
             this.primaryStage.close();
@@ -61,8 +69,8 @@ public class VeloNantes extends Application {
 
         this.graph = new Graph(this.quartierDao.getAll(), this.compteurDao.getAll(), this.dateInfoDao.getAll());
         this.leftBar = new LeftBar(this.graph, this.quartierDao.getAll(), this.compteurDao.getAll(), this.database);
+        this.dataMenu = new DataMenu(this.database, this.quartierDao, this.compteurDao, this.dateInfoDao, this.comptageDao);
 
-        AnchorPane rightPane = new AnchorPane();
         rightPane.setPadding(new Insets(15, 12, 15, 12));
         rightPane.getChildren().addAll(menu, graph);
 
@@ -70,6 +78,8 @@ public class VeloNantes extends Application {
         AnchorPane.setRightAnchor(menu, 0.0);
 
         AnchorPane.setTopAnchor(graph, 30.0);
+
+        AnchorPane.setTopAnchor(dataMenu, 30.0);
 
         BorderPane root = new BorderPane();
         root.setLeft(this.leftBar);

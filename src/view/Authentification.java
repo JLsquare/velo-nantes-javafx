@@ -24,9 +24,11 @@ public class Authentification extends VBox {
     private Button validateButton;
     private ButtonListener buttonListener;
     private Database database;
+    private LeftBar leftBar;
 
-    public Authentification(Database database){
+    public Authentification(Database database, LeftBar leftBar){
         this.database = database;
+        this.leftBar = leftBar;
         this.initializeComponents();
     }
 
@@ -43,13 +45,6 @@ public class Authentification extends VBox {
         this.error.maxWidth(100);
         this.error.setWrapText(true);
         this.validateButton = new Button("Valider");
-
-        this.authentificationLabel.getStyleClass().add("auth-label");
-        this.loginLabel.getStyleClass().add("label");
-        this.passwordLabel.getStyleClass().add("label");
-        this.login.getStyleClass().add("text-field");
-        this.password.getStyleClass().add("password-field");
-        this.validateButton.getStyleClass().add("button");
         
         this.buttonListener = new ButtonListener(this, this.database);
         this.validateButton.setOnAction(this.buttonListener);
@@ -87,5 +82,9 @@ public class Authentification extends VBox {
             newError += error.charAt(i);
         }
         this.error.setText(newError);
+    }
+
+    public void connected(){
+        this.leftBar.toConnected(this.login.getText());
     }
 }
