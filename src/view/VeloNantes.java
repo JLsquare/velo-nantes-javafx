@@ -42,18 +42,17 @@ public class VeloNantes extends Application {
         this.menu.getItems().get(0).setOnAction(e -> {
             System.out.println("Graphes");
             this.graph.setVisible(true);
-            this.leftBar.getFilters().setVisible(true);
+            this.leftBar.toGraph();
         });
         this.menu.getItems().get(1).setOnAction(e -> {
             System.out.println("Map");
-            //hide graph
             this.graph.setVisible(false);
-            this.leftBar.getFilters().setVisible(false);
+            //
         });
         this.menu.getItems().get(2).setOnAction(e -> {
             System.out.println("Données");
             this.graph.setVisible(false);
-            this.leftBar.getFilters().setVisible(false);
+            this.leftBar.toData();
         });
         this.menu.getItems().get(3).setOnAction(e -> {
             System.out.println("Quitter");
@@ -61,7 +60,7 @@ public class VeloNantes extends Application {
         });
 
         this.graph = new Graph(this.quartierDao.getAll(), this.compteurDao.getAll(), this.dateInfoDao.getAll());
-        this.leftBar = new LeftBar(this.graph, this.quartierDao.getAll(), this.compteurDao.getAll());
+        this.leftBar = new LeftBar(this.graph, this.quartierDao.getAll(), this.compteurDao.getAll(), this.database);
 
         AnchorPane rightPane = new AnchorPane();
         rightPane.setPadding(new Insets(15, 12, 15, 12));
