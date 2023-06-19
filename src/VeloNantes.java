@@ -73,7 +73,7 @@ public class VeloNantes extends Application {
         launch(args);
     }
 
-    public void updateGraph(){
-        this.graph.update();
+    public void updateGraph(GraphType type){
+        this.graph.update(type);
     }
 }

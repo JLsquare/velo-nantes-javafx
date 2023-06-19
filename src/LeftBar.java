@@ -54,7 +54,9 @@ public class LeftBar extends VBox{
 
     private StringListener stringListener;
     private DateListener dateListener;
-    VeloNantes veloNantes;
+    private ToggleListener toggleListener;
+
+    private VeloNantes veloNantes;
 
     public LeftBar(VeloNantes veloNantes, ArrayList<Quartier> quartiers, ArrayList<Compteur> compteurs) {
         this.veloNantes = veloNantes;
@@ -63,6 +65,7 @@ public class LeftBar extends VBox{
 
         this.stringListener = new StringListener(this);
         this.dateListener = new DateListener(this);
+        this.toggleListener = new ToggleListener(this);
 
         this.setPadding(new Insets(15, 12, 15, 12));
         this.setSpacing(10);
@@ -94,13 +97,11 @@ public class LeftBar extends VBox{
         this.startDatePicker = new DatePicker();
         LocalDate startDate = LocalDate.of(2020, 1, 1);
         this.startDatePicker.setValue(startDate);
-        this.startDatePicker.valueProperty().addListener(this.dateListener);
 
         this.endDateLabel = new Label("Date fin:");
         this.endDatePicker = new DatePicker();
         LocalDate endDate = LocalDate.of(2023, 01, 24);
         this.endDatePicker.setValue(endDate);
-        this.endDatePicker.valueProperty().addListener(this.dateListener);
 
         this.neighborhoodLabel = new Label("Quartier:");
         this.neighborhoodField = new ComboBox<>();
@@ -109,38 +110,36 @@ public class LeftBar extends VBox{
             this.neighborhoodField.getItems().add(quartier.getNomQuartier());
         }
         this.neighborhoodField.setValue("Tous");
-        this.neighborhoodField.valueProperty().addListener(this.stringListener);
 
         this.counterLabel = new Label("Compteur:");
         this.counterField = new ComboBox<>();
-        this.counterField.valueProperty().addListener(this.stringListener);
 
         this.updateCompteurs();
 
         this.group = new ToggleGroup();
 
         this.totalPassagesLabel = new Label("Total passages:");
-        this.totalPassages = new RadioButton();
+        this.totalPassages = new RadioButton(GraphType.totalPassages.toString());
         this.totalPassages.setToggleGroup(this.group);
         
         this.averagePassagesLabel = new Label("Moyenne passages:");
-        this.averagePassages = new RadioButton();
+        this.averagePassages = new RadioButton(GraphType.averagePassages.toString());
         this.averagePassages.setToggleGroup(this.group);
         
         this.totalPassagesPerHourLabel = new Label("Total passages par heure:");
-        this.totalPassagesPerHour = new RadioButton();
+        this.totalPassagesPerHour = new RadioButton(GraphType.totalPassagesPerHour.toString());
         this.totalPassagesPerHour.setToggleGroup(this.group);
         
         this.averagePassagesPerHourLabel = new Label("Moyenne passages par heure:");
-        this.averagePassagesPerHour = new RadioButton();
+        this.averagePassagesPerHour = new RadioButton(GraphType.averagePassagesPerHour.toString());
         this.averagePassagesPerHour.setToggleGroup(this.group);
         
         this.totalPassagesPerDayLabel = new Label("Total passage par jour:");
-        this.totalPassagesPerDay = new RadioButton();
+        this.totalPassagesPerDay = new RadioButton(GraphType.totalPassagesPerDay.toString());
         this.totalPassagesPerDay.setToggleGroup(this.group);
         
         this.averagePassagesPerDayLabel = new Label("Moyenne passages par jour:");
-        this.averagePassagesPerDay = new RadioButton();
+        this.averagePassagesPerDay = new RadioButton(GraphType.averagePassagesPerDay.toString());
         this.averagePassagesPerDay.setToggleGroup(this.group);
 
         this.group.selectToggle(this.totalPassages);
@@ -165,6 +164,12 @@ public class LeftBar extends VBox{
         this.bottomFiltersGrid.add(this.totalPassagesPerDay, 1, 8);
         this.bottomFiltersGrid.add(this.averagePassagesPerDayLabel, 0, 9);
         this.bottomFiltersGrid.add(this.averagePassagesPerDay, 1, 9);
+
+        this.startDatePicker.valueProperty().addListener(this.dateListener);
+        this.endDatePicker.valueProperty().addListener(this.dateListener);
+        this.neighborhoodField.valueProperty().addListener(this.stringListener);
+        this.counterField.valueProperty().addListener(this.stringListener);
+        this.group.selectedToggleProperty().addListener(this.toggleListener);
 
         this.getChildren().add(this.topFiltersGrid);
         this.getChildren().add(this.bottomFiltersGrid);
@@ -212,6 +217,11 @@ public class LeftBar extends VBox{
     }
 
     public void updateGraph() {
-        this.veloNantes.updateGraph();
+        String type = this.getType();
+        GraphType graphType = null;
+        graphType = GraphType.valueOf(type);
+        System.out.println("updateGraph : " + type + " " + graphType);
+        this.veloNantes.updateGraph(graphType);
     }
+
 }
