@@ -173,7 +173,7 @@ public class Filters extends VBox implements IFilters{
         this.counterField.getItems().clear();
         this.counterField.getItems().add("Tous");
         for(Compteur compteur : this.compteurs) {
-            if(compteur.getLeQuartier().getNomQuartier().equals(this.neighborhoodField.getValue()) || this.neighborhoodField.getValue().equals("Tous")) {
+            if((compteur.getLeQuartier().getNomQuartier() + " " + compteur.getLeQuartier().getIdQuartier()).equals(this.neighborhoodField.getValue()) || this.neighborhoodField.getValue().equals("Tous")) {
                 String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
                 this.counterField.getItems().add(counter);
             }
