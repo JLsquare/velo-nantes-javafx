@@ -1,15 +1,19 @@
+package view;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuButton;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import modele.dao.*;
 import modele.database.Database;
+
 import java.sql.SQLException;
 
 public class VeloNantes extends Application {
     private LeftBar leftBar;
-    private LeMenu menu;
+    private MenuButton menu;
     private Graph graph;
     private Database database;
     private QuartierDao quartierDao;
@@ -22,9 +26,14 @@ public class VeloNantes extends Application {
         this.initializeData();
         primaryStage.setTitle("Velo de Nantes");
 
-        this.leftBar = new LeftBar(this, quartierDao.getAll(), compteurDao.getAll());
-        this.menu = new LeMenu();
-        this.graph = new Graph(this.leftBar, quartierDao.getAll(), compteurDao.getAll(), dateInfoDao.getAll());
+        this.menu = new MenuButton();
+        this.menu.setText("Menu");
+        this.menu.getItems().add(new javafx.scene.control.MenuItem("Graphes"));
+        this.menu.getItems().add(new javafx.scene.control.MenuItem("Map"));
+        this.menu.getItems().add(new javafx.scene.control.MenuItem("Données"));
+
+        this.graph = new Graph(this.quartierDao.getAll(), this.compteurDao.getAll(), this.dateInfoDao.getAll());
+        this.leftBar = new LeftBar(this.graph, this.quartierDao.getAll(), this.compteurDao.getAll());
 
         AnchorPane rightPane = new AnchorPane();
         rightPane.setPadding(new Insets(15, 12, 15, 12));
@@ -73,7 +82,7 @@ public class VeloNantes extends Application {
         launch(args);
     }
 
-    public void updateGraph(GraphType type){
-        this.graph.update(type);
+    public Graph getGraph(){
+        return this.graph;
     }
 }

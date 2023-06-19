@@ -1,18 +1,20 @@
+package controller;
 import javafx.beans.value.ChangeListener;
+import view.IFilters;
 
 public class StringListener implements ChangeListener<String> {
-    private LeftBar leftBar;
+    private IFilters filters;
 
-    public StringListener(LeftBar leftBar) {
-        this.leftBar = leftBar;
+    public StringListener(IFilters filters) {
+        this.filters = filters;
     }
 
     @Override
     public void changed(javafx.beans.value.ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        if(observable == this.leftBar.getNeighborhoodField().valueProperty()){
-            this.leftBar.updateCompteurs();
+        if(observable == this.filters.getNeighborhoodField().valueProperty()){
+            this.filters.updateCompteurs();
         }
         System.out.println("StringListener: " + oldValue + " " + newValue);
-        leftBar.updateGraph();
+        filters.updateGraph();
     }    
 }
