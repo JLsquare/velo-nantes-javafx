@@ -20,11 +20,9 @@ public class RemoveQuartierListener implements ChangeListener<String>, EventHand
 
     @Override
     public void changed(ObservableValue<? extends String> observable, String before, String after) {
-        for(Quartier quartier : VeloNantes.quartierDao.getAll()){
-            if((quartier.getNomQuartier() + " " + quartier.getIdQuartier()).equals(after)){
-                this.quartier = quartier;
-            }
-        }
+        String[] splitQuartier = after.split(" ");
+        int idQuartier = Integer.parseInt(splitQuartier[splitQuartier.length - 1]);
+        this.quartier = VeloNantes.quartierDao.get(idQuartier);
         System.out.println("RemoveQuartierListener: " + quartier);
     }
     

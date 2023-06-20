@@ -1,6 +1,6 @@
 package view;
 
-import controller.ButtonListener;
+import controller.AuthentificationListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -21,7 +21,7 @@ public class Authentification extends VBox {
     private PasswordField password;
     private Label error;
     private Button validateButton;
-    private ButtonListener buttonListener;
+    private AuthentificationListener listener;
     private LeftBar leftBar;
 
     public Authentification(LeftBar leftBar){
@@ -43,8 +43,8 @@ public class Authentification extends VBox {
         this.error.setWrapText(true);
         this.validateButton = new Button("Valider");
         
-        this.buttonListener = new ButtonListener(this);
-        this.validateButton.setOnAction(this.buttonListener);
+        this.listener = new AuthentificationListener(this);
+        this.validateButton.setOnAction(this.listener);
 
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setVgap(10);

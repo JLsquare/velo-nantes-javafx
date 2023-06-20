@@ -6,10 +6,10 @@ import view.Authentification;
 import view.VeloNantes;
 
 
-public class ButtonListener implements EventHandler<ActionEvent> {
+public class AuthentificationListener implements EventHandler<ActionEvent> {
     private Authentification authentification;
 
-    public ButtonListener(Authentification authentification) throws IllegalArgumentException{
+    public AuthentificationListener(Authentification authentification) throws IllegalArgumentException{
         if(authentification == null){
             throw new IllegalArgumentException("ButtonListener: authentification cannot be null");
         }

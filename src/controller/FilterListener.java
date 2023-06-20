@@ -30,7 +30,6 @@ public class FilterListener implements ChangeListener<Object> {
     public void changed(javafx.beans.value.ObservableValue<?> observable, Object before, Object after) {
         if(observable == this.filters.getNeighborhoodField().valueProperty()){
             String nomQuartier = (String) after;
-            updateCompteurs(nomQuartier);
             if(nomQuartier.equals("Tous")){
                 this.quartier = null;
             } else {
@@ -38,6 +37,7 @@ public class FilterListener implements ChangeListener<Object> {
                 int idQuartier = Integer.parseInt(splitQuartier[splitQuartier.length - 1]);
                 this.quartier = VeloNantes.quartierDao.get(idQuartier);
             }
+            this.updateCompteurs();
         }
         if(observable == this.filters.getCounterField().valueProperty()){
             String nomCompteur = (String) after;
@@ -64,12 +64,12 @@ public class FilterListener implements ChangeListener<Object> {
         this.updateGraph();
     }
 
-    private void updateCompteurs(String newValue) {
+    private void updateCompteurs() {
         System.out.println("updateCompteurs");
         this.filters.getCounterField().getItems().clear();
         this.filters.getCounterField().getItems().add("Tous");
         for (Compteur compteur : VeloNantes.compteurDao.getAll()) {
-            if ((compteur.getLeQuartier().getNomQuartier() + " " + compteur.getLeQuartier().getIdQuartier()).equals(this.filters.getNeighborhoodField().getValue()) || this.filters.getNeighborhoodField().getValue().equals("Tous")) {
+            if (compteur.getLeQuartier().equals(this.quartier) || this.quartier == null) {
                 String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
                 this.filters.getCounterField().getItems().add(counter);
             }

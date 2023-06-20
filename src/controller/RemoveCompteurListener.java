@@ -6,12 +6,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import modele.entities.Comptage;
 import modele.entities.Compteur;
+import modele.entities.Quartier;
 import view.RemoveCompteur;
 import view.VeloNantes;
 
 public class RemoveCompteurListener implements ChangeListener<String>, EventHandler<ActionEvent> {
     private RemoveCompteur removeCompteur;
     private Compteur compteur;
+    private Quartier quartier;
 
     public RemoveCompteurListener(RemoveCompteur removeCompteur){
         this.removeCompteur = removeCompteur;
@@ -24,16 +26,29 @@ public class RemoveCompteurListener implements ChangeListener<String>, EventHand
             int idCompteur = Integer.parseInt(splitCompteur[splitCompteur.length - 1]);
             this.compteur = VeloNantes.compteurDao.get(idCompteur);
         } else {
-        this.removeCompteur.getCompteurField().getItems().clear();
-            for(Compteur compteur : VeloNantes.compteurDao.getAll()) {
-                if((compteur.getLeQuartier().getNomQuartier() + " " + compteur.getLeQuartier().getIdQuartier()).equals(this.removeCompteur.getQuartier()) || this.removeCompteur.getQuartier().equals("Tous")) {
-                    String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
-                    this.removeCompteur.getCompteurField().getItems().add(counter);
-                }
+            if(after.equals("Tous")){
+                this.quartier = null;
+            } else {
+                String[] splitQuartier = ((String) after).split(" ");
+                int idQuartier = Integer.parseInt(splitQuartier[splitQuartier.length - 1]);
+                this.quartier = VeloNantes.quartierDao.get(idQuartier);
             }
+            this.updateCompteurs();
         }
         System.out.println("RemoveCompteurListener: " + compteur);
     }
+
+    private void updateCompteurs() {
+        System.out.println("updateCompteurs");
+        this.removeCompteur.getCompteurField().getItems().clear();
+        for (Compteur compteur : VeloNantes.compteurDao.getAll()) {
+            if (compteur.getLeQuartier().equals(this.quartier) || this.quartier == null) {
+                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
+                this.removeCompteur.getCompteurField().getItems().add(counter);
+            }
+        }
+    }
+
     
     @Override
     public void handle(ActionEvent event) {

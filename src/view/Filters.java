@@ -12,7 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import modele.entities.Quartier;
 
-public class Filters extends VBox implements IFilters{
+public class Filters extends VBox{
     private GridPane topFiltersGrid;
     private GridPane bottomFiltersGrid;
 
@@ -83,6 +83,7 @@ public class Filters extends VBox implements IFilters{
 
         this.counterLabel = new Label("Compteur:");
         this.counterField = new ComboBox<>();
+        this.counterField.getItems().add("Tous");
 
         this.group = new ToggleGroup();
 
@@ -150,8 +151,8 @@ public class Filters extends VBox implements IFilters{
         this.counterField.valueProperty().addListener(this.listener);
         this.group.selectedToggleProperty().addListener(this.listener);
 
-        this.neighborhoodField.getItems().add("Tous");
-        this.counterField.getItems().add("Tous");
+        this.neighborhoodField.setValue("Tous");
+        this.counterField.setValue("Tous");
         this.startDatePicker.setValue(LocalDate.of(2020, 1, 1));
         this.endDatePicker.setValue(LocalDate.of(2023, 01, 24));
         this.group.selectToggle(this.totalPassages);
