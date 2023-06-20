@@ -2,13 +2,11 @@ package view;
 
 import controller.InsertQuartierListener;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class InsertQuartier extends VBox {
-    private GridPane form;
+public class InsertQuartier extends GridPane {
     private InsertQuartierListener listener;
     private Label menuLabel;
     private Label nomQuartierLabel;
@@ -27,7 +25,6 @@ public class InsertQuartier extends VBox {
     }
 
     public void initializeComponents() {
-        this.form = new GridPane();
         this.menuLabel = new Label("Insérer un quartier");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
         this.nomQuartierLabel = new Label("Nom du quartier : ");
@@ -44,17 +41,15 @@ public class InsertQuartier extends VBox {
         this.longueurPisteVeloField.textProperty().addListener(this.listener);
         this.insertButton.setOnAction(this.listener);
 
-        form.add(this.nomQuartierLabel, 0, 0);
-        form.add(this.nomQuartierField, 1, 0);
-        form.add(this.idQuartierLabel, 0, 1);
-        form.add(this.idQuartierField, 1, 1);
-        form.add(this.longueurPisteVeloLabel, 0, 2);
-        form.add(this.longueurPisteVeloField, 1, 2);
-        form.add(this.insertButton, 0, 3);
-
-        this.getChildren().add(this.menuLabel);
-        this.getChildren().add(this.form);
-        this.getChildren().add(this.output);
+        this.add(this.menuLabel, 0, 0, 2, 1);
+        this.add(this.nomQuartierLabel, 0, 1);
+        this.add(this.nomQuartierField, 1, 1);
+        this.add(this.idQuartierLabel, 0, 2);
+        this.add(this.idQuartierField, 1, 2);
+        this.add(this.longueurPisteVeloLabel, 0, 3);
+        this.add(this.longueurPisteVeloField, 1, 3);
+        this.add(this.insertButton, 1, 4);
+        this.add(this.output, 0, 5, 2, 1);
     }
 
     public TextField getNomQuartierField() {
