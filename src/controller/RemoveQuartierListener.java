@@ -4,23 +4,23 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import modele.dao.QuartierDao;
+import modele.entities.Comptage;
+import modele.entities.Compteur;
 import modele.entities.Quartier;
 import view.RemoveQuartier;
+import view.VeloNantes;
 
 public class RemoveQuartierListener implements ChangeListener<String>, EventHandler<ActionEvent> {
     private RemoveQuartier removeQuartier;
-    private QuartierDao quartierDao;
     private Quartier quartier;
 
-    public RemoveQuartierListener(RemoveQuartier removeQuartier, QuartierDao quartierDao){
+    public RemoveQuartierListener(RemoveQuartier removeQuartier){
         this.removeQuartier = removeQuartier;
-        this.quartierDao = quartierDao;
     }
 
     @Override
     public void changed(ObservableValue<? extends String> observable, String before, String after) {
-        for(Quartier quartier : this.quartierDao.getAll()){
+        for(Quartier quartier : VeloNantes.quartierDao.getAll()){
             if((quartier.getNomQuartier() + " " + quartier.getIdQuartier()).equals(after)){
                 this.quartier = quartier;
             }
@@ -31,7 +31,15 @@ public class RemoveQuartierListener implements ChangeListener<String>, EventHand
     @Override
     public void handle(ActionEvent event) {
         try{
-            this.quartierDao.remove(this.quartier);
+            for(Compteur compteur : quartier.getLesCompteurs()){
+                for(Comptage comptage : compteur.getLesComptages()){
+                    VeloNantes.comptageDao.remove(comptage);
+                }
+                VeloNantes.compteurDao.remove(compteur);
+            }
+            VeloNantes.quartierDao.remove(this.quartier);
+
+            this.removeQuartier.setOutput("Le quartier a été supprimé");
         }catch(Exception e){
             System.out.println(e);
             this.removeQuartier.setOutput(e.getMessage());

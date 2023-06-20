@@ -1,10 +1,7 @@
 package view;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
-import controller.DateListener;
-import controller.StringListener;
-import controller.ToggleListener;
+import controller.FilterListener;
 import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -13,7 +10,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import modele.entities.Compteur;
 import modele.entities.Quartier;
 
 public class Filters extends VBox implements IFilters{
@@ -46,28 +42,19 @@ public class Filters extends VBox implements IFilters{
     private RadioButton totalPassagesPerDay;
     private RadioButton averagePassagesPerDay;
 
-    private ArrayList<Quartier> quartiers;
-    private ArrayList<Compteur> compteurs;
-
-    private StringListener stringListener;
-    private DateListener dateListener;
-    private ToggleListener toggleListener;
+    private FilterListener listener;
 
     private Graph graph;
 
-    public Filters(Graph graph, ArrayList<Quartier> quartiers, ArrayList<Compteur> compteurs) throws IllegalArgumentException{
-        if(graph == null || quartiers == null || compteurs == null){
-            throw new IllegalArgumentException("Arguments cannot be null");
+    public Filters(Graph graph) throws IllegalArgumentException{
+        if(graph == null){
+            throw new IllegalArgumentException("Graph cannot be null");
         }
 
         this.graph = graph;
-        this.quartiers = quartiers;
-        this.compteurs = compteurs;
 
         this.initializeComponents();
         this.initializeListeners();
-
-        this.updateGraph();
     }
 
     public void initializeComponents(){
@@ -83,25 +70,19 @@ public class Filters extends VBox implements IFilters{
 
         this.startDateLabel = new Label("Date début:");
         this.startDatePicker = new DatePicker();
-        LocalDate startDate = LocalDate.of(2020, 1, 1);
-        this.startDatePicker.setValue(startDate);
 
         this.endDateLabel = new Label("Date fin:");
         this.endDatePicker = new DatePicker();
-        LocalDate endDate = LocalDate.of(2023, 01, 24);
-        this.endDatePicker.setValue(endDate);
 
         this.neighborhoodLabel = new Label("Quartier:");
         this.neighborhoodField = new ComboBox<>();
         this.neighborhoodField.getItems().add("Tous");
-        for(Quartier quartier : this.quartiers) {
+        for(Quartier quartier : VeloNantes.quartierDao.getAll()) {
             this.neighborhoodField.getItems().add(quartier.getNomQuartier() + " " + quartier.getIdQuartier());
         }
-        this.neighborhoodField.setValue("Tous");
 
         this.counterLabel = new Label("Compteur:");
         this.counterField = new ComboBox<>();
-        this.updateCompteurs();
 
         this.group = new ToggleGroup();
 
@@ -135,8 +116,6 @@ public class Filters extends VBox implements IFilters{
         this.averagePassagesPerDay.setUserData("averagePassagesPerDay");
         this.averagePassagesPerDay.setToggleGroup(this.group);
 
-        this.group.selectToggle(this.totalPassages);
-
         this.topFiltersGrid.add(this.startDateLabel, 0, 0);
         this.topFiltersGrid.add(this.startDatePicker, 1, 0);
         this.topFiltersGrid.add(this.endDateLabel, 0, 1);
@@ -163,32 +142,19 @@ public class Filters extends VBox implements IFilters{
     }
 
     public void initializeListeners(){
-        this.stringListener = new StringListener(this);
-        this.dateListener = new DateListener(this);
-        this.toggleListener = new ToggleListener(this);
+        this.listener = new FilterListener(this, this.graph);
 
-        this.startDatePicker.valueProperty().addListener(this.dateListener);
-        this.endDatePicker.valueProperty().addListener(this.dateListener);
-        this.neighborhoodField.valueProperty().addListener(this.stringListener);
-        this.counterField.valueProperty().addListener(this.stringListener);
-        this.group.selectedToggleProperty().addListener(this.toggleListener);
-    }
+        this.startDatePicker.valueProperty().addListener(this.listener);
+        this.endDatePicker.valueProperty().addListener(this.listener);
+        this.neighborhoodField.valueProperty().addListener(this.listener);
+        this.counterField.valueProperty().addListener(this.listener);
+        this.group.selectedToggleProperty().addListener(this.listener);
 
-    public void updateCompteurs(){
-        System.out.println("updateCompteurs");
-        this.counterField.getItems().clear();
+        this.neighborhoodField.getItems().add("Tous");
         this.counterField.getItems().add("Tous");
-        for(Compteur compteur : this.compteurs) {
-            if((compteur.getLeQuartier().getNomQuartier() + " " + compteur.getLeQuartier().getIdQuartier()).equals(this.neighborhoodField.getValue()) || this.neighborhoodField.getValue().equals("Tous")) {
-                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
-                this.counterField.getItems().add(counter);
-            }
-        }
-        this.counterField.setValue("Tous");
-    }
-
-    public void updateGraph() {
-        this.graph.update(this.getType(), this.getNeighborhood(), this.getCounter(), this.getStartDate(), this.getEndDate());
+        this.startDatePicker.setValue(LocalDate.of(2020, 1, 1));
+        this.endDatePicker.setValue(LocalDate.of(2023, 01, 24));
+        this.group.selectToggle(this.totalPassages);
     }
 
     public LocalDate getStartDate() {
@@ -207,8 +173,20 @@ public class Filters extends VBox implements IFilters{
         return this.neighborhoodField;
     }
 
+    public ComboBox<String> getCounterField() {
+        return this.counterField;
+    }
+
     public DatePicker getStartDatePicker() {
         return this.startDatePicker;
+    }
+
+    public DatePicker getEndDatePicker() {
+        return this.endDatePicker;
+    }
+
+    public ToggleGroup getGroup() {
+        return this.group;
     }
 
     public String getCounter() {

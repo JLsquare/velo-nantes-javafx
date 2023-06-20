@@ -2,10 +2,6 @@ package view;
 import javafx.scene.layout.VBox;
 import modele.entities.*;
 
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
-
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -14,28 +10,16 @@ import javafx.scene.chart.XYChart.Series;
 
 public class Graph extends VBox{
     private BarChart<String, Number> barChart;
-    private ArrayList<Quartier> quartiers;
-    private ArrayList<Compteur> compteurs;
-    private ArrayList<DateInfo> dateInfos;
-    private String neighborhoodName;
-    private String counterName;
+    private Quartier quartier;
+    private Compteur compteur;
+    private DateInfo start;
+    private DateInfo end;
     
     /**
      * Constructor of the Graph class
-     * @param leftBar the left bar of the application
-     * @param quartiers the list of all the neighborhoods
-     * @param compteurs the list of all the counters
-     * @param dateInfos the list of all the date infos
-     * @throws IllegalArgumentException if one of the arguments is null
      */
-    public Graph(ArrayList<Quartier> quartiers, ArrayList<Compteur> compteurs, ArrayList<DateInfo> dateInfos) throws IllegalArgumentException {
-        if(quartiers == null || compteurs == null || dateInfos == null){
-            throw new IllegalArgumentException("Null argument");
-        }
+    public Graph() {
 
-        this.quartiers = quartiers;
-        this.compteurs = compteurs;
-        this.dateInfos = dateInfos;
     }
 
     /**
@@ -43,15 +27,9 @@ public class Graph extends VBox{
      * @param graphType the type of the graph
      * @throws IllegalArgumentException if the argument is null
      */
-    public void update(String graphType, String neighborhoodName, String counterName, LocalDate start, LocalDate end) throws IllegalArgumentException{
+    public void update(String graphType, Quartier quartier, Compteur compteur, DateInfo start, DateInfo end) throws IllegalArgumentException{
         if(graphType == null){
             throw new IllegalArgumentException("Graph: graphType cannot be null");
-        }
-        if(neighborhoodName == null){
-            throw new IllegalArgumentException("Graph: neighborhoodName cannot be null");
-        }
-        if(counterName == null){
-            throw new IllegalArgumentException("Graph: counterName cannot be null");
         }
         if(start == null){
             throw new IllegalArgumentException("Graph: start cannot be null");
@@ -60,33 +38,23 @@ public class Graph extends VBox{
             throw new IllegalArgumentException("Graph: end cannot be null");
         }
 
-        this.neighborhoodName = neighborhoodName;
-        this.counterName = counterName;
-
-        DateInfo startDate = null;
-        DateInfo endDate = null;
-
-        for(DateInfo dateInfo : this.dateInfos){
-            if(dateInfo.getDate().equals(Date.valueOf(start))){
-                startDate = dateInfo;
-            }
-            if(dateInfo.getDate().equals(Date.valueOf(end))){
-                endDate = dateInfo;
-            }
-        }
+        this.quartier = quartier;
+        this.compteur = compteur;
+        this.start = start;
+        this.end = end;
 
         if(graphType == "totalPassages"){
-            this.simplePassages(false, startDate, endDate);
+            this.simplePassages(false);
         } else if (graphType == "averagePassages"){
-            this.simplePassages(true, startDate, endDate);
+            this.simplePassages(true);
         } else if(graphType == "totalPassagesPerHour"){
-            this.passagesPerHour(false, startDate, endDate);
+            this.passagesPerHour(false);
         } else if(graphType == "averagePassagesPerHour"){
-            this.passagesPerHour(true, startDate, endDate);
+            this.passagesPerHour(true);
         } else if(graphType == "totalPassagesPerDay"){
-            this.passagesPerDay(false, startDate, endDate);
+            this.passagesPerDay(false);
         } else if(graphType == "averagePassagesPerDay"){
-            this.passagesPerDay(true, startDate, endDate);
+            this.passagesPerDay(true);
         }
     }
 
@@ -115,21 +83,9 @@ public class Graph extends VBox{
     }
 
     /**
-     * Get the selected neighborhood
-     * @return the selected neighborhood
-     */
-    public Quartier getQuartier(){
-        Quartier selectedQuartier = null;
-        for(Quartier quartier : this.quartiers){
-            if((quartier.getNomQuartier() + " " + quartier.getIdQuartier()).equals(this.neighborhoodName)){
-                selectedQuartier = quartier;
-            }
-        }
-        return selectedQuartier;
-    }
-
-    /**
      * Get the selected counter
+     * @param name the name of the data
+     * @param value the value of the data
      * @return the selected counter
      * @throws IllegalArgumentException if the selected neighborhood is null
      */
@@ -147,59 +103,47 @@ public class Graph extends VBox{
     /**
      * Display the total or average passages
      * @param isAverage true if we want the average, false if we want the total
-     * @param startDate the start date
-     * @param endDate the end date
-     * @throws IllegalArgumentException if one of the arguments is null
      */
-    public void simplePassages(boolean isAverage, DateInfo startDate, DateInfo endDate) throws IllegalArgumentException{
-        if(startDate == null || endDate == null){
-            throw new IllegalArgumentException("Null argument");
-        }
-
+    public void simplePassages(boolean isAverage) {
         // Tous les quartiers, tous les compteurs
-        if(this.neighborhoodName.equals("Tous") && this.counterName.equals("Tous")){
+        if(this.quartier == null && this.compteur == null){
             this.setupChart("Passages totaux", "Quartiers", "Passages");
-            for(Quartier quartier : this.quartiers){
+            for(Quartier q : VeloNantes.quartierDao.getAll()){
                 if(isAverage){
-                    float average = quartier.averagePassages(startDate, endDate);
-                    this.addData(quartier.getNomQuartier() + " " + quartier.getIdQuartier(), average);
+                    float average = q.averagePassages(this.start, this.end);
+                    this.addData(q.getNomQuartier() + " " + q.getIdQuartier(), average);
                 } else {
-                    int total = quartier.totalPassages(startDate, endDate);
-                    this.addData(quartier.getNomQuartier() + " " + quartier.getIdQuartier(), total);
+                    int total = q.totalPassages(this.start, this.end);
+                    this.addData(q.getNomQuartier() + " " + q.getIdQuartier(), total);
                 }
             }
         } 
         
         // Quartier sélectionné, tous les compteurs du quartier
-        if (!this.neighborhoodName.equals("Tous") && this.counterName.equals("Tous")){
+        if (this.quartier != null && this.compteur == null){
             this.setupChart("Passages totaux", "Compteurs", "Passages");
-            Quartier selectedQuartier = this.getQuartier();
-            for(Compteur compteur : selectedQuartier.getLesCompteurs()){
-                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
+            for(Compteur c : this.quartier.getLesCompteurs()){
+                String counter = c.getNomCompteur() + c.getSens() + " " + c.getIdCompteur();
                 if(isAverage){
-                    float average = compteur.averagePassages(startDate, endDate);
+                    float average = c.averagePassages(this.start, this.end);
                     this.addData(counter, average);
                 } else {
-                    int total = compteur.totalPassages(startDate, endDate);
+                    int total = c.totalPassages(this.start, this.end);
                     this.addData(counter, total);
                 }
             }
         } 
         
         // compteur sélectionné
-        if (!this.counterName.equals("Tous")){
+        if (this.compteur != null){
             this.setupChart("Passages totaux", "Compteur", "Passages");
-            for(Compteur compteur : this.compteurs){
-                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
-                if(counter.equals(this.counterName)){
-                    if(isAverage){
-                        float average = compteur.averagePassages(startDate, endDate);
-                        this.addData(counter, average);
-                    } else {
-                        int total = compteur.totalPassages(startDate, endDate);
-                        this.addData(counter, total);
-                    }
-                }
+            String counter = this.compteur.getNomCompteur() + " " + this.compteur.getSens() + " " + this.compteur.getIdCompteur();
+            if(isAverage){
+                float average = this.compteur.averagePassages(this.start, this.end);
+                this.addData(counter, average);
+            } else {
+                int total = this.compteur.totalPassages(this.start, this.end);
+                this.addData(counter, total);
             }
         }
     }
@@ -207,28 +151,21 @@ public class Graph extends VBox{
     /**
      * Display the total or average passages per hour
      * @param isAverage true if we want the average, false if we want the total
-     * @param startDate the start date
-     * @param endDate the end date
-     * @throws IllegalArgumentException if one of the arguments is null
      */
-    public void passagesPerHour(boolean isAverage, DateInfo startDate, DateInfo endDate) throws IllegalArgumentException{
-        if(startDate == null || endDate == null){
-            throw new IllegalArgumentException("Null argument");
-        }
-
+    public void passagesPerHour(boolean isAverage) {
         float[] totalPerHour = new float[24];
         this.setupChart("Passages par heure", "Heures", "Passages");
 
         // Tous les quartiers, tous les compteurs
-        if(this.neighborhoodName.equals("Tous") && this.counterName.equals("Tous")){
-            for(Quartier quartier : this.quartiers){
+        if(this.quartier == null && this.compteur == null){
+            for(Quartier q : VeloNantes.quartierDao.getAll()){
                 if(isAverage){
-                    float[] average = quartier.averagePassagesPerHour(startDate, endDate);
+                    float[] average = q.averagePassagesPerHour(this.start, this.end);
                     for(int i = 0; i < 24; i++){
                         totalPerHour[i] += average[i];
                     }
                 } else {
-                    int[] total = quartier.totalPassagesPerHour(startDate, endDate);
+                    int[] total = q.totalPassagesPerHour(this.start, this.end);
                     for(int i = 0; i < 24; i++){
                         totalPerHour[i] += total[i];
                     }
@@ -237,16 +174,15 @@ public class Graph extends VBox{
         } 
         
         // Quartier sélectionné, tous les compteurs du quartier
-        if(!this.neighborhoodName.equals("Tous") && this.counterName.equals("Tous")){
-            Quartier selectedQuartier = this.getQuartier();
-            for(Compteur compteur : selectedQuartier.getLesCompteurs()){
+        if (this.quartier != null && this.compteur == null){
+            for(Compteur c : this.quartier.getLesCompteurs()){
                 if(isAverage){
-                    float[] average = compteur.averagePassagesPerHour(startDate, endDate);
+                    float[] average = c.averagePassagesPerHour(this.start, this.end);
                     for(int i = 0; i < 24; i++){
                         totalPerHour[i] += average[i];
                     }
                 } else {
-                    int[] total = compteur.totalPassagesPerHour(startDate, endDate);
+                    int[] total = c.totalPassagesPerHour(this.start, this.end);
                     for(int i = 0; i < 24; i++){
                         totalPerHour[i] += total[i];
                     }
@@ -255,21 +191,16 @@ public class Graph extends VBox{
         } 
         
         // compteur sélectionné
-        if (!this.counterName.equals("Tous")){
-            for(Compteur compteur : this.compteurs){
-                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
-                if(counter.equals(this.counterName)){
-                    if(isAverage){
-                        float[] average = compteur.averagePassagesPerHour(startDate, endDate);
-                        for(int i = 0; i < 24; i++){
-                            totalPerHour[i] = average[i];
-                        }
-                    } else {
-                        int[] total = compteur.totalPassagesPerHour(startDate, endDate);
-                        for(int i = 0; i < 24; i++){
-                            totalPerHour[i] = total[i];
-                        }
-                    }
+        if (this.compteur != null){
+            if(isAverage){
+                float[] average = this.compteur.averagePassagesPerHour(this.start, this.end);
+                for(int i = 0; i < 24; i++){
+                    totalPerHour[i] = average[i];
+                }
+            } else {
+                int[] total = this.compteur.totalPassagesPerHour(this.start, this.end);
+                for(int i = 0; i < 24; i++){
+                    totalPerHour[i] = total[i];
                 }
             }
         }
@@ -282,28 +213,21 @@ public class Graph extends VBox{
     /**
      * Display the total or average passages per day
      * @param isAverage true if we want the average, false if we want the total
-     * @param startDate the start date
-     * @param endDate the end date
-     * @throws IllegalArgumentException if one of the arguments is null
      */
-    public void passagesPerDay(boolean isAverage, DateInfo startDate, DateInfo endDate) throws IllegalArgumentException{
-        if(startDate == null || endDate == null){
-            throw new IllegalArgumentException("Null argument");
-        }
-
+    public void passagesPerDay(boolean isAverage){
         float[] totalPerDay = new float[7];
         this.setupChart("Passages par jour", "Jours", "Passages");
 
         // Tous les quartiers, tous les compteurs
-        if(this.neighborhoodName.equals("Tous") && this.counterName.equals("Tous")){
-            for(Quartier quartier : this.quartiers){
+        if(this.quartier == null && this.compteur == null){
+            for(Quartier q : VeloNantes.quartierDao.getAll()){
                 if(isAverage){
-                    float[] average = quartier.averagePassagesPerDay(startDate, endDate);
+                    float[] average = q.averagePassagesPerDay(this.start, this.end);
                     for(int i = 0; i < 7; i++){
                         totalPerDay[i] += average[i];
                     }
                 } else {
-                    int[] total = quartier.totalPassagesPerDay(startDate, endDate);
+                    int[] total = q.totalPassagesPerDay(this.start, this.end);
                     for(int i = 0; i < 7; i++){
                         totalPerDay[i] += total[i];
                     }
@@ -312,16 +236,15 @@ public class Graph extends VBox{
         } 
         
         // Quartier sélectionné, tous les compteurs du quartier
-        if(!this.neighborhoodName.equals("Tous") && this.counterName.equals("Tous")){
-            Quartier selectedQuartier = getQuartier();
-            for(Compteur compteur : selectedQuartier.getLesCompteurs()){
+        if (this.quartier != null && this.compteur == null){
+            for(Compteur c : this.quartier.getLesCompteurs()){
                 if(isAverage){
-                    float[] average = compteur.averagePassagesPerDay(startDate, endDate);
+                    float[] average = c.averagePassagesPerDay(this.start, this.end);
                     for(int i = 0; i < 7; i++){
                         totalPerDay[i] += average[i];
                     }
                 } else {
-                    int[] total = compteur.totalPassagesPerDay(startDate, endDate);
+                    int[] total = c.totalPassagesPerDay(this.start, this.end);
                     for(int i = 0; i < 7; i++){
                         totalPerDay[i] += total[i];
                     }
@@ -330,21 +253,16 @@ public class Graph extends VBox{
         } 
         
         // compteur sélectionné
-        if(!this.counterName.equals("Tous")){
-            for(Compteur compteur : this.compteurs){
-                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
-                if(counter.equals(this.counterName)){
-                    if(isAverage){
-                        float[] average = compteur.averagePassagesPerDay(startDate, endDate);
-                        for(int i = 0; i < 7; i++){
-                            totalPerDay[i] += average[i];
-                        }
-                    } else {
-                        int[] total = compteur.totalPassagesPerDay(startDate, endDate);
-                        for(int i = 0; i < 7; i++){
-                            totalPerDay[i] += total[i];
-                        }
-                    }
+        if (this.compteur != null){
+            if(isAverage){
+                float[] average = this.compteur.averagePassagesPerDay(this.start, this.end);
+                for(int i = 0; i < 7; i++){
+                    totalPerDay[i] += average[i];
+                }
+            } else {
+                int[] total = this.compteur.totalPassagesPerDay(this.start, this.end);
+                for(int i = 0; i < 7; i++){
+                    totalPerDay[i] += total[i];
                 }
             }
         }

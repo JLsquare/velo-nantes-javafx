@@ -146,6 +146,14 @@ public class DateInfo {
         this.vacances = vacances;
     }
 
+    /**
+     * Get the Comptages
+     * @return the Comptages
+     */
+    public ArrayList<Comptage> getLesComptages() {
+        return lesComptages;
+    }
+
     // ---------------- Add & Remove ---------------- //
 
     /**

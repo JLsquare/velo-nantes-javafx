@@ -3,7 +3,6 @@ package view;
 import controller.InsertQuartierListener;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import modele.dao.QuartierDao;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -20,12 +19,10 @@ public class InsertQuartier extends VBox {
     private TextField longueurPisteVeloField;
     private Button insertButton;
     private Label output;
-    private QuartierDao quartierDao;
 
-    public InsertQuartier(QuartierDao quartierDao) {
+    public InsertQuartier() {
         super();
-        this.quartierDao = quartierDao;
-        this.listener = new InsertQuartierListener(this, this.quartierDao);
+        this.listener = new InsertQuartierListener(this);
         initializeComponents();
     }
 

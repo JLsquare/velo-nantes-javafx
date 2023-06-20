@@ -1,25 +1,20 @@
 package controller;
 
 import javafx.event.EventHandler;
-import modele.database.Database;
 import javafx.event.ActionEvent;
 import view.Authentification;
+import view.VeloNantes;
 
 
 public class ButtonListener implements EventHandler<ActionEvent> {
     private Authentification authentification;
-    private Database database;
 
-    public ButtonListener(Authentification authentification, Database database) throws IllegalArgumentException{
+    public ButtonListener(Authentification authentification) throws IllegalArgumentException{
         if(authentification == null){
             throw new IllegalArgumentException("ButtonListener: authentification cannot be null");
         }
-        if(database == null){
-            throw new IllegalArgumentException("ButtonListener: database cannot be null");
-        }
 
         this.authentification = authentification;
-        this.database = database;
     }
 
     @Override
@@ -28,7 +23,7 @@ public class ButtonListener implements EventHandler<ActionEvent> {
         String password = this.authentification.getPassword().getText();
 
         try{
-            this.database.openWriteConnection(login, password);
+            VeloNantes.database.openWriteConnection(login, password);
             this.authentification.setError("Authentification réussie.");
             this.authentification.connected();
         }catch(Exception e){

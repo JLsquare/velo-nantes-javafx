@@ -6,42 +6,20 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import modele.dao.*;
-import modele.database.Database;
 
 public class DataMenu extends HBox {
     private String mode;
     private String table;
-    private QuartierDao quartierDao;
-    private CompteurDao compteurDao;
-    private DateInfoDao dateInfoDao;
-    private ComptageDao comptageDao;
-    private InsertQuartier insertQuartier;
-    private RemoveQuartier removeQuartier;
-    private RemoveCompteur removeCompteur;
     private VBox menuList;
 
-    public DataMenu(Database database, QuartierDao quartierDao, CompteurDao compteurDao, DateInfoDao dateInfoDao, ComptageDao comptageDao) throws IllegalArgumentException{
-        if(database == null){
-            throw new IllegalArgumentException("Database cannot be null");
-        }
-        if(quartierDao == null){
-            throw new IllegalArgumentException("QuartierDao cannot be null");
-        }
-        if(compteurDao == null){
-            throw new IllegalArgumentException("CompteurDao cannot be null");
-        }
-        if(dateInfoDao == null){
-            throw new IllegalArgumentException("DateInfoDao cannot be null");
-        }
-        if(comptageDao == null){
-            throw new IllegalArgumentException("ComptageDao cannot be null");
-        }
+    private InsertQuartier insertQuartier;
 
-        this.quartierDao = quartierDao;
-        this.compteurDao = compteurDao;
-        this.dateInfoDao = dateInfoDao;
-        this.comptageDao = comptageDao;
+    private RemoveQuartier removeQuartier;
+    private RemoveCompteur removeCompteur;
+    private RemoveDate removeDate;
+    private RemoveComptage removeComptage;
+
+    public DataMenu() {
         initializeComponents();
     }
 
@@ -82,9 +60,12 @@ public class DataMenu extends HBox {
             }
         }
 
-        this.insertQuartier = new InsertQuartier(this.quartierDao);
-        this.removeQuartier = new RemoveQuartier(this.quartierDao);
-        this.removeCompteur = new RemoveCompteur(this.quartierDao, this.compteurDao);
+        this.insertQuartier = new InsertQuartier();
+
+        this.removeQuartier = new RemoveQuartier();
+        this.removeCompteur = new RemoveCompteur();
+        this.removeDate = new RemoveDate();
+        this.removeComptage = new RemoveComptage();
 
         this.getChildren().addAll(menuList);
     }
@@ -101,6 +82,10 @@ public class DataMenu extends HBox {
                 this.getChildren().add(this.removeQuartier);
             } else if(this.table.equals("Compteur")){
                 this.getChildren().add(this.removeCompteur);
+            } else if(this.table.equals("DateInfo")){
+                this.getChildren().add(this.removeDate);
+            } else if(this.table.equals("Comptage")){
+                this.getChildren().add(this.removeComptage);
             }
         }
     }

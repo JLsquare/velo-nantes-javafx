@@ -4,20 +4,18 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import modele.dao.QuartierDao;
 import modele.entities.Quartier;
 import view.InsertQuartier;
+import view.VeloNantes;
 
 public class InsertQuartierListener implements ChangeListener<String>, EventHandler<ActionEvent>{
     private InsertQuartier insertQuartier;
-    private QuartierDao quartierDao;
     private String nomQuartier;
     private int idQuartier;
     private float longueurPisteVelo;
 
-    public InsertQuartierListener(InsertQuartier insertQuartier, QuartierDao quartierDao){
+    public InsertQuartierListener(InsertQuartier insertQuartier){
         this.insertQuartier = insertQuartier;
-        this.quartierDao = quartierDao;
     }
 
     @Override
@@ -51,7 +49,7 @@ public class InsertQuartierListener implements ChangeListener<String>, EventHand
     public void handle(ActionEvent event) {
         Quartier quartier = new Quartier(this.idQuartier, this.nomQuartier, this.longueurPisteVelo);
         try{
-            this.quartierDao.add(quartier);
+            VeloNantes.quartierDao.add(quartier);
         }catch(Exception e){
             System.out.println(e);
             this.insertQuartier.setOutput(e.getMessage());

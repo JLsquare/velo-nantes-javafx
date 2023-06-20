@@ -16,11 +16,11 @@ public class VeloNantes extends Application {
     private MenuButton menu;
     private Graph graph;
     private DataMenu dataMenu;
-    private Database database;
-    private QuartierDao quartierDao;
-    private CompteurDao compteurDao;
-    private DateInfoDao dateInfoDao;
-    private ComptageDao comptageDao;
+    public static Database database;
+    public static QuartierDao quartierDao;
+    public static CompteurDao compteurDao;
+    public static DateInfoDao dateInfoDao;
+    public static ComptageDao comptageDao;
     private Stage primaryStage;
 
     @Override
@@ -67,9 +67,9 @@ public class VeloNantes extends Application {
             this.primaryStage.close();
         });
 
-        this.graph = new Graph(this.quartierDao.getAll(), this.compteurDao.getAll(), this.dateInfoDao.getAll());
-        this.leftBar = new LeftBar(this.graph, this.quartierDao.getAll(), this.compteurDao.getAll(), this.database);
-        this.dataMenu = new DataMenu(this.database, this.quartierDao, this.compteurDao, this.dateInfoDao, this.comptageDao);
+        this.graph = new Graph();
+        this.leftBar = new LeftBar(graph);
+        this.dataMenu = new DataMenu();
 
         rightPane.setPadding(new Insets(15, 12, 15, 12));
         rightPane.getChildren().addAll(menu, graph);
@@ -91,23 +91,23 @@ public class VeloNantes extends Application {
     }
 
     private void initializeData(){
-        this.database = new Database("jdbc:mariadb://localhost:3306/bd_velo_4b2");
+        database = new Database("jdbc:mariadb://localhost:3306/bd_velo_4b2");
         try{
             database.openReadConnection("read_4b2", "read_4b2");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        this.quartierDao = new QuartierDao(this.database);
-        this.compteurDao = new CompteurDao(this.database, this.quartierDao);
-        this.dateInfoDao = new DateInfoDao(this.database);
-        this.comptageDao = new ComptageDao(this.database, this.compteurDao, this.dateInfoDao);
+        quartierDao = new QuartierDao(database);
+        compteurDao = new CompteurDao(database, quartierDao);
+        dateInfoDao = new DateInfoDao(database);
+        comptageDao = new ComptageDao(database, compteurDao, dateInfoDao);
 
         try {
-            this.quartierDao.readAll();
-            this.compteurDao.readAll();
-            this.dateInfoDao.readAll();
-            this.comptageDao.readAll();
+            quartierDao.readAll();
+            compteurDao.readAll();
+            dateInfoDao.readAll();
+            comptageDao.readAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }

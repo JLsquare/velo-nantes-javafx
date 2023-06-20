@@ -10,7 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import modele.database.Database;
 
 public class Authentification extends VBox {
     private GridPane gridPane;
@@ -23,11 +22,9 @@ public class Authentification extends VBox {
     private Label error;
     private Button validateButton;
     private ButtonListener buttonListener;
-    private Database database;
     private LeftBar leftBar;
 
-    public Authentification(Database database, LeftBar leftBar){
-        this.database = database;
+    public Authentification(LeftBar leftBar){
         this.leftBar = leftBar;
         this.initializeComponents();
     }
@@ -46,7 +43,7 @@ public class Authentification extends VBox {
         this.error.setWrapText(true);
         this.validateButton = new Button("Valider");
         
-        this.buttonListener = new ButtonListener(this, this.database);
+        this.buttonListener = new ButtonListener(this);
         this.validateButton.setOnAction(this.buttonListener);
 
         gridPane.setAlignment(Pos.CENTER);
