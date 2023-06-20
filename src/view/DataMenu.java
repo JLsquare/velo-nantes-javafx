@@ -14,6 +14,7 @@ public class DataMenu extends HBox {
 
     private InsertQuartier insertQuartier;
     private InsertCompteur insertCompteur;
+    private InsertDate insertDate;
 
     private RemoveQuartier removeQuartier;
     private RemoveCompteur removeCompteur;
@@ -63,6 +64,7 @@ public class DataMenu extends HBox {
 
         this.insertQuartier = new InsertQuartier();
         this.insertCompteur = new InsertCompteur();
+        this.insertDate = new InsertDate();
 
         this.removeQuartier = new RemoveQuartier();
         this.removeCompteur = new RemoveCompteur();
@@ -80,6 +82,8 @@ public class DataMenu extends HBox {
                 this.getChildren().add(this.insertQuartier);
             } else if(this.table.equals("Compteur")){
                 this.getChildren().add(this.insertCompteur);
+            } else if(this.table.equals("DateInfo")){
+                this.getChildren().add(this.insertDate);
             }
         } else if(this.mode.equals("Suppression")){
             if(this.table.equals("Quartier")){

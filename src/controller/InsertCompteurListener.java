@@ -26,6 +26,7 @@ public class InsertCompteurListener implements ChangeListener<String>, EventHand
     @Override
     public void changed(ObservableValue<? extends String> observable, String before, String after) {
         this.insertCompteur.setOutput("");
+
         if(observable == insertCompteur.getNomCompteurField().textProperty()){
             if(after.length() > 0){
                 this.nomCompteur = after;
@@ -33,6 +34,7 @@ public class InsertCompteurListener implements ChangeListener<String>, EventHand
                 this.insertCompteur.setOutput("Le nom du compteur ne peut pas être vide.");
             }
         }
+
         if(observable == insertCompteur.getIdCompteurField().textProperty()){
             try{
                 this.idCompteur = Integer.parseInt(after);
@@ -40,9 +42,11 @@ public class InsertCompteurListener implements ChangeListener<String>, EventHand
                 this.insertCompteur.setOutput("L'id du compteur doit être un entier.");
             }
         }
+
         if(observable == insertCompteur.getSensField().textProperty()){
             this.sens = after;
         }
+
         if(observable == insertCompteur.getCoordXField().textProperty()){
             try{
                 this.coordX = Float.parseFloat(after);
@@ -50,6 +54,7 @@ public class InsertCompteurListener implements ChangeListener<String>, EventHand
                 this.insertCompteur.setOutput("La coordonnée X doit être un nombre.");
             }
         }
+
         if(observable == insertCompteur.getCoordYField().textProperty()){
             try{
                 this.coordY = Float.parseFloat(after);
@@ -57,6 +62,7 @@ public class InsertCompteurListener implements ChangeListener<String>, EventHand
                 this.insertCompteur.setOutput("La coordonnée Y doit être un nombre.");
             }
         }
+        
         if(observable == insertCompteur.getQuartierField().valueProperty()){
             String[] quartierSplit = after.split(" ");
             int idQuartier = Integer.parseInt(quartierSplit[quartierSplit.length - 1]);

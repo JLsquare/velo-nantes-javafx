@@ -7,16 +7,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class InsertQuartier extends GridPane {
-    private InsertQuartierListener listener;
     private Label menuLabel;
     private Label nomQuartierLabel;
     private Label idQuartierLabel;
     private Label longueurPisteVeloLabel;
+
     private TextField nomQuartierField;
     private TextField idQuartierField;
     private TextField longueurPisteVeloField;
+
     private Button insertButton;
     private Label output;
+    private InsertQuartierListener listener;
 
     public InsertQuartier() {
         super();
