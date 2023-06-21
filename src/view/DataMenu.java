@@ -12,6 +12,8 @@ public class DataMenu extends HBox {
     private String table;
     private VBox menuList;
 
+    private UpdateQuartier updateQuartier;
+
     private InsertQuartier insertQuartier;
     private InsertCompteur insertCompteur;
     private InsertDate insertDate;
@@ -63,6 +65,8 @@ public class DataMenu extends HBox {
             }
         }
 
+        this.updateQuartier = new UpdateQuartier();
+
         this.insertQuartier = new InsertQuartier();
         this.insertCompteur = new InsertCompteur();
         this.insertDate = new InsertDate();
@@ -79,7 +83,11 @@ public class DataMenu extends HBox {
     public void updateForm(){
         this.getChildren().clear();
         this.getChildren().add(this.menuList);
-        if(this.mode.equals("Saisie")){
+        if(this.mode.equals("Modification")){
+            if(this.table.equals("Quartier")){
+                this.getChildren().add(this.updateQuartier);
+            }
+        } else if(this.mode.equals("Saisie")){
             if(this.table.equals("Quartier")){
                 this.getChildren().add(this.insertQuartier);
             } else if(this.table.equals("Compteur")){
