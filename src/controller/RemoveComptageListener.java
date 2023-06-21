@@ -29,15 +29,15 @@ public class RemoveComptageListener implements ChangeListener<Object>, EventHand
             String[] splitCompteur = compteurString.split(" ");
             int idCompteur = Integer.parseInt(splitCompteur[splitCompteur.length - 1]);
             this.compteur = VeloNantes.compteurDao.get(idCompteur);
-            this.updateOutput();
+            this.update();
         } else if (after instanceof LocalDate) {
             LocalDate date = (LocalDate) after;
             this.dateInfo = VeloNantes.dateInfoDao.get(Date.valueOf(date));
-            this.updateOutput();
+            this.update();
         }
     }
 
-    public void updateOutput(){
+    public void update(){
         if(this.compteur != null && this.dateInfo != null){
             Comptage comptage = VeloNantes.comptageDao.get(this.dateInfo, this.compteur);
             if(comptage == null){

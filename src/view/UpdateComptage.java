@@ -1,6 +1,6 @@
 package view;
 
-import controller.InsertComptageListener;
+import controller.UpdateComptageListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -10,7 +10,7 @@ import javafx.scene.layout.GridPane;
 import modele.entities.Compteur;
 import modele.entities.PresenceAnomalie;
 
-public class InsertComptage extends GridPane {
+public class UpdateComptage extends GridPane {
     private Label menuLabel;
     private Label dateLabel;
     private Label compteurLabel;
@@ -24,18 +24,19 @@ public class InsertComptage extends GridPane {
     private TextField[] passagesField;
 
     private GridPane passagesPane;
-    private Button insertButton;
+    private Button updateButton;
     private Label output;
-    private InsertComptageListener listener;
-
-    public InsertComptage() {
+    private Label warning;
+    private UpdateComptageListener listener;
+    
+    public UpdateComptage() {
         super();
-        this.listener = new InsertComptageListener(this);
+        this.listener = new UpdateComptageListener(this);
         initializeComponents();
     }
 
     public void initializeComponents(){
-        this.menuLabel = new Label("Insérer un comptage");
+        this.menuLabel = new Label("Modifier un comptage");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
         this.dateLabel = new Label("Date : ");
         this.dateField = new DatePicker();
@@ -47,13 +48,14 @@ public class InsertComptage extends GridPane {
         this.passagesLabels = new Label[24];
         this.passagesField = new TextField[24];
         this.passagesPane = new GridPane();
-        this.insertButton = new Button("Insérer");
+        this.updateButton = new Button("Modifier");
         this.output = new Label("");
+        this.warning = new Label("Attention, cela supprimera aussi les comptages associés à ce compteur et cette date.");
 
         for(Compteur compteur : VeloNantes.compteurDao.getAll()){
             this.compteurField.getItems().add(compteur.getNomCompteur() + " " + compteur.getIdCompteur());
         }
-
+        
         for(PresenceAnomalie anomalie : PresenceAnomalie.values()){
             this.anomalieField.getItems().add(anomalie.toString());
         }
@@ -78,6 +80,7 @@ public class InsertComptage extends GridPane {
         for(int i = 0; i < 24; i++){
             this.passagesField[i].textProperty().addListener(this.listener);
         }
+        this.updateButton.setOnAction(this.listener);
 
         this.add(this.menuLabel, 0, 0, 2, 1);
         this.add(this.dateLabel, 0, 1);
@@ -88,27 +91,42 @@ public class InsertComptage extends GridPane {
         this.add(this.anomalieField, 1, 3);
         this.add(this.passagesLabel, 0, 4);
         this.add(this.passagesPane, 0, 5, 2, 1);
-        this.add(this.insertButton, 0, 6);
-        this.add(this.output, 1, 7, 2, 1);
+        this.add(this.updateButton, 1, 6);
+        this.add(this.warning, 0, 7, 2, 1);
+        this.add(this.output, 1, 8, 2, 1);
     }
 
-    public DatePicker getDateField() {
-        return dateField;
+    public ComboBox<String> getCompteurField(){
+        return this.compteurField;
     }
 
-    public ComboBox<String> getCompteurField() {
-        return compteurField;
+    public DatePicker getDateField(){
+        return this.dateField;
     }
 
-    public ComboBox<String> getAnomalieField() {
-        return anomalieField;
+    public String getDate(){
+        return this.dateField.getValue().toString();
     }
 
-    public TextField[] getPassagesFields() {
-        return passagesField;
+    public ComboBox<String> getAnomalieField(){
+        return this.anomalieField;
     }
 
-    public void setOutput(String output) {
+    public void setAnomalieField(PresenceAnomalie anomalie){
+        this.anomalieField.setValue(anomalie.toString());
+    }
+
+    public TextField[] getPassagesFields(){
+        return this.passagesField;
+    }
+
+    public void setPassagesFields(int[] passages){
+        for(int i = 0; i < 24; i++){
+            this.passagesField[i].setText(Integer.toString(passages[i]));
+        }
+    }
+
+    public void setOutput(String output){
         this.output.setText(output);
     }
 }
