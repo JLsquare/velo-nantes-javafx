@@ -25,11 +25,14 @@ public class RemoveDateListener implements ChangeListener<LocalDate>, EventHandl
 
     @Override
     public void changed(ObservableValue<? extends LocalDate> observable, LocalDate before, LocalDate after) {
+        this.removeDate.setOutput("");
         this.dateInfo = VeloNantes.dateInfoDao.get(Date.valueOf(after));
         if(this.dateInfo == null){
             this.removeDate.setOutput("Cette date n'est pas dans la base de données");
         } else {        
-            this.removeDate.setOutput(dateInfo.toString());
+            this.removeDate.setTempMoyField(dateInfo.getTempMoy());
+            this.removeDate.setJourField(dateInfo.getJour());
+            this.removeDate.setVacancesField(dateInfo.getVacances());
         }
         System.out.println("RemoveDateListener: " + dateInfo);
     }

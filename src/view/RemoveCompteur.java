@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import modele.entities.Compteur;
-import modele.entities.Quartier;
 
 public class RemoveCompteur extends GridPane {
     private Label menuLabel;
@@ -85,8 +84,8 @@ public class RemoveCompteur extends GridPane {
         this.add(this.quartierLabel, 0, 7);
         this.add(this.quartierField, 1, 7);
         this.add(this.removeButton, 0, 8, 2, 1);
-        this.add(this.output, 0, 9, 2, 1);
-        this.add(this.warning, 0, 10, 2, 1);
+        this.add(this.warning, 0, 9, 2, 1);
+        this.add(this.output, 0, 10, 2, 1);
 
         this.compteurField.valueProperty().addListener(this.listener);
         this.removeButton.setOnAction(this.listener);
