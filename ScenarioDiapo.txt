@@ -1,3 +1,5 @@
+Nous allons présenter l'application selon les deux points de vue prévu par celle-ci (utilisateur et administrateur):
+
 L'application pour un utilisateur :
 
 - La Map :
@@ -29,3 +31,25 @@ Il n'y a pas de différence de fonctionnement pour la Map et le Graph entre les 
 
 
 Et finalement l'option quitter ferme l'application.
+
+-------------------------------------------------------------------------------------------------------------------------
+
+We are now going to present you our application according to the two points of view provided by it, the user and the administrator:
+
+First of all, the application for a user. By selecting the map, the user can browse the Google map of Nantes directly on the application with the terminals indicated on the map. 
+He can therefore select any terminal that interests him, which will indicate its name, its id, its GPS position, its district, 
+    the total number of passages at this terminal and the average of the passages. 
+The application will automatically fill in the filters for the district and the name of the selected terminal.
+
+Then, the user can generate a graph by modifying filters using the map or using the filter interface. 
+This includes the date interval of the data we are interested in, the name of the district and the name of the terminal. 
+He can also select the type of graph, each time for an average or a total, that is to say the number of simple passages, per hour or per day in the given interval.
+Finally, as the user can't connect to the database as an admin, he will not be able to modify the data. But he can still see what the admins can do as modifications.
+
+Secondly, the application for an administrator. There is no difference in operation for the Map and the Graph between the two roles.
+To perform administrator actions, he must log in with a login and a password. 
+Once connected (we can know it with a graphical indication), 
+he can perform 12 different actions listed by buttons and arranged in 3 categories which are data modification, data addition and data deletion.
+Each button will display different interfaces or the admin will be able to make his modifications. 
+
+Finally, the quit option closes the application.
