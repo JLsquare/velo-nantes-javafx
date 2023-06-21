@@ -91,11 +91,16 @@ public class VeloNantes extends Application {
     }
 
     private void initializeData(){
-        database = new Database("jdbc:mariadb://localhost:3306/bd_velo_4b2");
         try{
+            database = new Database("jdbc:mariadb://localhost:3306/bd_velo_4b2");
             database.openReadConnection("read_4b2", "read_4b2");
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                database = new Database("jdbc:mysql://localhost:3306/bd_velo_4b2");
+                database.openReadConnection("read_4b2", "read_4b2");
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
         }
 
         quartierDao = new QuartierDao(database);
