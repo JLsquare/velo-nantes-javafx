@@ -1,6 +1,7 @@
 package view;
 
 import controller.RemoveComptageListener;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -11,6 +12,9 @@ import modele.entities.Compteur;
 import modele.entities.PresenceAnomalie;
 
 public class RemoveComptage extends GridPane {
+
+    // ---------------- Attributes ---------------- //
+
     private Label menuLabel;
     private Label dateLabel;
     private Label compteurLabel;
@@ -26,16 +30,33 @@ public class RemoveComptage extends GridPane {
     private GridPane passagesPane;
     private Button removeButton;
     private Label output;
-    private Label warning;
     private RemoveComptageListener listener;
+
+    // ---------------- Constructor ---------------- //
     
+    /**
+     * Constructor of InsertComptage
+     */
     public RemoveComptage() {
         super();
         this.listener = new RemoveComptageListener(this);
         initializeComponents();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the view
+     */
     public void initializeComponents(){
+        this.setVgap(10);
+        this.setHgap(10);
+        this.setPadding(new Insets(20));
+
+        this.setVgap(10);
+        this.setHgap(10);
+        this.setPadding(new Insets(20));
+
         this.menuLabel = new Label("Supprimer un comptage");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
         this.dateLabel = new Label("Date : ");
@@ -51,7 +72,6 @@ public class RemoveComptage extends GridPane {
         this.passagesPane = new GridPane();
         this.removeButton = new Button("Supprimer");
         this.output = new Label("");
-        this.warning = new Label("Attention, cela supprimera aussi les comptages associés à ce compteur et cette date.");
 
         for(Compteur compteur : VeloNantes.compteurDao.getAll()){
             this.compteurField.getItems().add(compteur.getNomCompteur() + " " + compteur.getIdCompteur());
@@ -68,8 +88,8 @@ public class RemoveComptage extends GridPane {
         }
 
         for(int i = 0; i < 24; i++){
-            this.passagesPane.add(this.passagesLabels[i], i/6, 2*(i%6));
-            this.passagesPane.add(this.passagesField[i], i/6, 2*(i%6)+1); 
+            this.passagesPane.add(this.passagesLabels[i], i%4, i/4*2);
+            this.passagesPane.add(this.passagesField[i], i%4, i/4*2 + 1); 
         }
 
         this.dateField.valueProperty().addListener(this.listener);
@@ -86,32 +106,69 @@ public class RemoveComptage extends GridPane {
         this.add(this.passagesLabel, 0, 4);
         this.add(this.passagesPane, 0, 5, 2, 1);
         this.add(this.removeButton, 1, 6);
-        this.add(this.warning, 0, 7, 2, 1);
-        this.add(this.output, 1, 8, 2, 1);
+        this.add(this.output, 1, 7, 2, 1);
     }
 
+    // ---------------- Getters & Setters ---------------- //
+
+    /**
+     * Get the compteurField
+     * @return the compteurField
+     */
     public ComboBox<String> getCompteurField(){
         return this.compteurField;
     }
 
+    /**
+     * Get the anomalieField
+     * @return the anomalieField
+     */
     public DatePicker getDateField(){
         return this.dateField;
     }
 
+    /**
+     * Get the anomalieField
+     * @return the anomalieField
+     */
     public String getDate(){
         return this.dateField.getValue().toString();
     }
 
-    public void setAnomalieField(PresenceAnomalie anomalie){
+    /**
+     * Set the anomalie of the anomalieField
+     * @param anomalie the anomalie to set
+     */
+    public void setAnomalieField(PresenceAnomalie anomalie) throws IllegalArgumentException{
+        if(anomalie == null){
+            throw new IllegalArgumentException("The anomalie must not be null");
+        }
+
         this.anomalieField.setValue(anomalie.toString());
     }
 
-    public void setPassagesFields(int[] passages){
+    /**
+     * Set the passages of the passagesField
+     * @param passages the passages to set
+     * @throws IllegalArgumentException if the passages is null or if the length of the passages is not 24
+     */
+    public void setPassagesFields(int[] passages) throws IllegalArgumentException{
+        if(passages == null){
+            throw new IllegalArgumentException("The passages must not be null");
+        }
+        if(passages.length != 24){
+            throw new IllegalArgumentException("The passages must have a length of 24");
+        }
+
         for(int i = 0; i < 24; i++){
             this.passagesField[i].setText(Integer.toString(passages[i]));
         }
     }
 
+    /**
+     * Set the output of the label
+     * @param output the output to set
+     */
     public void setOutput(String output){
         this.output.setText(output);
     }

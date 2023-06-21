@@ -1,6 +1,7 @@
 package view;
 
 import controller.InsertDateListener;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -10,7 +11,10 @@ import javafx.scene.layout.GridPane;
 import modele.entities.Jour;
 import modele.entities.Vacances;
 
-public class InsertDate extends GridPane{
+public class InsertDate extends GridPane {
+
+    // ---------------- Attributes ---------------- //
+
     private Label menuLabel;
     private Label dateLabel;
     private Label tempMoyLabel;
@@ -26,13 +30,27 @@ public class InsertDate extends GridPane{
     private Label output;
     private InsertDateListener listener;
 
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of InsertDate
+     */
     public InsertDate() {
         super();
         this.listener = new InsertDateListener(this);
         initializeComponents();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the view
+     */
     public void initializeComponents(){
+        this.setVgap(10);
+        this.setHgap(10);
+        this.setPadding(new Insets(20));
+
         this.menuLabel = new Label("Insérer une date");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
         this.dateLabel = new Label("Date : ");
@@ -73,23 +91,49 @@ public class InsertDate extends GridPane{
         this.add(this.output, 0, 6, 2, 1);
     }
 
+    // ---------------- Getters & Setters ---------------- //
+
+    /**
+     * Get the date field
+     * @return the date field
+     */
     public DatePicker getDateField() {
         return dateField;
     }
 
+    /**
+     * Get the temperature field
+     * @return the temperature field
+     */
     public TextField getTempMoyField() {
         return tempMoyField;
     }
 
+    /**
+     * Get the day field
+     * @return the day field
+     */
     public ComboBox<String> getJourField() {
         return jourField;
     }
 
+    /**
+     * Get the vacation field
+     * @return the vacation field
+     */
     public ComboBox<String> getVacancesField() {
         return vacancesField;
     }
 
-    public void setOutput(String output) {
+    /**
+     * Set the output label
+     * @param output the output
+     */
+    public void setOutput(String output) throws IllegalArgumentException {
+        if(output == null){
+            throw new IllegalArgumentException("Output cannot be null");
+        }
+        
         this.output.setText(output);
     }
 }

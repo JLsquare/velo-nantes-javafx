@@ -1,6 +1,7 @@
 package view;
 
 import controller.UpdateQuartierListener;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -9,6 +10,9 @@ import javafx.scene.layout.GridPane;
 import modele.entities.Quartier;
 
 public class UpdateQuartier extends GridPane {
+
+    // ---------------- Attributes ---------------- //
+
     private Label menuLabel;
     private Label quartierLabel;
     private Label nomQuartierLabel;
@@ -24,13 +28,27 @@ public class UpdateQuartier extends GridPane {
     private Label output;
     private UpdateQuartierListener listener;
 
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of UpdateQuartier
+     */
     public UpdateQuartier() {
         super();
         this.listener = new UpdateQuartierListener(this);
         initializeComponents();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the view
+     */
     public void initializeComponents(){
+        this.setVgap(10);
+        this.setHgap(10);
+        this.setPadding(new Insets(20));
+
         this.menuLabel = new Label("Modifier un quartier");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
         this.quartierLabel = new Label("Quartier : ");
@@ -67,31 +85,70 @@ public class UpdateQuartier extends GridPane {
         this.add(this.output, 0, 6, 2, 1);
     }
 
+    // ---------------- Getters and setters ---------------- //
+
+    /**
+     * Get the quartier ComboBox
+     * @return the quartier ComboBox
+     */
     public ComboBox<String> getQuartierField() {
         return this.quartierField;
     }
 
+    /**
+     * Get the nomQuartier TextField
+     * @return the nomQuartier TextField
+     */
     public TextField getNomQuartierField() {
         return this.nomQuartierField;
     }
 
-    public void setNomQuartierField(String nomQuartier) {
+    /**
+     * Get the idQuartier TextField
+     * @return the idQuartier TextField
+     */
+    public void setNomQuartierField(String nomQuartier) throws NullPointerException{
+        if(nomQuartier == null){
+            throw new NullPointerException("nomQuartier is null");
+        }
+
         this.nomQuartierField.setText(nomQuartier);
     }
 
+    /**
+     * Set the idQuartier 
+     * @param idQuartier the idQuartier
+     */
     public void setIdQuartierField(int idQuartier) {
         this.idQuartierField.setText(idQuartier + "");
     }
 
+    /**
+     * Get the longueurPisteVelo TextField
+     * @return the longueurPisteVelo TextField
+     */
     public TextField getLongueurPisteVeloField() {
         return this.longueurPisteVeloField;
     }
 
+    /**
+     * Set the longueurPisteVelo
+     * @param longueurPisteVelo the longueurPisteVelo
+     */
     public void setLongueurPisteVeloField(float longueurPisteVelo) {
         this.longueurPisteVeloField.setText(longueurPisteVelo + "");
     }
 
-    public void setOutput(String output) {
+    /**
+     * Set the output
+     * @param output the output
+     * @throws IllegalArgumentException if output is null
+     */
+    public void setOutput(String output) throws IllegalArgumentException{
+        if(output == null){
+            throw new IllegalArgumentException("output is null");
+        }
+
         this.output.setText(output);
     }
 }

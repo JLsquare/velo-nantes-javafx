@@ -25,7 +25,7 @@ public class AuthentificationListener implements EventHandler<ActionEvent> {
         try{
             VeloNantes.database.openWriteConnection(login, password);
             this.authentification.setError("Authentification réussie.");
-            this.authentification.connected();
+            this.authentification.getLeftBar().toConnected(login);
         }catch(Exception e){
             this.authentification.setError(e.getMessage());
             return;

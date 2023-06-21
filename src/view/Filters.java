@@ -13,18 +13,21 @@ import javafx.scene.layout.VBox;
 import modele.entities.Quartier;
 
 public class Filters extends VBox{
+
+    // ---------------- Attributes ---------------- //
+
     private GridPane topFiltersGrid;
     private GridPane bottomFiltersGrid;
 
     private Label startDateLabel;
-    private Label counterLabel;
-    private Label neighborhoodLabel;
+    private Label compteurLabel;
+    private Label quartierLabel;
     private Label endDateLabel;
 
     private DatePicker startDatePicker;
     private DatePicker endDatePicker;
-    private ComboBox<String> neighborhoodField;
-    private ComboBox<String> counterField;
+    private ComboBox<String> quartierField;
+    private ComboBox<String> compteurField;
 
     private ToggleGroup group;
 
@@ -43,9 +46,15 @@ public class Filters extends VBox{
     private RadioButton averagePassagesPerDay;
 
     private FilterListener listener;
-
     private Graph graph;
 
+    // ---------------- Constructors ---------------- //
+
+    /**
+     * Constructor of the Filters class
+     * @param graph the graph of the application
+     * @throws IllegalArgumentException if graph is null    
+     */
     public Filters(Graph graph) throws IllegalArgumentException{
         if(graph == null){
             throw new IllegalArgumentException("Graph cannot be null");
@@ -54,9 +63,13 @@ public class Filters extends VBox{
         this.graph = graph;
 
         this.initializeComponents();
-        this.initializeListeners();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the listeners of the Filters class
+     */
     public void initializeComponents(){
         this.topFiltersGrid = new GridPane();
         this.topFiltersGrid.setHgap(10);
@@ -74,16 +87,16 @@ public class Filters extends VBox{
         this.endDateLabel = new Label("Date fin:");
         this.endDatePicker = new DatePicker();
 
-        this.neighborhoodLabel = new Label("Quartier:");
-        this.neighborhoodField = new ComboBox<>();
-        this.neighborhoodField.getItems().add("Tous");
+        this.quartierLabel = new Label("Quartier:");
+        this.quartierField = new ComboBox<>();
+        this.quartierField.getItems().add("Tous");
         for(Quartier quartier : VeloNantes.quartierDao.getAll()) {
-            this.neighborhoodField.getItems().add(quartier.getNomQuartier() + " " + quartier.getIdQuartier());
+            this.quartierField.getItems().add(quartier.getNomQuartier() + " " + quartier.getIdQuartier());
         }
 
-        this.counterLabel = new Label("Compteur:");
-        this.counterField = new ComboBox<>();
-        this.counterField.getItems().add("Tous");
+        this.compteurLabel = new Label("Compteur:");
+        this.compteurField = new ComboBox<>();
+        this.compteurField.getItems().add("Tous");
 
         this.group = new ToggleGroup();
 
@@ -121,10 +134,10 @@ public class Filters extends VBox{
         this.topFiltersGrid.add(this.startDatePicker, 1, 0);
         this.topFiltersGrid.add(this.endDateLabel, 0, 1);
         this.topFiltersGrid.add(this.endDatePicker, 1, 1);
-        this.topFiltersGrid.add(this.neighborhoodLabel, 0, 2);
-        this.topFiltersGrid.add(this.neighborhoodField, 1, 2);
-        this.topFiltersGrid.add(this.counterLabel, 0, 3);
-        this.topFiltersGrid.add(this.counterField, 1, 3);
+        this.topFiltersGrid.add(this.quartierLabel, 0, 2);
+        this.topFiltersGrid.add(this.quartierField, 1, 2);
+        this.topFiltersGrid.add(this.compteurLabel, 0, 3);
+        this.topFiltersGrid.add(this.compteurField, 1, 3);
         this.bottomFiltersGrid.add(this.totalPassagesLabel, 0, 4);
         this.bottomFiltersGrid.add(this.totalPassages, 1, 4);
         this.bottomFiltersGrid.add(this.averagePassagesLabel, 0, 5);
@@ -140,68 +153,122 @@ public class Filters extends VBox{
 
         this.getChildren().add(this.topFiltersGrid);
         this.getChildren().add(this.bottomFiltersGrid);
-    }
 
-    public void initializeListeners(){
         this.listener = new FilterListener(this, this.graph);
 
         this.startDatePicker.valueProperty().addListener(this.listener);
         this.endDatePicker.valueProperty().addListener(this.listener);
-        this.neighborhoodField.valueProperty().addListener(this.listener);
-        this.counterField.valueProperty().addListener(this.listener);
+        this.quartierField.valueProperty().addListener(this.listener);
+        this.compteurField.valueProperty().addListener(this.listener);
         this.group.selectedToggleProperty().addListener(this.listener);
 
-        this.neighborhoodField.setValue("Tous");
-        this.counterField.setValue("Tous");
+        this.quartierField.setValue("Tous");
+        this.compteurField.setValue("Tous");
         this.startDatePicker.setValue(LocalDate.of(2020, 1, 1));
         this.endDatePicker.setValue(LocalDate.of(2023, 01, 24));
         this.group.selectToggle(this.totalPassages);
     }
 
+    // ---------------- Getters & Setters ---------------- //
+
+    /**
+     * Get the date of the start date picker
+     * @return the date of the start date picker
+     */
     public LocalDate getStartDate() {
         return this.startDatePicker.getValue();
     }
 
+    /**
+     * Get the date of the end date picker
+     * @return the date of the end date picker
+     */
     public LocalDate getEndDate() {
         return this.endDatePicker.getValue();
     }
 
-    public String getNeighborhood() {
-        return this.neighborhoodField.getValue();
+    /**
+     * Get the neighborhood selected
+     * @return the neighborhood selected
+     */
+    public String getQuartier() {
+        return this.quartierField.getValue();
     }
 
-    public ComboBox<String> getNeighborhoodField() {
-        return this.neighborhoodField;
+    /**
+     * Get the counter selected
+     * @return the counter selected
+     */
+    public ComboBox<String> getQuartierField() {
+        return this.quartierField;
     }
 
-    public void setNeighborhoodField(String neighborhood) {
-        this.neighborhoodField.setValue(neighborhood);
+    /**
+     * Set the quartier selected
+     * @param quartier the neighborhood selected
+     * @throws IllegalArgumentException if the neighborhood doesn't exist
+     */
+    public void setQuartierField(String quartier) throws IllegalArgumentException{
+        if (!this.quartierField.getItems().contains(quartier)) {
+            throw new IllegalArgumentException("Le quartier n'existe pas");
+        }
+
+        this.quartierField.setValue(quartier);
     }
 
-    public ComboBox<String> getCounterField() {
-        return this.counterField;
+    /**
+     * Get the compteur selected
+     * @return the counter selected
+     */
+    public ComboBox<String> getCompteurField() {
+        return this.compteurField;
     }
 
-    public void setCounterField(String counter) {
-        this.counterField.setValue(counter);
+    /**
+     * Set the compteur selected
+     * @param compteur the counter selected
+     * @throws IllegalArgumentException if the counter doesn't exist
+     */
+    public void setCompteurField(String compteur) {
+        this.compteurField.setValue(compteur);
     }
 
+    /**
+     * Get the start date picker
+     * @return the start date picker
+     */
     public DatePicker getStartDatePicker() {
         return this.startDatePicker;
     }
 
+    /**
+     * Get the end date picker
+     * @return the end date picker
+     */
     public DatePicker getEndDatePicker() {
         return this.endDatePicker;
     }
 
+    /**
+     * Get the ToggleGroup of the radio buttons
+     * @return the ToggleGroup of the radio buttons
+     */
     public ToggleGroup getGroup() {
         return this.group;
     }
 
-    public String getCounter() {
-        return this.counterField.getValue();
+    /**
+     * Get the compteur selected
+     * @return the compteur selected
+     */
+    public String getCompteur() {
+        return this.compteurField.getValue();
     }
 
+    /**
+     * Get the type of the graph selected
+     * @return the type of the graph selected
+     */
     public String getType() {
         return (String)this.group.getSelectedToggle().getUserData();
     }

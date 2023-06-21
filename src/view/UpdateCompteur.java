@@ -1,6 +1,7 @@
 package view;
 
 import controller.UpdateCompteurListener;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -10,6 +11,9 @@ import modele.entities.Compteur;
 import modele.entities.Quartier;
 
 public class UpdateCompteur extends GridPane {
+
+    // ---------------- Attributes ---------------- //
+
     private Label menuLabel;
     private Label compteurLabel;
     private Label nomCompteurLabel;
@@ -30,14 +34,28 @@ public class UpdateCompteur extends GridPane {
     private Button updateButton;
     private Label output;
     private UpdateCompteurListener listener;
+
+    // ---------------- Constructor ---------------- //
     
+    /**
+     * Constructor of UpdateCompteur
+     */
     public UpdateCompteur() {
         super();
         this.listener = new UpdateCompteurListener(this);
         initializeComponents();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the view
+     */
     public void initializeComponents(){
+        this.setVgap(10);
+        this.setHgap(10);
+        this.setPadding(new Insets(20));
+
         this.menuLabel = new Label("Modifier un compteur");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
         this.compteurLabel = new Label("Compteur : ");
@@ -93,55 +111,129 @@ public class UpdateCompteur extends GridPane {
         this.add(this.output, 0, 9, 2, 1);
     }
 
+    // ---------------- Getters and setters ---------------- //
+
+    /**
+     * Get the compteurField
+     * @return the compteurField
+     */
     public ComboBox<String> getCompteurField() {
         return compteurField;
     }
 
+    /**
+     * Get the nomCompteurField
+     * @return the nomCompteurField
+     */
     public TextField getNomCompteurField() {
         return nomCompteurField;
     }
 
-    public void setNomCompteurField(String nom) {
+    /**
+     * Set the nomCompteur of the field
+     * @param nom the nomCompteur
+     * @throws IllegalArgumentException if nom is null
+     */
+    public void setNomCompteurField(String nom) throws IllegalArgumentException{
+        if(nom == null){
+            throw new IllegalArgumentException("nom cannot be null");
+        }
+
         this.nomCompteurField.setText(nom);
     }
 
+    /**
+     * Set the idCompteur of the field
+     * @param id the idCompteur
+     */
     public void setIdCompteurField(int id) {
         this.idCompteurField.setText(id + "");
     }
 
+    /**
+     * Get the sensField
+     * @return the sensField
+     */
     public TextField getSensField() {
         return sensField;
     }
 
-    public void setSensField(String sens) {
+    /**
+     * Set the sens of the field
+     * @param sens the sens
+     * @throws IllegalArgumentException if sens is null
+     */
+    public void setSensField(String sens) throws IllegalArgumentException{ 
+        if(sens == null){
+            throw new IllegalArgumentException("sens cannot be null");
+        }
+
         this.sensField.setText(sens);
     }
 
+    /**
+     * Get the coordXField
+     * @return the coordXField
+     */
     public TextField getCoordXField() {
         return coordXField;
     }
 
+    /**
+     * Set the coordX of the field
+     * @param coordX the coordX
+     */
     public void setCoordXField(float coordX) {
         this.coordXField.setText(coordX + "");
     }
 
+    /**
+     * Get the coordYField
+     * @return the coordYField
+     */
     public TextField getCoordYField() {
         return coordYField;
     }
 
+    /**
+     * Set the coordY of the field
+     * @param coordY the coordY
+     */
     public void setCoordYField(float coordY) {
         this.coordYField.setText(coordY + "");
     }
 
+    /**
+     * Get the quartierField
+     * @return the quartierField
+     */
     public ComboBox<String> getQuartierField() {
         return quartierField;
     }
 
-    public void setQuartierField(String quartier) {
+    /**
+     * Set the quartier of the field
+     * @param quartier the quartier
+     * @throws IllegalArgumentException if quartier is null
+     */
+    public void setQuartierField(String quartier) throws IllegalArgumentException{
+        if(quartier == null){
+            throw new IllegalArgumentException("quartier cannot be null");
+        }
+
         this.quartierField.setValue(quartier);
     }
 
-    public void setOutput(String output) {
+    /** 
+     * Set the output
+     * @param output the output
+     * @throws IllegalArgumentException if output is null
+     */
+    public void setOutput(String output) throws IllegalArgumentException{
+        if(output == null){
+            throw new IllegalArgumentException("output cannot be null");
+        }
+
         this.output.setText(output);
     }
 }

@@ -1,6 +1,7 @@
 package view;
 
 import controller.RemoveQuartierListener;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -9,6 +10,9 @@ import javafx.scene.layout.GridPane;
 import modele.entities.Quartier;
 
 public class RemoveQuartier extends GridPane {
+
+    // ---------------- Attributes ---------------- //
+
     private Label menuLabel;
     private Label quartierLabel;
     private Label nomQuartierLabel;
@@ -21,17 +25,31 @@ public class RemoveQuartier extends GridPane {
     private TextField longueurPisteVeloField;
 
     private Button removeButton;
-    private Label output;
     private Label warning;
+    private Label output;
     private RemoveQuartierListener listener;
 
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of RemoveQuartier
+     */
     public RemoveQuartier() {
         super();
         this.listener = new RemoveQuartierListener(this);
         initializeComponents();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the view
+     */
     public void initializeComponents(){
+        this.setVgap(10);
+        this.setHgap(10);
+        this.setPadding(new Insets(20));
+
         this.menuLabel = new Label("Supprimer un quartier");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
         this.quartierLabel = new Label("Nom du quartier : ");
@@ -46,8 +64,8 @@ public class RemoveQuartier extends GridPane {
         this.longueurPisteVeloField = new TextField();
         this.longueurPisteVeloField.setDisable(true);
         this.removeButton = new Button("Supprimer");
+        this.warning = new Label("Attention, cela supprimera aussi les compteurs et les comptages de ce quartier.");
         this.output = new Label("");
-        this.warning = new Label("Attention, cela supprimera aussi les comptages associés à ce quartier.");
 
         for(Quartier quartier : VeloNantes.quartierDao.getAll()){
             this.quartierField.getItems().add(quartier.getNomQuartier() + " " + quartier.getIdQuartier());
@@ -70,18 +88,46 @@ public class RemoveQuartier extends GridPane {
         this.removeButton.setOnAction(this.listener);
     }
 
-    public void setOutput(String output){
+    // ---------------- Getters & Setters ---------------- //
+
+    /**
+     * Set the output
+     * @param output the output
+     * @throws IllegalArgumentException if output is null
+     */
+    public void setOutput(String output) throws IllegalArgumentException{
+        if(output == null){
+            throw new IllegalArgumentException("Output can't be null");
+        }
+
         this.output.setText(output);
     }
 
-    public void setNomQuartierField(String nomQuartier){
+    /**
+     * Set the nomQuartier of the field
+     * @param nomQuartier the nomQuartier
+     * @throws IllegalArgumentException if nomQuartier is null
+     */
+    public void setNomQuartierField(String nomQuartier) throws IllegalArgumentException{
+        if(nomQuartier == null){
+            throw new IllegalArgumentException("NomQuartier can't be null");
+        }
+
         this.nomQuartierField.setText(nomQuartier);
     }
 
+    /**
+     * Set the idQuartier of the field
+     * @param idQuartier the idQuartier
+     */
     public void setIdQuartierField(int idQuartier){
         this.idQuartierField.setText(idQuartier + "");
     }
 
+    /**
+     * Set the longueurPisteVelo of the field
+     * @param longueurPisteVelo the longueurPisteVelo
+     */
     public void setLongueurPisteVeloField(float longueurPisteVelo){
         this.longueurPisteVeloField.setText(longueurPisteVelo + "");
     }

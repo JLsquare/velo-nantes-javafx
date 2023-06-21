@@ -1,74 +1,97 @@
 package view;
 
+import controller.GraphiquesListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class Graphiques extends VBox {
+
+    // ---------------- Attributes ---------------- //
+
+    private StackPane stackPane;
+    private HBox buttonsBox;
     private ImageView imageView;
     private Button previousButton;
     private Button nextButton;
-    private int currentIndex;
+    private Pane spacer;
+    private GraphiquesListener graphiquesListener;
 
-    private static final int MAX_INDEX = 7;
+    // ---------------- Constructor ---------------- //
 
     public Graphiques() {
         initializeComponents();
-        showImage(1); // Afficher la première image au démarrage
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the Graphiques class
+     */
     private void initializeComponents() {
-        HBox buttonsBox = new HBox();
-        buttonsBox.setAlignment(Pos.CENTER);
-        buttonsBox.setSpacing(10);
+        this.spacer = new Pane();
+        this.spacer.setMinHeight(20);
 
-        previousButton = new Button("Précédent");
-        nextButton = new Button("Suivant");
+        this.previousButton = new Button("Précédent");
+        this.nextButton = new Button("Suivant");
 
-        previousButton.setOnAction(e -> showPreviousImage());
-        nextButton.setOnAction(e -> showNextImage());
+        this.buttonsBox = new HBox();
+        this.buttonsBox.setAlignment(Pos.CENTER);
+        this.buttonsBox.setSpacing(10);
+        this.buttonsBox.getChildren().addAll(previousButton, nextButton);
 
-        buttonsBox.getChildren().addAll(previousButton, nextButton);
+        this.imageView = new ImageView();
+        this.imageView.setPreserveRatio(true);
 
-        imageView = new ImageView();
-        imageView.setPreserveRatio(true);
+        this.stackPane = new StackPane();
+        this.stackPane.setPrefWidth(800);
+        this.stackPane.setPrefHeight(600);
+        this.stackPane.getChildren().add(imageView);
 
-        this.getChildren().addAll(imageView, buttonsBox);
+        this.getChildren().addAll(spacer, stackPane, buttonsBox);
         this.setAlignment(Pos.CENTER);
         this.setSpacing(10);
         this.setPadding(new Insets(10));
+
+        this.graphiquesListener = new GraphiquesListener(this);
+
+        this.previousButton.setOnAction(graphiquesListener);
+        this.nextButton.setOnAction(graphiquesListener);
     }
 
-    private void showImage(int index) {
-        if (index < 1 || index > MAX_INDEX) {
-            return;
-        }
+    // ---------------- Getters & Setters ---------------- //
 
-        String imageName = "graphique" + index + ".png";
-        String imagePath = "/data/" + imageName;
-
-        Image image = new Image(getClass().getResourceAsStream(imagePath));
-        imageView.setImage(image);
-        currentIndex = index;
+    /**
+     * Get the previousButton button
+     * @return the previousButton button
+     */
+    public Button getPreviousButton() {
+        return previousButton;
     }
 
-    private void showPreviousImage() {
-        int previousIndex = currentIndex - 1;
-        if (previousIndex < 1) {
-            previousIndex = MAX_INDEX;
-        }
-        showImage(previousIndex);
+    /**
+     * Get the nextButton button
+     * @return the nextButton button
+     */
+    public Button getNextButton() {
+        return nextButton;
     }
 
-    private void showNextImage() {
-        int nextIndex = currentIndex + 1;
-        if (nextIndex > MAX_INDEX) {
-            nextIndex = 1;
+    /**
+     * Set the image of the imageView
+     * @param image the image to set
+     */
+    public void setImage(Image image) throws IllegalArgumentException{
+        if(image == null){
+            throw new IllegalArgumentException("Image cannot be null");
         }
-        showImage(nextIndex);
+        
+        this.imageView.setImage(image);
     }
 }

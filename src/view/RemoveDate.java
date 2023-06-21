@@ -1,6 +1,7 @@
 package view;
 
 import controller.RemoveDateListener;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -11,6 +12,9 @@ import modele.entities.Jour;
 import modele.entities.Vacances;
 
 public class RemoveDate extends GridPane {
+
+    // ---------------- Attributes ---------------- //
+
     private Label menuLabel;
     private Label dateLabel;
     private Label tempMoyLabel;
@@ -27,13 +31,27 @@ public class RemoveDate extends GridPane {
     private Label warning;
     private RemoveDateListener listener;
 
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of RemoveDate
+     */
     public RemoveDate() {
         super();
         this.listener = new RemoveDateListener(this);
         initializeComponents();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the view
+     */
     public void initializeComponents(){
+        this.setVgap(10);
+        this.setHgap(10);
+        this.setPadding(new Insets(20));
+
         this.menuLabel = new Label("Supprimer une date");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
         this.dateLabel = new Label("La date : ");
@@ -68,23 +86,57 @@ public class RemoveDate extends GridPane {
         this.removeButton.setOnAction(this.listener);
     }
 
+    // ---------------- Getters & Setters ---------------- //
+
+    /**
+     * Get the date
+     * @return the date
+     */
     public String getDate(){
         return this.dateField.getValue().toString();
     }
 
+    /**
+     * Set the temperature
+     * @param tempMoy the temperature
+     */
     public void setTempMoyField(float tempMoy){
         this.tempMoyField.setText(tempMoy + "");
     }
 
-    public void setJourField(Jour jour){
+    /**
+     * Set the day
+     * @param jour the day
+     */
+    public void setJourField(Jour jour) throws IllegalArgumentException{
+        if(jour == null){
+            throw new IllegalArgumentException("jour cannot be null");
+        }
+
         this.jourField.setValue(jour.toString());
     }
 
-    public void setVacancesField(Vacances vacances){
+    /**
+     * Set the vacation
+     * @param vacances the vacation
+     */
+    public void setVacancesField(Vacances vacances) throws IllegalArgumentException{
+        if(vacances == null){
+            throw new IllegalArgumentException("vacances cannot be null");
+        }
+
         this.vacancesField.setValue(vacances.toString());
     }
 
-    public void setOutput(String output){
+    /**
+     * Set the output
+     * @param output the output
+     */
+    public void setOutput(String output) throws IllegalArgumentException{
+        if(output == null){
+            throw new IllegalArgumentException("output cannot be null");
+        }
+
         this.output.setText(output);
     }
 }

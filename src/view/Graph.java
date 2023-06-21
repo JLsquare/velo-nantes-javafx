@@ -9,18 +9,25 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 
 public class Graph extends VBox{
+
+    // ---------------- Attributes ---------------- //
+
     private BarChart<String, Number> barChart;
     private Quartier quartier;
     private Compteur compteur;
     private DateInfo start;
     private DateInfo end;
     
+    // ---------------- Constructor ---------------- //
+
     /**
      * Constructor of the Graph class
      */
     public Graph() {
 
     }
+
+    // ---------------- Methods ---------------- //
 
     /**
      * Update the graph

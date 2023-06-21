@@ -21,6 +21,9 @@ import modele.entities.Quartier;
 import netscape.javascript.JSObject;
 
 public class Map extends VBox implements MapComponentInitializedListener {
+
+    // ---------------- Attributes ---------------- //
+
     private GoogleMapView mapView;
     private GoogleMap map;
     private MapOptions mapOptions;
@@ -28,12 +31,29 @@ public class Map extends VBox implements MapComponentInitializedListener {
     private Pane spacer;
     private InfoWindow lastOpenWindow;
 
-    public Map(Filters filters){
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of the Map class
+     * @param filters the filters of the application
+     * @throws IllegalArgumentException if filters is null
+     */
+    public Map(Filters filters) throws IllegalArgumentException{
         super();
+
+        if(filters == null){
+            throw new IllegalArgumentException("Filters cannot be null");
+        }
+
         this.filters = filters;
         this.initializeComponents();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the Map class
+     */
     private void initializeComponents(){
         this.mapView = new GoogleMapView("", "AIzaSyAMxQ0PIfYEa1z9lHV-rOOFoKOEk2N26zw");
         this.mapView.addMapInitializedListener(this);
@@ -43,6 +63,9 @@ public class Map extends VBox implements MapComponentInitializedListener {
         this.getChildren().add(this.mapView);
     }
 
+    /**
+     * Initialize the map
+     */
     @Override
     public void mapInitialized() {
         this.mapOptions = new MapOptions();
@@ -88,8 +111,8 @@ public class Map extends VBox implements MapComponentInitializedListener {
                 this.lastOpenWindow = infoWindow;
                 infoWindow.open(this.map, marker);
                 Quartier quartier = compteur.getLeQuartier();
-                this.filters.setNeighborhoodField(quartier.getNomQuartier() + " " + quartier.getIdQuartier());
-                this.filters.setCounterField(compteur.getNomCompteur() + " " + compteur.getSens() + " " + compteur.getIdCompteur());
+                this.filters.setQuartierField(quartier.getNomQuartier() + " " + quartier.getIdQuartier());
+                this.filters.setCompteurField(compteur.getNomCompteur() + " " + compteur.getSens() + " " + compteur.getIdCompteur());
             });
         }
     }

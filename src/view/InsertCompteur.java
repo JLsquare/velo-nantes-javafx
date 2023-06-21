@@ -1,6 +1,7 @@
 package view;
 
 import controller.InsertCompteurListener;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -9,6 +10,9 @@ import javafx.scene.layout.GridPane;
 import modele.entities.Quartier;
 
 public class InsertCompteur extends GridPane {
+
+    // ---------------- Attributes ---------------- //
+
     private Label menuLabel;
     private Label nomCompteurLabel;
     private Label idCompteurLabel;
@@ -28,13 +32,27 @@ public class InsertCompteur extends GridPane {
     private Label output;
     private InsertCompteurListener listener;
 
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of InsertCompteur
+     */
     public InsertCompteur() {
         super();
         this.listener = new InsertCompteurListener(this);
         initializeComponents();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the view
+     */
     public void initializeComponents(){
+        this.setVgap(10);
+        this.setHgap(10);
+        this.setPadding(new Insets(20));
+
         this.menuLabel = new Label("Insérer un compteur");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
         this.nomCompteurLabel = new Label("Nom du compteur : ");
@@ -81,31 +99,65 @@ public class InsertCompteur extends GridPane {
         this.add(this.output, 0, 8, 2, 1);
     }
 
+    // ---------------- Getters & Setters ---------------- //
+
+    /**
+     * Get the field of the name of the compteur
+     * @return the field of the name of the compteur
+     */
     public TextField getNomCompteurField() {
         return nomCompteurField;
     }
 
+    /**
+     * Get the field of the id of the compteur
+     * @return the field of the id of the compteur
+     */
     public TextField getIdCompteurField() {
         return idCompteurField;
     }
 
+    /**
+     * Get the field of the sens of the compteur
+     * @return the field of the sens of the compteur
+     */
     public TextField getSensField() {
         return sensField;
     }
 
+    /**
+     * Get the field of the coordX of the compteur
+     * @return the field of the coordX of the compteur
+     */
     public TextField getCoordXField() {
         return coordXField;
     }
 
+    /**
+     * Get the field of the coordY of the compteur
+     * @return the field of the coordY of the compteur
+     */
     public TextField getCoordYField() {
         return coordYField;
     }
 
+    /**
+     * Get the field of the quartier of the compteur
+     * @return the field of the quartier of the compteur
+     */
     public ComboBox<String> getQuartierField() {
         return quartierField;
     }
 
-    public void setOutput(String output) {
+    /**
+     * Set the output
+     * @param output the output
+     */
+    public void setOutput(String output) throws IllegalArgumentException{
+        if(output == null){
+            throw new IllegalArgumentException("output is null");
+        }
+
         this.output.setText(output);
     }
 }

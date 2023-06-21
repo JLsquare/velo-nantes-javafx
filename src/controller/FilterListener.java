@@ -29,7 +29,7 @@ public class FilterListener implements ChangeListener<Object> {
 
     @Override
     public void changed(javafx.beans.value.ObservableValue<?> observable, Object before, Object after) {
-        if(observable == this.filters.getNeighborhoodField().valueProperty()){
+        if(observable == this.filters.getQuartierField().valueProperty()){
             String nomQuartier = (String) after;
             if(nomQuartier.equals("Tous")){
                 this.quartier = null;
@@ -40,7 +40,7 @@ public class FilterListener implements ChangeListener<Object> {
             }
             this.updateCompteurs();
         }
-        if(observable == this.filters.getCounterField().valueProperty()){
+        if(observable == this.filters.getCompteurField().valueProperty()){
             if(isUpdatingCompteurs == false){
                 String nomCompteur = (String) after;
                 if(nomCompteur.equals("Tous")){
@@ -70,16 +70,16 @@ public class FilterListener implements ChangeListener<Object> {
     private void updateCompteurs() {
         System.out.println("updateCompteurs");
         this.isUpdatingCompteurs = true;
-        this.filters.getCounterField().getItems().clear();
-        this.filters.getCounterField().getItems().add("Tous");
+        this.filters.getCompteurField().getItems().clear();
+        this.filters.getCompteurField().getItems().add("Tous");
         for (Compteur compteur : VeloNantes.compteurDao.getAll()) {
             if (compteur.getLeQuartier().equals(this.quartier) || this.quartier == null) {
                 String counter = compteur.getNomCompteur() + " " + compteur.getSens() + " " + compteur.getIdCompteur();
-                this.filters.getCounterField().getItems().add(counter);
+                this.filters.getCompteurField().getItems().add(counter);
             }
         }
         this.isUpdatingCompteurs = false;
-        this.filters.getCounterField().setValue("Tous");
+        this.filters.getCompteurField().setValue("Tous");
     }
 
     private void updateGraph() {

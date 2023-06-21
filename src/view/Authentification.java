@@ -12,6 +12,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class Authentification extends VBox {
+
+    // ---------------- Attributes ---------------- //
+
     private GridPane gridPane;
     private Label authentificationLabel;
     private Pane spacer;
@@ -24,11 +27,27 @@ public class Authentification extends VBox {
     private AuthentificationListener listener;
     private LeftBar leftBar;
 
-    public Authentification(LeftBar leftBar){
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of the Authentification class
+     * @param leftBar the left bar of the application
+     * @throws IllegalArgumentException if leftBar is null
+     */
+    public Authentification(LeftBar leftBar) throws IllegalArgumentException{
+        if(leftBar == null){
+            throw new IllegalArgumentException("LeftBar cannot be null");
+        }
+
         this.leftBar = leftBar;
         this.initializeComponents();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the Authentification class
+     */
     private void initializeComponents(){
         this.gridPane = new GridPane();
         this.authentificationLabel = new Label("Authentification");
@@ -62,15 +81,34 @@ public class Authentification extends VBox {
         this.getChildren().add(this.error);
     }
 
+    // ---------------- Getters & Setters ---------------- //
+
+    /**
+     * Get the login TextField
+     * @return the login TextField
+     */
     public TextField getLogin(){
         return this.login;
     }
 
+    /**
+     * Get the password PasswordField
+     * @return the password PasswordField
+     */
     public PasswordField getPassword(){
         return this.password;
     }
 
-    public void setError(String error){
+    /**
+     * Set the error label
+     * @param error the error to set
+     * @throws IllegalArgumentException if error is null
+     */
+    public void setError(String error) throws IllegalArgumentException{
+        if(error == null){
+            throw new IllegalArgumentException("Error cannot be null");
+        }
+
         String newError = "";
         for(int i = 0; i < error.length(); i++){
             if(i % 40 == 0 && i != 0){
@@ -81,7 +119,11 @@ public class Authentification extends VBox {
         this.error.setText(newError);
     }
 
-    public void connected(){
-        this.leftBar.toConnected(this.login.getText());
+    /**
+     * Get the left bar
+     * @return the left bar
+     */
+    public LeftBar getLeftBar(){
+        return this.leftBar;
     }
 }

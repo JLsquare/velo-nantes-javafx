@@ -1,6 +1,7 @@
 package view;
 
 import controller.InsertComptageListener;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -11,6 +12,9 @@ import modele.entities.Compteur;
 import modele.entities.PresenceAnomalie;
 
 public class InsertComptage extends GridPane {
+
+    // ---------------- Attributes ---------------- //
+
     private Label menuLabel;
     private Label dateLabel;
     private Label compteurLabel;
@@ -29,13 +33,27 @@ public class InsertComptage extends GridPane {
     private Label output;
     private InsertComptageListener listener;
 
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of InsertComptage
+     */
     public InsertComptage() {
         super();
         this.listener = new InsertComptageListener(this);
         initializeComponents();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the view
+     */
     public void initializeComponents(){
+        this.setVgap(10);
+        this.setHgap(10);
+        this.setPadding(new Insets(20));
+
         this.menuLabel = new Label("Insérer un comptage");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
         this.dateLabel = new Label("Date : ");
@@ -70,8 +88,8 @@ public class InsertComptage extends GridPane {
         }
 
         for(int i = 0; i < 24; i++){
-            this.passagesPane.add(this.passagesLabels[i], i/6, 2*(i%6));
-            this.passagesPane.add(this.passagesField[i], i/6, 2*(i%6)+1); 
+            this.passagesPane.add(this.passagesLabels[i], i%4, i/4*2);
+            this.passagesPane.add(this.passagesField[i], i%4, i/4*2 + 1); 
         }
 
         this.dateField.valueProperty().addListener(this.listener);
@@ -97,31 +115,65 @@ public class InsertComptage extends GridPane {
         this.add(this.output, 1, 8, 2, 1);
     }
 
+    // ---------------- Getters & Setters ---------------- //
+
+    /**
+     * Get the date field
+     * @return the date field
+     */
     public DatePicker getDateField() {
         return dateField;
     }
 
+    /**
+     * Get the compteur field
+     * @return the compteur field
+     */
     public ComboBox<String> getCompteurField() {
         return compteurField;
     }
 
+    /**
+     * Get the anomalie field
+     * @return the anomalie field
+     */
     public ComboBox<String> getAnomalieField() {
         return anomalieField;
     }
 
+    /**
+     * Get the passages fields
+     * @return the passages fields
+     */
     public TextField[] getPassagesFields() {
         return passagesField;
     }
 
+    /**
+     * Get the insert button
+     * @return the insert button
+     */
     public Button getInsertButton() {
         return insertButton;
     }
 
+    /**
+     * Get the insert csv button
+     * @return the insert csv button
+     */
     public Button getInsertCsvButton() {
         return insertCsvButton;
     }
 
-    public void setOutput(String output) {
+    /**
+     * Set the output
+     * @param output the output
+     */
+    public void setOutput(String output) throws IllegalArgumentException{
+        if(output == null){
+            throw new IllegalArgumentException("output cannot be null");
+        }
+        
         this.output.setText(output);
     }
 }

@@ -12,6 +12,9 @@ import modele.database.Database;
 import java.sql.SQLException;
 
 public class VeloNantes extends Application {
+
+    // ---------------- Attributes ---------------- //
+
     private Stage primaryStage;
     private LeftBar leftBar;
     private MenuButton menu;
@@ -27,8 +30,28 @@ public class VeloNantes extends Application {
     public static DateInfoDao dateInfoDao;
     public static ComptageDao comptageDao;
 
+
+    // ---------------- Methods ---------------- //
+
+    /**
+     * The main method
+     * @param args the arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    /**
+     * Start the application
+     * @param primaryStage the primary stage
+     * @throws IllegalArgumentException if primaryStage is null
+     */
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IllegalArgumentException{
+        if(primaryStage == null){
+            throw new IllegalArgumentException("Primary stage cannot be null");
+        }
+
         this.primaryStage = primaryStage;
         this.initializeData();
         primaryStage.setTitle("Velo de Nantes");
@@ -36,6 +59,9 @@ public class VeloNantes extends Application {
 
     }
 
+    /**
+     * Initialize the components of the view
+     */
     private void initializeComponents(){
         this.menu = new MenuButton();
         this.menu.setText("Menu");
@@ -58,22 +84,24 @@ public class VeloNantes extends Application {
             System.out.println("Graphiques");
             rightPane.getChildren().clear(); 
             rightPane.getChildren().addAll(menu, graphiques);
-        });
-
-        this.menu.getItems().get(1).setOnAction(e -> {
-            System.out.println("Map");
-            rightPane.getChildren().clear(); 
-            rightPane.getChildren().addAll(menu, map);
+            this.leftBar.toGraphiques();
         });
 
         this.menu.getItems().get(2).setOnAction(e -> {
+            System.out.println("Map");
+            rightPane.getChildren().clear(); 
+            rightPane.getChildren().addAll(menu, map);
+            this.leftBar.toGraph();
+        });
+
+        this.menu.getItems().get(3).setOnAction(e -> {
             System.out.println("Données");
             rightPane.getChildren().clear(); 
             rightPane.getChildren().addAll(menu, dataMenu); 
             this.leftBar.toAuthentification();
         });
 
-        this.menu.getItems().get(3).setOnAction(e -> {
+        this.menu.getItems().get(4).setOnAction(e -> {
             System.out.println("Quitter");
             this.primaryStage.close();
         });
@@ -103,16 +131,19 @@ public class VeloNantes extends Application {
         this.primaryStage.show();
     }
 
+    /**
+     * Initialize the data
+     */
     private void initializeData(){
         try{
             database = new Database("jdbc:mariadb://localhost:3306/bd_velo_4b2");
             database.openReadConnection("read_4b2", "read_4b2");
-        } catch (SQLException e) {
+        } catch (SQLException mariadbException) {
             try {
                 database = new Database("jdbc:mysql://localhost:3306/bd_velo_4b2");
                 database.openReadConnection("read_4b2", "read_4b2");
-            } catch (SQLException e1) {
-                e1.printStackTrace();
+            } catch (SQLException mysqlException) {
+                System.out.println("Impossible de se connecter à la base de données" + mysqlException.getMessage());
             }
         }
 
@@ -127,14 +158,16 @@ public class VeloNantes extends Application {
             dateInfoDao.readAll();
             comptageDao.readAll();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Impossible de lire les données : " + e.getMessage());
         }
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
+    // ---------------- Getters & Setters ---------------- //
+    
+    /**
+     * Get the graph
+     * @return the graph
+     */
     public Graph getGraph(){
         return this.graph;
     }

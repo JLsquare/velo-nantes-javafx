@@ -1,6 +1,7 @@
 package view;
 
 import controller.RemoveCompteurListener;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -9,6 +10,9 @@ import javafx.scene.layout.GridPane;
 import modele.entities.Compteur;
 
 public class RemoveCompteur extends GridPane {
+
+    // ---------------- Attributes ---------------- //
+
     private Label menuLabel;
     private Label compteurLabel;
     private Label nomCompteurLabel;
@@ -31,13 +35,27 @@ public class RemoveCompteur extends GridPane {
     private Label warning;
     private RemoveCompteurListener listener;
 
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of RemoveCompteur
+     */
     public RemoveCompteur() {
         super();
         this.listener = new RemoveCompteurListener(this);
         initializeComponents();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the view
+     */
     public void initializeComponents(){
+        this.setVgap(10);
+        this.setHgap(10);
+        this.setPadding(new Insets(20));
+
         this.menuLabel = new Label("Supprimer un compteur");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
         this.compteurLabel = new Label("Compteur : ");
@@ -91,35 +109,89 @@ public class RemoveCompteur extends GridPane {
         this.removeButton.setOnAction(this.listener);
     }
 
+    // ---------------- Getters & Setters ---------------- //
+
+    /**
+     * Get the compteurField
+     * @return the compteurField
+     */
     public ComboBox<String> getCompteurField(){
         return this.compteurField;
     }
 
-    public void setNomCompteurField(String nomCompteur){
+    /**
+     * Set the nomCompteur of the field
+     * @param nomCompteur the nomCompteur to set
+     * @throws IllegalArgumentException if nomCompteur is null
+     */
+    public void setNomCompteurField(String nomCompteur) throws IllegalArgumentException{
+        if(nomCompteur == null){
+            throw new IllegalArgumentException("nomCompteur can't be null");
+        }
+
         this.nomCompteurField.setText(nomCompteur);
     }
 
+    /**
+     * Set the idCompteur of the field
+     * @param idCompteur the idCompteur to set
+     */
     public void setIdCompteurField(int idCompteur){
         this.idCompteurField.setText(idCompteur + "");
     }
 
-    public void setSensField(String sens){
+    /**
+     * Set the sens of the field
+     * @param sens the sens to set
+     * @throws IllegalArgumentException if sens is null
+     */
+    public void setSensField(String sens) throws IllegalArgumentException{
+        if(sens == null){
+            throw new IllegalArgumentException("sens can't be null");
+        }
+
         this.sensField.setText(sens);
     }
 
+    /**
+     * Set the coordX of the field
+     * @param coordX the coordX to set
+     */
     public void setCoordXField(float coordX){
         this.coordXField.setText(coordX + "");
     }
 
+    /**
+     * Set the coordY of the field
+     * @param coordY the coordY to set
+     */
     public void setCoordYField(float coordY){
         this.coordYField.setText(coordY + "");
     }
 
-    public void setQuartierField(String quartier){
+    /**
+     * Set the quartier of the field
+     * @param quartier the quartier to set
+     * @throws IllegalArgumentException if quartier is null
+     */
+    public void setQuartierField(String quartier) throws IllegalArgumentException{
+        if(quartier == null){
+            throw new IllegalArgumentException("quartier can't be null");
+        }
+
         this.quartierField.setValue(quartier);
     }
 
-    public void setOutput(String output){
+    /**
+     * Set the output of the field
+     * @param output the output to set
+     * @throws IllegalArgumentException if output is null
+     */
+    public void setOutput(String output) throws IllegalArgumentException{
+        if(output == null){
+            throw new IllegalArgumentException("output can't be null");
+        }
+        
         this.output.setText(output);
     }
 }

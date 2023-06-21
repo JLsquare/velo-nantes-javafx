@@ -2,11 +2,15 @@ package view;
 
 import controller.InsertQuartierListener;
 import javafx.scene.layout.GridPane;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class InsertQuartier extends GridPane {
+
+    // ---------------- Attributes ---------------- //
+
     private Label menuLabel;
     private Label nomQuartierLabel;
     private Label idQuartierLabel;
@@ -20,13 +24,27 @@ public class InsertQuartier extends GridPane {
     private Label output;
     private InsertQuartierListener listener;
 
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of InsertQuartier
+     */
     public InsertQuartier() {
         super();
         this.listener = new InsertQuartierListener(this);
         initializeComponents();
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the view
+     */
     public void initializeComponents() {
+        this.setVgap(10);
+        this.setHgap(10);
+        this.setPadding(new Insets(20));
+
         this.menuLabel = new Label("Insérer un quartier");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
         this.nomQuartierLabel = new Label("Nom du quartier : ");
@@ -54,31 +72,65 @@ public class InsertQuartier extends GridPane {
         this.add(this.output, 0, 5, 2, 1);
     }
 
+    // ---------------- Getters & Setters ---------------- //
+
+    /**
+     * Get the nomQuartier field
+     * @return the nomQuartier field
+     */
     public TextField getNomQuartierField() {
         return this.nomQuartierField;
     }
 
+    /**
+     * Get the idQuartier field
+     * @return the idQuartier field
+     */
     public TextField getIdQuartierField() {
         return this.idQuartierField;
     }
 
+    /**
+     * Get the longueurPisteVelo field
+     * @return the longueurPisteVelo field
+     */
     public TextField getLongueurPisteVeloField() {
         return this.longueurPisteVeloField;
     }
 
+    /**
+     * Get the nomQuartier
+     * @return the nomQuartier
+     */
     public String getNomQuartier() {
         return this.nomQuartierField.getText();
     }
 
+    /**
+     * Get the idQuartier
+     * @return the idQuartier
+     */
     public String getIdQuartier() {
         return this.idQuartierField.getText();
     }
 
+    /**
+     * Get the longueurPisteVelo
+     * @return the longueurPisteVelo
+     */
     public String getLongueurPisteVelo() {
         return this.longueurPisteVeloField.getText();
     }
 
-    public void setOutput(String output) {
+    /**
+     * Set the output label
+     * @param output the output
+     */
+    public void setOutput(String output) throws IllegalArgumentException {
+        if (output == null) {
+            throw new IllegalArgumentException("output is null");
+        }
+        
         this.output.setText(output);
     }
 }

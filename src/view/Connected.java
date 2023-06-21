@@ -8,21 +8,42 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
 public class Connected extends GridPane{
+
+    // ---------------- Attributes ---------------- //
+
     private Label connectedLabel;
     private Label loginLabel;
     private Label login;
     private Label dateLabel;
     private Label date;
     private Button disconnectButton;
+    private String loginString;
 
-    public Connected(String login){
-        this.initializeComponents(login);
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of the Connected class
+     * @param login the login of the user
+     * @throws IllegalArgumentException if login is null
+     */
+    public Connected(String login) throws IllegalArgumentException{
+        if(login == null){
+            throw new IllegalArgumentException("Login cannot be null");
+        }
+
+        this.loginString = login;
+        this.initializeComponents();
     }
 
-    private void initializeComponents(String login){
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Initialize the components of the Connected class
+     */
+    private void initializeComponents(){
         this.connectedLabel = new Label("Connecté");
         this.loginLabel = new Label("Identifiant");
-        this.login = new Label(login);
+        this.login = new Label(this.loginString);
         this.dateLabel = new Label("Date");
         this.date = new Label(LocalDateTime.now().toString());
         this.disconnectButton = new Button("Déconnexion");
