@@ -72,8 +72,8 @@ public class InsertCompteurListener implements ChangeListener<String>, EventHand
 
     @Override
     public void handle(ActionEvent event){
-        Compteur compteur = new Compteur(this.idCompteur, this.nomCompteur, this.sens, this.coordX, this.coordY, this.quartier);
         try{
+            Compteur compteur = new Compteur(this.idCompteur, this.nomCompteur, this.sens, this.coordX, this.coordY, this.quartier);
             VeloNantes.compteurDao.add(compteur);
             this.insertCompteur.setOutput("Compteur ajouté.");
         }catch(Exception e){

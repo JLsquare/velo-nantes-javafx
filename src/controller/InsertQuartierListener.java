@@ -47,9 +47,10 @@ public class InsertQuartierListener implements ChangeListener<String>, EventHand
 
     @Override
     public void handle(ActionEvent event) {
-        Quartier quartier = new Quartier(this.idQuartier, this.nomQuartier, this.longueurPisteVelo);
         try{
+            Quartier quartier = new Quartier(this.idQuartier, this.nomQuartier, this.longueurPisteVelo);
             VeloNantes.quartierDao.add(quartier);
+            this.insertQuartier.setOutput("Le quartier a bien été ajouté.");
         }catch(Exception e){
             System.out.println(e);
             this.insertQuartier.setOutput(e.getMessage());

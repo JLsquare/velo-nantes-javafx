@@ -34,7 +34,6 @@ public class InsertDateListener implements ChangeListener<Object>, EventHandler<
 
         if(after instanceof String){
             String afterString = (String) after;
-            
             if(observable == insertDate.getJourField().valueProperty()){
                 this.jour = Jour.valueOf(afterString);
             }
@@ -42,7 +41,7 @@ public class InsertDateListener implements ChangeListener<Object>, EventHandler<
             if(observable == insertDate.getVacancesField().valueProperty()){
                 this.vacances = Vacances.valueOf(afterString);
             } 
-
+            
             if(observable == insertDate.getTempMoyField().textProperty()){
                 try {
                     this.tempMoy = Float.parseFloat(afterString);

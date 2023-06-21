@@ -1,5 +1,6 @@
 package view;
 
+import controller.InsertComptageListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -27,11 +28,11 @@ public class InsertComptage extends GridPane {
     private GridPane passagesPane;
     private Button insertButton;
     private Label output;
-    //private InsertComptageListener listener;
+    private InsertComptageListener listener;
 
     public InsertComptage() {
         super();
-        //this.listener = new InsertComptageListener(this);
+        this.listener = new InsertComptageListener(this);
         initializeComponents();
     }
 
@@ -75,6 +76,14 @@ public class InsertComptage extends GridPane {
             this.passagesPane.add(this.passagesField[i], i/6, 2*(i%6)+1); 
         }
 
+        this.dateField.valueProperty().addListener(this.listener);
+        this.quartierField.valueProperty().addListener(this.listener);
+        this.compteurField.valueProperty().addListener(this.listener);
+        this.anomalieField.valueProperty().addListener(this.listener);
+        for(int i = 0; i < 24; i++){
+            this.passagesField[i].textProperty().addListener(this.listener);
+        }
+
         this.add(this.menuLabel, 0, 0, 2, 1);
         this.add(this.dateLabel, 0, 1);
         this.add(this.dateField, 1, 1);
@@ -88,5 +97,29 @@ public class InsertComptage extends GridPane {
         this.add(this.passagesPane, 0, 6, 2, 1);
         this.add(this.insertButton, 0, 7);
         this.add(this.output, 1, 8, 2, 1);
+    }
+
+    public DatePicker getDateField() {
+        return dateField;
+    }
+
+    public ComboBox<String> getQuartierField() {
+        return quartierField;
+    }
+
+    public ComboBox<String> getCompteurField() {
+        return compteurField;
+    }
+
+    public ComboBox<String> getAnomalieField() {
+        return anomalieField;
+    }
+
+    public TextField[] getPassagesFields() {
+        return passagesField;
+    }
+
+    public void setOutput(String output) {
+        this.output.setText(output);
     }
 }

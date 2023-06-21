@@ -58,6 +58,7 @@ public class InsertDate extends GridPane{
         this.tempMoyField.textProperty().addListener(this.listener);
         this.jourField.valueProperty().addListener(this.listener);
         this.vacancesField.valueProperty().addListener(this.listener);
+        this.insertButton.setOnAction(this.listener);
 
         this.add(this.menuLabel, 0, 0, 2, 1);
         this.add(this.dateLabel, 0, 1);
