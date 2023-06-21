@@ -42,7 +42,7 @@ public class ReadComptageCsv {
      * @param file the csv file to read
      * @throws IOException if the file is not found
      */
-    public void read(File file) throws IOException {
+    public void read(File file) throws IOException, SQLException {
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         bufferedReader.readLine();
@@ -57,8 +57,9 @@ public class ReadComptageCsv {
     /**
      * Convert a line of the csv file to a Comptage and add it to the database
      * @param line the line to convert
+     * @throws SQLException
      */
-    public void lineToComptage(String line){
+    public void lineToComptage(String line) throws SQLException{
         String[] splitLine = line.split(";");
         String date = splitLine[2];
         String idCompteur = splitLine[0];
@@ -80,10 +81,10 @@ public class ReadComptageCsv {
             presenceAnomalie = PresenceAnomalie.valueOf(anomalie);
         }
         Comptage comptage = new Comptage(passages, presenceAnomalie, compteur, dateInfo);
-        try{
+        if(this.comptageDao.get(dateInfo, compteur) == null){
             this.comptageDao.add(comptage);
-        }catch(SQLException e){
-            // Doublons
+        } else {
+            this.comptageDao.update(comptage);
         }
     }
 }

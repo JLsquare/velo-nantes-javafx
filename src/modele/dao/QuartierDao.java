@@ -95,6 +95,9 @@ public class QuartierDao implements IDao<Quartier>{
             throw new IllegalArgumentException("Quartier cannot be null");
         }
 
+        if(this.get(quartier.getIdQuartier()) == null){
+            this.lesQuartiers.add(quartier);
+        }
         String query = "INSERT INTO QUARTIER VALUES(?, ?, ?)";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setInt(1, quartier.getIdQuartier());

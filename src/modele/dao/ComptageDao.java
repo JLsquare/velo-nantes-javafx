@@ -125,6 +125,9 @@ public class ComptageDao implements IDao<Comptage>{
             throw new IllegalArgumentException("Comptage cannot be null");
         }
 
+        if(this.get(comptage.getLaDate(), comptage.getLeCompteur()) == null){
+            this.lesComptages.add(comptage);
+        }
         String query = "INSERT INTO COMPTAGE VALUES(?, ?, ";
         for(int i = 0; i < 24; i++) {
             query += "?, ";
@@ -136,7 +139,11 @@ public class ComptageDao implements IDao<Comptage>{
         for(int i = 0; i < 24; i++) {
             ps.setInt(i + 3, comptage.getPassages()[i]);
         }
-        ps.setObject(27, comptage.getAnomalie());
+        if(comptage.getAnomalie() == PresenceAnomalie.Nulle){
+            ps.setString(27, null);
+        } else {
+            ps.setString(27, comptage.getAnomalie().toString());
+        }
         ps.executeUpdate();
         ps.close();
 
