@@ -10,14 +10,12 @@ import javafx.event.EventHandler;
 import modele.entities.Comptage;
 import modele.entities.Compteur;
 import modele.entities.DateInfo;
-import modele.entities.Quartier;
 import view.RemoveComptage;
 import view.VeloNantes;
 
 public class RemoveComptageListener implements ChangeListener<Object>, EventHandler<ActionEvent> {
     private RemoveComptage removeComptage;
     private Compteur compteur;
-    private Quartier quartier;
     private DateInfo dateInfo;
 
     public RemoveComptageListener(RemoveComptage removeComptage){
@@ -27,37 +25,15 @@ public class RemoveComptageListener implements ChangeListener<Object>, EventHand
         @Override
     public void changed(ObservableValue<?> observable, Object before, Object after) {
         if (after instanceof String) {
-            String afterString = (String) after;
-            if(observable == removeComptage.getCompteurField().valueProperty()){
-                String[] splitCompteur = afterString.split(" ");
-                int idCompteur = Integer.parseInt(splitCompteur[splitCompteur.length - 1]);
-                this.compteur = VeloNantes.compteurDao.get(idCompteur);
-                this.updateOutput();
-            } else {
-                if(afterString.equals("Tous")){
-                    this.quartier = null;
-                } else {
-                    String[] splitQuartier = afterString.split(" ");
-                    int idQuartier = Integer.parseInt(splitQuartier[splitQuartier.length - 1]);
-                    this.quartier = VeloNantes.quartierDao.get(idQuartier);
-                    this.updateCompteurs();
-                }
-            }
+            String compteurString = (String) after;
+            String[] splitCompteur = compteurString.split(" ");
+            int idCompteur = Integer.parseInt(splitCompteur[splitCompteur.length - 1]);
+            this.compteur = VeloNantes.compteurDao.get(idCompteur);
+            this.updateOutput();
         } else if (after instanceof LocalDate) {
             LocalDate date = (LocalDate) after;
             this.dateInfo = VeloNantes.dateInfoDao.get(Date.valueOf(date));
             this.updateOutput();
-        }
-    }
-
-    private void updateCompteurs() {
-        System.out.println("updateCompteurs");
-        this.removeComptage.getCompteurField().getItems().clear();
-        for (Compteur compteur : VeloNantes.compteurDao.getAll()) {
-            if (compteur.getLeQuartier().equals(this.quartier) || this.quartier == null) {
-                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
-                this.removeComptage.getCompteurField().getItems().add(counter);
-            }
         }
     }
 
@@ -68,6 +44,8 @@ public class RemoveComptageListener implements ChangeListener<Object>, EventHand
                 this.removeComptage.setOutput("Ce comptage n'est pas dans la base de données");
             } else {
                 this.removeComptage.setOutput(comptage.toString());
+                this.removeComptage.setAnomalieField(comptage.getAnomalie());
+                this.removeComptage.setPassagesFields(comptage.getPassages());
             }
         }
         if(this.dateInfo == null){

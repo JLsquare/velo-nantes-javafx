@@ -12,13 +12,11 @@ import modele.entities.Comptage;
 import modele.entities.Compteur;
 import modele.entities.DateInfo;
 import modele.entities.PresenceAnomalie;
-import modele.entities.Quartier;
 import view.InsertComptage;
 import view.VeloNantes;
 
 public class InsertComptageListener implements ChangeListener<Object>, EventHandler<ActionEvent>{
     private InsertComptage insertComptage;
-    private Quartier quartier;
     private Compteur compteur;
     private DateInfo dateInfo;
     private PresenceAnomalie anomalie;
@@ -34,18 +32,6 @@ public class InsertComptageListener implements ChangeListener<Object>, EventHand
         if(observable == this.insertComptage.getDateField().valueProperty()){
             LocalDate date = (LocalDate) after;
             this.dateInfo = VeloNantes.dateInfoDao.get(Date.valueOf(date));
-        }
-
-        if(observable == this.insertComptage.getQuartierField()){
-            String quartierString = (String) after;
-            if(quartierString.equals("Tous")){
-                this.quartier = null;
-            } else {
-                String[] splitQuartier = quartierString.split(" ");
-                int idQuartier = Integer.parseInt(splitQuartier[splitQuartier.length - 1]);
-                this.quartier = VeloNantes.quartierDao.get(idQuartier);
-            }
-            this.updateCompteurs();
         }
 
         if(observable == this.insertComptage.getCompteurField().valueProperty()){
@@ -68,17 +54,6 @@ public class InsertComptageListener implements ChangeListener<Object>, EventHand
                 }catch(NumberFormatException e){
                     this.insertComptage.setOutput("Le nombre de passages doit être un entier");
                 }
-            }
-        }
-    }
-
-    private void updateCompteurs() {
-        System.out.println("updateCompteurs");
-        this.insertComptage.getCompteurField().getItems().clear();
-        for (Compteur compteur : VeloNantes.compteurDao.getAll()) {
-            if (compteur.getLeQuartier().equals(this.quartier) || this.quartier == null) {
-                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
-                this.insertComptage.getCompteurField().getItems().add(counter);
             }
         }
     }
