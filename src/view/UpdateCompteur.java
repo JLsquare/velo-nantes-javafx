@@ -55,7 +55,6 @@ public class UpdateCompteur extends GridPane {
         this.coordYField = new TextField();
         this.quartierLabel = new Label("Quartier : ");
         this.quartierField = new ComboBox<String>();
-
         this.updateButton = new Button("Modifier");
         this.output = new Label("");
         

@@ -4,17 +4,26 @@ import controller.RemoveQuartierListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import modele.entities.Quartier;
 
 public class RemoveQuartier extends GridPane {
-    private RemoveQuartierListener listener;
     private Label menuLabel;
+    private Label quartierLabel;
     private Label nomQuartierLabel;
-    private ComboBox<String> nomQuartierField;
+    private Label idQuartierLabel;
+    private Label longueurPisteVeloLabel;
+
+    private ComboBox<String> quartierField;
+    private TextField nomQuartierField;
+    private TextField idQuartierField;
+    private TextField longueurPisteVeloField;
+
     private Button removeButton;
     private Label output;
     private Label warning;
+    private RemoveQuartierListener listener;
 
     public RemoveQuartier() {
         super();
@@ -25,30 +34,55 @@ public class RemoveQuartier extends GridPane {
     public void initializeComponents(){
         this.menuLabel = new Label("Supprimer un quartier");
         this.menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
-
+        this.quartierLabel = new Label("Nom du quartier : ");
+        this.quartierField = new ComboBox<String>();
         this.nomQuartierLabel = new Label("Nom du quartier : ");
-        this.nomQuartierField = new ComboBox<String>();
-        for(Quartier quartier : VeloNantes.quartierDao.getAll()){
-            this.nomQuartierField.getItems().add(quartier.getNomQuartier() + " " + quartier.getIdQuartier());
-        }
-
+        this.nomQuartierField = new TextField();
+        this.nomQuartierField.setDisable(true);
+        this.idQuartierLabel = new Label("Id du quartier : ");
+        this.idQuartierField = new TextField();
+        this.idQuartierField.setDisable(true);
+        this.longueurPisteVeloLabel = new Label("Longueur de la piste cyclable : ");
+        this.longueurPisteVeloField = new TextField();
+        this.longueurPisteVeloField.setDisable(true);
         this.removeButton = new Button("Supprimer");
-
         this.output = new Label("");
         this.warning = new Label("Attention, cela supprimera aussi les comptages associés à ce quartier.");
 
-        this.add(this.menuLabel, 0, 0, 2, 1);
-        this.add(this.nomQuartierLabel, 0, 1);
-        this.add(this.nomQuartierField, 1, 1);
-        this.add(this.removeButton, 1, 2);
-        this.add(this.warning, 0, 3, 2, 1);
-        this.add(this.output, 0, 4, 2, 1);
+        for(Quartier quartier : VeloNantes.quartierDao.getAll()){
+            this.quartierField.getItems().add(quartier.getNomQuartier() + " " + quartier.getIdQuartier());
+        }
 
-        this.nomQuartierField.valueProperty().addListener(this.listener);
+        this.add(this.menuLabel, 0, 0, 2, 1);
+        this.add(this.quartierLabel, 0, 1);
+        this.add(this.quartierField, 1, 1);
+        this.add(this.nomQuartierLabel, 0, 2);
+        this.add(this.nomQuartierField, 1, 2);
+        this.add(this.idQuartierLabel, 0, 3);
+        this.add(this.idQuartierField, 1, 3);
+        this.add(this.longueurPisteVeloLabel, 0, 4);
+        this.add(this.longueurPisteVeloField, 1, 4);
+        this.add(this.removeButton, 1, 5);
+        this.add(this.warning, 0, 6, 2, 1);
+        this.add(this.output, 0, 7, 2, 1);
+
+        this.quartierField.valueProperty().addListener(this.listener);
         this.removeButton.setOnAction(this.listener);
     }
 
     public void setOutput(String output){
         this.output.setText(output);
+    }
+
+    public void setNomQuartierField(String nomQuartier){
+        this.nomQuartierField.setText(nomQuartier);
+    }
+
+    public void setIdQuartierField(int idQuartier){
+        this.idQuartierField.setText(idQuartier + "");
+    }
+
+    public void setLongueurPisteVeloField(float longueurPisteVelo){
+        this.longueurPisteVeloField.setText(longueurPisteVelo + "");
     }
 }

@@ -24,6 +24,9 @@ public class RemoveQuartierListener implements ChangeListener<String>, EventHand
         int idQuartier = Integer.parseInt(splitQuartier[splitQuartier.length - 1]);
         this.quartier = VeloNantes.quartierDao.get(idQuartier);
         System.out.println("RemoveQuartierListener: " + quartier);
+        this.removeQuartier.setNomQuartierField(this.quartier.getNomQuartier());
+        this.removeQuartier.setIdQuartierField(this.quartier.getIdQuartier());
+        this.removeQuartier.setLongueurPisteVeloField(this.quartier.getLongueurPisteVelo());
     }
     
     @Override
