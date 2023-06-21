@@ -37,8 +37,7 @@ Et finalement l'option quitter ferme l'application.
 We are now going to present you our application according to the two points of view provided by it, the user and the administrator:
 
 First of all, the application for a user. By selecting the map, the user can browse the Google map of Nantes directly on the application with the terminals indicated on the map. 
-He can therefore select any terminal that interests him, which will indicate its name, its id, its GPS position, its district, 
-    the total number of passages at this terminal and the average of the passages. 
+He can therefore select any terminal that interests him, which will indicate its name, its id, its GPS position, its district, the total number of passages at this terminal and the average of the passages. 
 The application will automatically fill in the filters for the district and the name of the selected terminal.
 
 Then, the user can generate a graph by modifying filters using the map or using the filter interface. 
@@ -48,9 +47,7 @@ Finally, as the user can't connect to the database as an admin, he will not be a
 
 Secondly, the application for an administrator. There is no difference in operation for the Map and the Graph between the two roles.
 To perform administrator actions, he must log in with a login and a password. 
-Once connected (we can know it with a graphical indication), 
-he can perform 12 different actions listed by buttons and arranged in 3 categories which are data modification, data addition and data deletion.
-Each button will display different interfaces or the admin will be able to make his modifications in the application by entering the information in the fields provided for this purpose
-     or in the case of adding a terminal, by importing a csv file.
+Once connected (we can know it with a graphical indication), he can perform 12 different actions listed by buttons and arranged in 3 categories which are data modification, data addition and data deletion.
+Each button will display different interfaces or the admin will be able to make his modifications in the application by entering the information in the fields provided for this purpose or in the case of adding a terminal, by importing a csv file.
 
 Finally, the quit option closes the application.
