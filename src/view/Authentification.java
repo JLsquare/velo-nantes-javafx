@@ -38,7 +38,7 @@ public class Authentification extends VBox {
         this.passwordLabel = new Label("Mot de passe");
         this.login = new TextField();
         this.password = new PasswordField();
-        this.error = new Label("No error.");
+        this.error = new Label();
         this.error.maxWidth(100);
         this.error.setWrapText(true);
         this.validateButton = new Button("Valider");
