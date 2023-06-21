@@ -14,7 +14,7 @@ public class Graphiques extends VBox {
     private Button nextButton;
     private int currentIndex;
 
-    private static final int MAX_INDEX = 7;
+    private static final int MAX_INDEX = 8;
 
     public Graphiques() {
         initializeComponents();
