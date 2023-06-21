@@ -29,6 +29,9 @@ public class UpdateQuartierListener implements ChangeListener<String>, EventHand
             this.updateQuartier.setIdQuartierField(idQuartier);
             this.quartier = VeloNantes.quartierDao.get(this.idQuartier);
             this.updateQuartier.setOutput("Quartier sélectionné: " + this.quartier);
+
+            this.updateQuartier.setNomQuartierField(this.quartier.getNomQuartier());
+            this.updateQuartier.setLongueurPisteVeloField(this.quartier.getLongueurPisteVelo());
         }
 
         if(observable == this.updateQuartier.getNomQuartierField().textProperty()){

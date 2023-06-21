@@ -75,12 +75,20 @@ public class UpdateQuartier extends GridPane {
         return this.nomQuartierField;
     }
 
+    public void setNomQuartierField(String nomQuartier) {
+        this.nomQuartierField.setText(nomQuartier);
+    }
+
     public void setIdQuartierField(int idQuartier) {
         this.idQuartierField.setText(idQuartier + "");
     }
 
     public TextField getLongueurPisteVeloField() {
         return this.longueurPisteVeloField;
+    }
+
+    public void setLongueurPisteVeloField(float longueurPisteVelo) {
+        this.longueurPisteVeloField.setText(longueurPisteVelo + "");
     }
 
     public void setOutput(String output) {
