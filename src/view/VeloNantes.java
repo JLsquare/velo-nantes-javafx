@@ -18,6 +18,7 @@ public class VeloNantes extends Application {
     private Graph graph;
     private DataMenu dataMenu;
     private Map map;
+    private Graphiques graphiques;
 
     public static Scene scene;
     public static Database database;
@@ -39,6 +40,7 @@ public class VeloNantes extends Application {
         this.menu = new MenuButton();
         this.menu.setText("Menu");
         this.menu.getItems().add(new javafx.scene.control.MenuItem("Graphes"));
+        this.menu.getItems().add(new javafx.scene.control.MenuItem("Graphiques"));
         this.menu.getItems().add(new javafx.scene.control.MenuItem("Map"));
         this.menu.getItems().add(new javafx.scene.control.MenuItem("Données"));
         this.menu.getItems().add(new javafx.scene.control.MenuItem("Quitter"));
@@ -50,6 +52,12 @@ public class VeloNantes extends Application {
             rightPane.getChildren().clear();
             rightPane.getChildren().addAll(menu, graph); 
             this.leftBar.toGraph();
+        });
+
+        this.menu.getItems().get(1).setOnAction(e -> {
+            System.out.println("Graphiques");
+            rightPane.getChildren().clear(); 
+            rightPane.getChildren().addAll(menu, graphiques);
         });
 
         this.menu.getItems().get(1).setOnAction(e -> {
@@ -74,6 +82,7 @@ public class VeloNantes extends Application {
         this.leftBar = new LeftBar(graph);
         this.dataMenu = new DataMenu();
         this.map = new Map(this.leftBar.getFilters());
+        this.graphiques = new Graphiques();
 
         rightPane.setPadding(new Insets(15, 12, 15, 12));
         rightPane.getChildren().addAll(menu, graph);
