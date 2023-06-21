@@ -25,6 +25,7 @@ public class InsertComptage extends GridPane {
 
     private GridPane passagesPane;
     private Button insertButton;
+    private Button insertCsvButton;
     private Label output;
     private InsertComptageListener listener;
 
@@ -48,6 +49,7 @@ public class InsertComptage extends GridPane {
         this.passagesField = new TextField[24];
         this.passagesPane = new GridPane();
         this.insertButton = new Button("Insérer");
+        this.insertCsvButton = new Button("Insérer CSV");
         this.output = new Label("");
 
         for(Compteur compteur : VeloNantes.compteurDao.getAll()){
@@ -78,6 +80,8 @@ public class InsertComptage extends GridPane {
         for(int i = 0; i < 24; i++){
             this.passagesField[i].textProperty().addListener(this.listener);
         }
+        this.insertButton.setOnAction(this.listener);
+        this.insertCsvButton.setOnAction(this.listener);
 
         this.add(this.menuLabel, 0, 0, 2, 1);
         this.add(this.dateLabel, 0, 1);
@@ -88,8 +92,9 @@ public class InsertComptage extends GridPane {
         this.add(this.anomalieField, 1, 3);
         this.add(this.passagesLabel, 0, 4);
         this.add(this.passagesPane, 0, 5, 2, 1);
-        this.add(this.insertButton, 0, 6);
-        this.add(this.output, 1, 7, 2, 1);
+        this.add(this.insertButton, 1, 6);
+        this.add(this.insertCsvButton, 1, 7);
+        this.add(this.output, 1, 8, 2, 1);
     }
 
     public DatePicker getDateField() {
@@ -106,6 +111,14 @@ public class InsertComptage extends GridPane {
 
     public TextField[] getPassagesFields() {
         return passagesField;
+    }
+
+    public Button getInsertButton() {
+        return insertButton;
+    }
+
+    public Button getInsertCsvButton() {
+        return insertCsvButton;
     }
 
     public void setOutput(String output) {

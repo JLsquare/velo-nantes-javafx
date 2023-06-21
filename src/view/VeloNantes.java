@@ -20,6 +20,7 @@ public class VeloNantes extends Application {
     private Map map;
     private Graphiques graphiques;
 
+    public static Scene scene;
     public static Database database;
     public static QuartierDao quartierDao;
     public static CompteurDao compteurDao;
@@ -97,7 +98,7 @@ public class VeloNantes extends Application {
         root.setLeft(this.leftBar);
         root.setCenter(rightPane);
 
-        Scene scene = new Scene(root, 1280, 720);
+        scene = new Scene(root, 1280, 720);
         this.primaryStage.setScene(scene);
         this.primaryStage.show();
     }
