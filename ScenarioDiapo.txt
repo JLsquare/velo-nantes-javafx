@@ -50,6 +50,7 @@ Secondly, the application for an administrator. There is no difference in operat
 To perform administrator actions, he must log in with a login and a password. 
 Once connected (we can know it with a graphical indication), 
 he can perform 12 different actions listed by buttons and arranged in 3 categories which are data modification, data addition and data deletion.
-Each button will display different interfaces or the admin will be able to make his modifications. 
+Each button will display different interfaces or the admin will be able to make his modifications in the application by entering the information in the fields provided for this purpose
+     or in the case of adding a terminal, by importing a csv file.
 
 Finally, the quit option closes the application.
