@@ -12,16 +12,18 @@ import modele.database.Database;
 import java.sql.SQLException;
 
 public class VeloNantes extends Application {
+    private Stage primaryStage;
     private LeftBar leftBar;
     private MenuButton menu;
     private Graph graph;
     private DataMenu dataMenu;
+    private Map map;
+
     public static Database database;
     public static QuartierDao quartierDao;
     public static CompteurDao compteurDao;
     public static DateInfoDao dateInfoDao;
     public static ComptageDao comptageDao;
-    private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
@@ -52,7 +54,7 @@ public class VeloNantes extends Application {
         this.menu.getItems().get(1).setOnAction(e -> {
             System.out.println("Map");
             rightPane.getChildren().clear(); 
-            rightPane.getChildren().add(menu);
+            rightPane.getChildren().addAll(menu, map);
         });
 
         this.menu.getItems().get(2).setOnAction(e -> {
@@ -70,6 +72,7 @@ public class VeloNantes extends Application {
         this.graph = new Graph();
         this.leftBar = new LeftBar(graph);
         this.dataMenu = new DataMenu();
+        this.map = new Map(this.leftBar.getFilters());
 
         rightPane.setPadding(new Insets(15, 12, 15, 12));
         rightPane.getChildren().addAll(menu, graph);

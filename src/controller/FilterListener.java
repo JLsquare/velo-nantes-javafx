@@ -20,6 +20,7 @@ public class FilterListener implements ChangeListener<Object> {
     private Quartier quartier;
     private Graph graph;
     private String type;
+    private boolean isUpdatingCompteurs = false;
 
     public FilterListener(Filters filter, Graph graph) {
         this.filters = filter;
@@ -40,13 +41,15 @@ public class FilterListener implements ChangeListener<Object> {
             this.updateCompteurs();
         }
         if(observable == this.filters.getCounterField().valueProperty()){
-            String nomCompteur = (String) after;
-            if(nomCompteur.equals("Tous")){
-                this.compteur = null;
-            } else {
-                String[] splitCompteur = nomCompteur.split(" ");
-                int idCompteur = Integer.parseInt(splitCompteur[splitCompteur.length - 1]);
-                this.compteur = VeloNantes.compteurDao.get(idCompteur);
+            if(isUpdatingCompteurs == false){
+                String nomCompteur = (String) after;
+                if(nomCompteur.equals("Tous")){
+                    this.compteur = null;
+                } else {
+                    String[] splitCompteur = nomCompteur.split(" ");
+                    int idCompteur = Integer.parseInt(splitCompteur[splitCompteur.length - 1]);
+                    this.compteur = VeloNantes.compteurDao.get(idCompteur);
+                }
             }
         }
         if(observable == this.filters.getStartDatePicker().valueProperty()){
@@ -66,14 +69,16 @@ public class FilterListener implements ChangeListener<Object> {
 
     private void updateCompteurs() {
         System.out.println("updateCompteurs");
+        this.isUpdatingCompteurs = true;
         this.filters.getCounterField().getItems().clear();
         this.filters.getCounterField().getItems().add("Tous");
         for (Compteur compteur : VeloNantes.compteurDao.getAll()) {
             if (compteur.getLeQuartier().equals(this.quartier) || this.quartier == null) {
-                String counter = compteur.getNomCompteur() + compteur.getSens() + " " + compteur.getIdCompteur();
+                String counter = compteur.getNomCompteur() + " " + compteur.getSens() + " " + compteur.getIdCompteur();
                 this.filters.getCounterField().getItems().add(counter);
             }
         }
+        this.isUpdatingCompteurs = false;
         this.filters.getCounterField().setValue("Tous");
     }
 

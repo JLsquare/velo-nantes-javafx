@@ -174,8 +174,16 @@ public class Filters extends VBox{
         return this.neighborhoodField;
     }
 
+    public void setNeighborhoodField(String neighborhood) {
+        this.neighborhoodField.setValue(neighborhood);
+    }
+
     public ComboBox<String> getCounterField() {
         return this.counterField;
+    }
+
+    public void setCounterField(String counter) {
+        this.counterField.setValue(counter);
     }
 
     public DatePicker getStartDatePicker() {
