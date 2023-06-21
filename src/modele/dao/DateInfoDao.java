@@ -108,6 +108,9 @@ public class DateInfoDao implements IDao<DateInfo> {
             throw new IllegalArgumentException("DateInfo cannot be null");
         }
 
+        if(this.get(dateInfo.getDate()) == null){
+            this.lesDate.add(dateInfo);
+        }
         String query = "INSERT INTO DATEINFO VALUES(?, ?, ?, ?)";
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setDate(1, dateInfo.getDate());
