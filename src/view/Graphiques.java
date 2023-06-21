@@ -23,8 +23,6 @@ public class Graphiques extends VBox {
     private Pane spacer;
     private GraphiquesListener graphiquesListener;
 
-    private static final int MAX_INDEX = 8;
-
     public Graphiques() {
         initializeComponents();
     }

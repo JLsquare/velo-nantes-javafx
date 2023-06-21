@@ -8,7 +8,7 @@ import view.Graphiques;
 public class GraphiquesListener implements EventHandler<ActionEvent>{
     private Graphiques graphiques;
     private int currentIndex;
-    private static final int MAX_INDEX = 7;
+    private static final int MAX_INDEX = 8;
 
     public GraphiquesListener(Graphiques graphiques) {
         this.graphiques = graphiques;
