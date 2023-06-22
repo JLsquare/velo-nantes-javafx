@@ -44,6 +44,7 @@ public class AuthentificationListener implements EventHandler<ActionEvent> {
             this.authentification.getLeftBar().toConnected(login);
         }catch(Exception e){
             this.authentification.setError(e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 }

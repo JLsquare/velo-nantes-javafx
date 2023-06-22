@@ -65,7 +65,7 @@ public class GraphiquesListener implements EventHandler<ActionEvent>{
         }
 
         String imagePath = "graphique" + index + ".png";
-        Image image = new Image(imagePath);
+        Image image = new Image(this.getClass().getResourceAsStream("/data/" + imagePath));
         this.graphiques.setImage(image);
         currentIndex = index;
     }

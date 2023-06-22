@@ -97,7 +97,6 @@ public class FilterListener implements ChangeListener<Object> {
      * Update the compteur field
      */
     private void updateCompteurs() {
-        System.out.println("updateCompteurs");
         this.isUpdatingCompteurs = true;
         this.filters.getCompteurField().getItems().clear();
         this.filters.getCompteurField().getItems().add("Tous");

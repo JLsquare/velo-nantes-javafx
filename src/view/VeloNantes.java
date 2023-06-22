@@ -77,35 +77,35 @@ public class VeloNantes extends Application {
         this.rightPane = new AnchorPane();
 
         this.menu.getItems().get(0).setOnAction(e -> {
-            System.out.println("Graphes");
+            System.out.println("VeloNantes : Graphes opened");
             this.rightPane.getChildren().clear();
             this.rightPane.getChildren().addAll(menu, graph); 
             this.leftBar.toGraph();
         });
 
         this.menu.getItems().get(1).setOnAction(e -> {
-            System.out.println("Graphiques");
+            System.out.println("Velonantes : Graphiques opened");
             this.rightPane.getChildren().clear(); 
             this.rightPane.getChildren().addAll(menu, graphiques);
             this.leftBar.toGraphiques();
         });
 
         this.menu.getItems().get(2).setOnAction(e -> {
-            System.out.println("Map");
+            System.out.println("Velonantes : Map opened");
             this.rightPane.getChildren().clear(); 
             this.rightPane.getChildren().addAll(menu, map);
             this.leftBar.toGraph();
         });
 
         this.menu.getItems().get(3).setOnAction(e -> {
-            System.out.println("Données");
+            System.out.println("Velonantes : Donnees opened");
             this.rightPane.getChildren().clear(); 
             this.rightPane.getChildren().addAll(menu, dataMenu); 
             this.leftBar.toAuthentification();
         });
 
         this.menu.getItems().get(4).setOnAction(e -> {
-            System.out.println("Quitter");
+            System.out.println("Velonantes : Quitting");
             this.primaryStage.close();
         });
 
@@ -129,7 +129,7 @@ public class VeloNantes extends Application {
         this.root.getStyleClass().add("background");
 
         scene = new Scene(root, 1280, 720);
-        scene.getStylesheets().add("style.css");
+        scene.getStylesheets().add(this.getClass().getResource("/data/style.css").toExternalForm());
         this.primaryStage.setScene(scene);
         this.primaryStage.show();
     }

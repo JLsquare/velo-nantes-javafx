@@ -47,7 +47,7 @@ public class LeftBar extends VBox{
         this.setSpacing(10);
         this.setMinWidth(256); 
 
-        Image titleImage = new Image("logo.png");
+        Image titleImage = new Image(this.getClass().getResourceAsStream("/data/logo.png"));
         this.title = new ImageView(titleImage);
         this.title.setFitWidth(300); 
         this.title.setPreserveRatio(true);
