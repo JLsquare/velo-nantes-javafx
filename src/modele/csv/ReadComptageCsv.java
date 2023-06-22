@@ -32,6 +32,16 @@ public class ReadComptageCsv {
      * @throws IllegalArgumentException if dateInfoDao, compteurDao or comptageDao is null
      */
     public ReadComptageCsv(DateInfoDao dateInfoDao, CompteurDao compteurDao, ComptageDao comptageDao) throws IllegalArgumentException {
+        if(dateInfoDao == null){
+            throw new IllegalArgumentException("ReadComptageCsv: dateInfoDao cannot be null");
+        }
+        if(compteurDao == null){
+            throw new IllegalArgumentException("ReadComptageCsv: compteurDao cannot be null");
+        }
+        if(comptageDao == null){
+            throw new IllegalArgumentException("ReadComptageCsv: comptageDao cannot be null");
+        }
+
         this.dateInfoDao = dateInfoDao;
         this.compteurDao = compteurDao;
         this.comptageDao = comptageDao;
@@ -41,6 +51,7 @@ public class ReadComptageCsv {
      * Read a csv file and add the Comptage to the database
      * @param file the csv file to read
      * @throws IOException if the file is not found
+     * @throws SQLException if there is an error with the database
      */
     public void read(File file) throws IOException, SQLException {
         FileReader fileReader = new FileReader(file);
@@ -57,7 +68,7 @@ public class ReadComptageCsv {
     /**
      * Convert a line of the csv file to a Comptage and add it to the database
      * @param line the line to convert
-     * @throws SQLException
+     * @throws SQLException if there is an error with the database
      */
     public void lineToComptage(String line) throws SQLException{
         String[] splitLine = line.split(";");

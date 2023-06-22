@@ -10,6 +10,9 @@ import view.InsertCompteur;
 import view.VeloNantes;
 
 public class InsertCompteurListener implements ChangeListener<String>, EventHandler<ActionEvent>{
+
+    // ---------------- Attributes ---------------- //
+
     private InsertCompteur insertCompteur;
     private String nomCompteur;
     private int idCompteur;
@@ -18,11 +21,30 @@ public class InsertCompteurListener implements ChangeListener<String>, EventHand
     private float coordY;
     private Quartier quartier;
 
-    public InsertCompteurListener(InsertCompteur insertCompteur){
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of the InsertCompteurListener class
+     * @param insertCompteur the insert compteur view
+     * @throws IllegalArgumentException if insertCompteur is null
+     */
+    public InsertCompteurListener(InsertCompteur insertCompteur) throws IllegalArgumentException{
+        if(insertCompteur == null){
+            throw new IllegalArgumentException("InsertCompteurListener: insertCompteur cannot be null");
+        }
+
         this.insertCompteur = insertCompteur;
         this.sens = "";
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Handle the changes events
+     * @param observable the observable
+     * @param before the value before
+     * @param after the value after
+     */
     @Override
     public void changed(ObservableValue<? extends String> observable, String before, String after) {
         this.insertCompteur.setOutput("");
@@ -70,6 +92,10 @@ public class InsertCompteurListener implements ChangeListener<String>, EventHand
         }
     }
 
+    /**
+     * Handle the action event
+     * @param event the event to handle
+     */
     @Override
     public void handle(ActionEvent event){
         try{

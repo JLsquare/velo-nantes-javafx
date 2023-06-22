@@ -13,6 +13,9 @@ import view.Graph;
 import view.VeloNantes;
 
 public class FilterListener implements ChangeListener<Object> {
+
+    // ---------------- Attributes ---------------- //
+
     private Filters filters;
     private DateInfo start;
     private DateInfo end;
@@ -22,11 +25,34 @@ public class FilterListener implements ChangeListener<Object> {
     private String type;
     private boolean isUpdatingCompteurs = false;
 
-    public FilterListener(Filters filter, Graph graph) {
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of the FilterListener class
+     * @param filter the filter view
+     * @param graph the graph view
+     * @throws IllegalArgumentException if filter or graph is null
+     */
+    public FilterListener(Filters filter, Graph graph) throws IllegalArgumentException {
+        if(filter == null){
+            throw new IllegalArgumentException("FilterListener: filter cannot be null");
+        }
+        if(graph == null){
+            throw new IllegalArgumentException("FilterListener: graph cannot be null");
+        }
+
         this.filters = filter;
         this.graph = graph;
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Handle the changes events
+     * @param observable the observable object
+     * @param before the object before the change
+     * @param after the object after the change
+     */
     @Override
     public void changed(javafx.beans.value.ObservableValue<?> observable, Object before, Object after) {
         if(observable == this.filters.getQuartierField().valueProperty()){
@@ -67,6 +93,9 @@ public class FilterListener implements ChangeListener<Object> {
         this.updateGraph();
     }
 
+    /**
+     * Update the compteur field
+     */
     private void updateCompteurs() {
         System.out.println("updateCompteurs");
         this.isUpdatingCompteurs = true;
@@ -82,6 +111,9 @@ public class FilterListener implements ChangeListener<Object> {
         this.filters.getCompteurField().setValue("Tous");
     }
 
+    /**
+     * Update the graph
+     */
     private void updateGraph() {
         if(this.start != null && this.end != null && this.type != null){
             this.graph.update(this.type, this.quartier, this.compteur, this.start, this.end);

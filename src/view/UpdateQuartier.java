@@ -104,8 +104,9 @@ public class UpdateQuartier extends GridPane {
     }
 
     /**
-     * Get the idQuartier TextField
-     * @return the idQuartier TextField
+     * Set the nomQuartier TextField
+     * @param nomQuartier the nomQuartier
+     * @throws NullPointerException if nomQuartier is null
      */
     public void setNomQuartierField(String nomQuartier) throws NullPointerException{
         if(nomQuartier == null){

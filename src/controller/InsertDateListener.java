@@ -14,16 +14,38 @@ import view.InsertDate;
 import view.VeloNantes;
 
 public class InsertDateListener implements ChangeListener<Object>, EventHandler<ActionEvent>{
+
+    // ---------------- Attributes ---------------- //
+
     private InsertDate insertDate;
     private Date date;
     private float tempMoy;
     private Jour jour;
     private Vacances vacances;
 
-    public InsertDateListener(InsertDate insertDate){
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of the InsertDateListener class
+     * @param insertDate the insert date view
+     * @throws IllegalArgumentException if insertDate is null
+     */
+    public InsertDateListener(InsertDate insertDate) throws IllegalArgumentException{
+        if(insertDate == null){
+            throw new IllegalArgumentException("InsertDateListener: insertDate cannot be null");
+        }
+
         this.insertDate = insertDate;
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Handle the changes events
+     * @param observable the observable object
+     * @param before the object before the change
+     * @param after the object after the change
+     */
     @Override
     public void changed(ObservableValue<?> observable, Object before, Object after) {
         this.insertDate.setOutput("");
@@ -52,6 +74,10 @@ public class InsertDateListener implements ChangeListener<Object>, EventHandler<
         } 
     }
 
+    /**
+     * Handle the action events
+     * @param event the event
+     */
     @Override
     public void handle(ActionEvent event) {
         try{

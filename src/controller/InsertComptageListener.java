@@ -19,19 +19,43 @@ import view.InsertComptage;
 import view.VeloNantes;
 
 public class InsertComptageListener implements ChangeListener<Object>, EventHandler<ActionEvent>{
+
+    // ---------------- Attributes ---------------- //
+
     private InsertComptage insertComptage;
     private Compteur compteur;
     private DateInfo dateInfo;
     private PresenceAnomalie anomalie;
     private int[] passages;
 
-    public InsertComptageListener(InsertComptage insertComptage){
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of the InsertComptageListener class
+     * @param insertComptage the insert comptage view
+     * @throws IllegalArgumentException if insertComptage is null
+     */
+    public InsertComptageListener(InsertComptage insertComptage) throws IllegalArgumentException{
+        if(insertComptage == null){
+            throw new IllegalArgumentException("InsertComptageListener: insertComptage cannot be null");
+        }
+
         this.insertComptage = insertComptage;
         this.passages = new int[24];
     }
     
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Handle the changes events
+     * @param observable the observable object
+     * @param before the object before the change
+     * @param after the object after the change
+     */
     @Override
     public void changed(ObservableValue<? extends Object> observable, Object before, Object after){
+        this.insertComptage.setOutput("");
+
         if(observable == this.insertComptage.getDateField().valueProperty()){
             LocalDate date = (LocalDate) after;
             this.dateInfo = VeloNantes.dateInfoDao.get(Date.valueOf(date));
@@ -61,6 +85,10 @@ public class InsertComptageListener implements ChangeListener<Object>, EventHand
         }
     }
 
+    /**
+     * Handle the action event
+     * @param event the event to handle
+     */
     @Override
     public void handle(ActionEvent event){
         if(event.getSource() == this.insertComptage.getInsertButton()){

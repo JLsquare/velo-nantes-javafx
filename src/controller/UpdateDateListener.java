@@ -14,6 +14,9 @@ import view.UpdateDate;
 import view.VeloNantes;
 
 public class UpdateDateListener implements ChangeListener<Object>, EventHandler<ActionEvent>{
+
+    // ---------------- Attributes ---------------- //
+
     private UpdateDate updateDate;
     private DateInfo dateInfo;
     private Date date;
@@ -21,10 +24,29 @@ public class UpdateDateListener implements ChangeListener<Object>, EventHandler<
     private Jour jour;
     private Vacances vacances;
 
-    public UpdateDateListener(UpdateDate updateDate){
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of the UpdateDateListener class
+     * @param updateDate the update date view
+     * @throws IllegalArgumentException if updateDate is null
+     */
+    public UpdateDateListener(UpdateDate updateDate) throws IllegalArgumentException{
+        if(updateDate == null){
+            throw new IllegalArgumentException("UpdateDateListener: updateDate cannot be null");
+        }
+
         this.updateDate = updateDate;
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Handle the changes events
+     * @param observable the observable object
+     * @param before the object before the change
+     * @param after the object after the change
+     */
     @Override
     public void changed(ObservableValue<?> observable, Object before, Object after) {
         this.updateDate.setOutput("");
@@ -61,6 +83,10 @@ public class UpdateDateListener implements ChangeListener<Object>, EventHandler<
         } 
     }
 
+    /**
+     * Handle the action events
+     * @param event the event
+     */
     @Override
     public void handle(ActionEvent event) {
         try{

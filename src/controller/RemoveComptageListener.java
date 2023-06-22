@@ -14,15 +14,37 @@ import view.RemoveComptage;
 import view.VeloNantes;
 
 public class RemoveComptageListener implements ChangeListener<Object>, EventHandler<ActionEvent> {
+
+    // ---------------- Attributes ---------------- //
+
     private RemoveComptage removeComptage;
     private Compteur compteur;
     private DateInfo dateInfo;
 
-    public RemoveComptageListener(RemoveComptage removeComptage){
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of the RemoveComptageListener class
+     * @param removeComptage the remove comptage view
+     * @throws IllegalArgumentException if removeComptage is null
+     */
+    public RemoveComptageListener(RemoveComptage removeComptage) throws IllegalArgumentException {
+        if (removeComptage == null) {
+            throw new IllegalArgumentException("RemoveComptageListener: removeComptage cannot be null");
+        }
+
         this.removeComptage = removeComptage;
     }
 
-        @Override
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Handle the changes events
+     * @param observable the observable object
+     * @param before the object before the change
+     * @param after the object after the change
+     */
+    @Override
     public void changed(ObservableValue<?> observable, Object before, Object after) {
         if (after instanceof String) {
             String compteurString = (String) after;
@@ -37,6 +59,9 @@ public class RemoveComptageListener implements ChangeListener<Object>, EventHand
         }
     }
 
+    /**
+     * Update the view
+     */
     public void update(){
         if(this.compteur != null && this.dateInfo != null){
             Comptage comptage = VeloNantes.comptageDao.get(this.dateInfo, this.compteur);
@@ -53,6 +78,10 @@ public class RemoveComptageListener implements ChangeListener<Object>, EventHand
         }
     }
     
+    /**
+     * Handle the action events
+     * @param event the event
+     */
     @Override
     public void handle(ActionEvent event) {
         try{

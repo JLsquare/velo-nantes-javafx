@@ -16,6 +16,9 @@ import view.UpdateComptage;
 import view.VeloNantes;
 
 public class UpdateComptageListener implements ChangeListener<Object>, EventHandler<ActionEvent>{
+
+    // ---------------- Attributes ---------------- //
+
     private UpdateComptage updateComptage;
     private Comptage comptage;
     private Compteur compteur;
@@ -23,11 +26,30 @@ public class UpdateComptageListener implements ChangeListener<Object>, EventHand
     private PresenceAnomalie anomalie;
     private int[] passages;
 
-    public UpdateComptageListener(UpdateComptage updateComptage){
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of the UpdateComptageListener class
+     * @param updateComptage the update comptage view
+     * @throws IllegalArgumentException if updateComptage is null
+     */
+    public UpdateComptageListener(UpdateComptage updateComptage) throws IllegalArgumentException{
+        if(updateComptage == null){
+            throw new IllegalArgumentException("UpdateComptageListener: updateComptage cannot be null");
+        }
+
         this.updateComptage = updateComptage;
         this.passages = new int[24];
     }
     
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Handle the changes events
+     * @param observable the observable object
+     * @param before the object before the change
+     * @param after the object after the change
+     */
     @Override
     public void changed(ObservableValue<? extends Object> observable, Object before, Object after){
         this.updateComptage.setOutput("");
@@ -63,6 +85,9 @@ public class UpdateComptageListener implements ChangeListener<Object>, EventHand
         }
     }
 
+    /**
+     * Update the comptage
+     */
     public void update(){
         if(this.compteur != null && this.dateInfo != null){
             this.comptage = VeloNantes.comptageDao.get(this.dateInfo, this.compteur);
@@ -79,6 +104,10 @@ public class UpdateComptageListener implements ChangeListener<Object>, EventHand
         }
     }
 
+    /**
+     * Handle the action events
+     * @param event the event
+     */
     @Override
     public void handle(ActionEvent event){
         try{

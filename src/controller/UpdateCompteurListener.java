@@ -10,6 +10,9 @@ import view.UpdateCompteur;
 import view.VeloNantes;
 
 public class UpdateCompteurListener implements ChangeListener<String>, EventHandler<ActionEvent>{
+
+    // ---------------- Attributes ---------------- //
+
     private UpdateCompteur updateCompteur;
     private Compteur compteur;
     private String nomCompteur;
@@ -19,10 +22,29 @@ public class UpdateCompteurListener implements ChangeListener<String>, EventHand
     private float coordY;
     private Quartier quartier;
 
-    public UpdateCompteurListener(UpdateCompteur updateCompteur){
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of the UpdateCompteurListener class
+     * @param updateCompteur the update compteur view
+     * @throws IllegalArgumentException if updateCompteur is null
+     */
+    public UpdateCompteurListener(UpdateCompteur updateCompteur) throws IllegalArgumentException{
+        if(updateCompteur == null){
+            throw new IllegalArgumentException("UpdateCompteurListener: updateCompteur cannot be null");
+        }
+
         this.updateCompteur = updateCompteur;
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Handle changes events
+     * @param observable the observable
+     * @param before the value before
+     * @param after the value after
+     */
     @Override
     public void changed(ObservableValue<? extends String> observable, String before, String after) {
         this.updateCompteur.setOutput("");
@@ -38,6 +60,7 @@ public class UpdateCompteurListener implements ChangeListener<String>, EventHand
             this.quartier = this.compteur.getLeQuartier();
 
             this.updateCompteur.setNomCompteurField(this.compteur.getNomCompteur());
+            this.updateCompteur.setIdCompteurField(this.compteur.getIdCompteur());
             this.updateCompteur.setSensField(this.compteur.getSens());
             this.updateCompteur.setCoordXField(this.compteur.getCoordX());
             this.updateCompteur.setCoordYField(this.compteur.getCoordY());
@@ -79,6 +102,10 @@ public class UpdateCompteurListener implements ChangeListener<String>, EventHand
         }
     }
 
+    /**
+     * Handle action events
+     * @param event the event
+     */
     @Override
     public void handle(ActionEvent event){
         try{

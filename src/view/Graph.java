@@ -32,6 +32,10 @@ public class Graph extends VBox{
     /**
      * Update the graph
      * @param graphType the type of the graph
+     * @param quartier the selected neighborhood
+     * @param compteur the selected counter
+     * @param start the start date
+     * @param end the end date
      * @throws IllegalArgumentException if the argument is null
      */
     public void update(String graphType, Quartier quartier, Compteur compteur, DateInfo start, DateInfo end) throws IllegalArgumentException{
@@ -90,11 +94,10 @@ public class Graph extends VBox{
     }
 
     /**
-     * Get the selected counter
+     * Add data to the chart
      * @param name the name of the data
      * @param value the value of the data
-     * @return the selected counter
-     * @throws IllegalArgumentException if the selected neighborhood is null
+     * @throws IllegalArgumentException if the name is null
      */
     public void addData(String name, float value) throws IllegalArgumentException{
         if(name == null){

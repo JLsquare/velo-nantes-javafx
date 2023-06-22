@@ -107,7 +107,7 @@ public class UpdateCompteur extends GridPane {
         this.add(this.coordYField, 1, 6);
         this.add(this.quartierLabel, 0, 7);
         this.add(this.quartierField, 1, 7);
-        this.add(this.updateButton, 0, 8, 2, 1);
+        this.add(this.updateButton, 1, 8, 2, 1);
         this.add(this.output, 0, 9, 2, 1);
     }
 

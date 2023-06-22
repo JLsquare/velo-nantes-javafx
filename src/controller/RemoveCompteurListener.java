@@ -10,13 +10,35 @@ import view.RemoveCompteur;
 import view.VeloNantes;
 
 public class RemoveCompteurListener implements ChangeListener<String>, EventHandler<ActionEvent> {
+
+    // ---------------- Attributes ---------------- //
+
     private RemoveCompteur removeCompteur;
     private Compteur compteur;
 
-    public RemoveCompteurListener(RemoveCompteur removeCompteur){
+    // ---------------- Constructor ---------------- //
+
+    /**
+     * Constructor of the RemoveCompteurListener class
+     * @param removeCompteur the remove compteur view
+     * @throws IllegalArgumentException if removeCompteur is null
+     */
+    public RemoveCompteurListener(RemoveCompteur removeCompteur) throws IllegalArgumentException {
+        if (removeCompteur == null) {
+            throw new IllegalArgumentException("RemoveCompteurListener: removeCompteur cannot be null");
+        }
+
         this.removeCompteur = removeCompteur;
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Handle the changes events
+     * @param observable the observable object
+     * @param before the object before the change
+     * @param after the object after the change
+     */
     @Override
     public void changed(ObservableValue<? extends String> observable, String before, String after) {
         String[] splitCompteur = ((String) after).split(" ");
@@ -31,6 +53,10 @@ public class RemoveCompteurListener implements ChangeListener<String>, EventHand
         System.out.println("RemoveCompteurListener: " + compteur);
     }
     
+    /**
+     * handle the action events
+     * @param event the event
+     */
     @Override
     public void handle(ActionEvent event) {
         try{

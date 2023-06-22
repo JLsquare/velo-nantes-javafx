@@ -113,7 +113,7 @@ public class VeloNantes extends Application {
         this.graphiques = new Graphiques();
 
         rightPane.setPadding(new Insets(15, 12, 15, 12));
-        rightPane.getChildren().addAll(menu, graph);
+        rightPane.getChildren().addAll(menu, map);
 
         AnchorPane.setTopAnchor(menu, 0.0);
         AnchorPane.setRightAnchor(menu, 0.0);

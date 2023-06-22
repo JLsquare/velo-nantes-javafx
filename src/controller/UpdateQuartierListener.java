@@ -9,16 +9,38 @@ import view.UpdateQuartier;
 import view.VeloNantes;
 
 public class UpdateQuartierListener implements ChangeListener<String>, EventHandler<ActionEvent>{
+
+    // ---------------- Attributes ---------------- //
+
     private UpdateQuartier updateQuartier;
     private Quartier quartier;
     private String nomQuartier;
     private int idQuartier;
     private float longueurPisteVelo;
+
+    // ---------------- Constructor ---------------- //
     
-    public UpdateQuartierListener(UpdateQuartier updateQuartier){
+    /**
+     * Constructor of the UpdateQuartierListener class
+     * @param updateQuartier the update quartier view
+     * @throws IllegalArgumentException if updateQuartier is null
+     */
+    public UpdateQuartierListener(UpdateQuartier updateQuartier) throws IllegalArgumentException{
+        if(updateQuartier == null){
+            throw new IllegalArgumentException("UpdateQuartierListener: updateQuartier cannot be null");
+        }
+
         this.updateQuartier = updateQuartier;
     }
 
+    // ---------------- Methods ---------------- //
+
+    /**
+     * Handle the changes events
+     * @param observable the observable
+     * @param before the value before
+     * @param after the value after
+     */
     @Override
     public void changed(ObservableValue<? extends String> observable, String before, String after) {
         this.updateQuartier.setOutput("");
@@ -51,6 +73,10 @@ public class UpdateQuartierListener implements ChangeListener<String>, EventHand
         }
     }
 
+    /**
+     * Handle the action event
+     * @param event the event to handle
+     */
     @Override
     public void handle(ActionEvent event) {
         try{

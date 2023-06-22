@@ -101,7 +101,7 @@ public class RemoveCompteur extends GridPane {
         this.add(this.coordYField, 1, 6);
         this.add(this.quartierLabel, 0, 7);
         this.add(this.quartierField, 1, 7);
-        this.add(this.removeButton, 0, 8, 2, 1);
+        this.add(this.removeButton, 1, 8, 2, 1);
         this.add(this.warning, 0, 9, 2, 1);
         this.add(this.output, 0, 10, 2, 1);
 
@@ -191,7 +191,7 @@ public class RemoveCompteur extends GridPane {
         if(output == null){
             throw new IllegalArgumentException("output can't be null");
         }
-        
+
         this.output.setText(output);
     }
 }
