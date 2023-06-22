@@ -51,10 +51,13 @@ public class Authentification extends VBox {
     private void initializeComponents(){
         this.gridPane = new GridPane();
         this.authentificationLabel = new Label("Authentification");
+        this.authentificationLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
         this.spacer = new Pane();
         this.spacer.setMinHeight(20);
         this.loginLabel = new Label("Identifiant");
+        this.loginLabel.setStyle("-fx-text-fill: white;");
         this.passwordLabel = new Label("Mot de passe");
+        this.passwordLabel.setStyle("-fx-text-fill: white;");
         this.login = new TextField();
         this.password = new PasswordField();
         this.error = new Label();

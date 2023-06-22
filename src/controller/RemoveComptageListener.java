@@ -68,7 +68,6 @@ public class RemoveComptageListener implements ChangeListener<Object>, EventHand
             if(comptage == null){
                 this.removeComptage.setOutput("Ce comptage n'est pas dans la base de données");
             } else {
-                this.removeComptage.setOutput(comptage.toString());
                 this.removeComptage.setAnomalieField(comptage.getAnomalie());
                 this.removeComptage.setPassagesFields(comptage.getPassages());
             }

@@ -26,11 +26,12 @@ public class InfoGraphiques extends VBox{
      */
     public void initializeComponents(){
         this.title = new Label("Graphiques");
-        this.title.setStyle("-fx-font-size: 20;");
+        this.title.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
 
         this.info = new Label("Ces graphiques représentent les données de la ville de Nantes. Vous pouvez naviguer entre les graphiques à l'aide des boutons \"Précédent\" et \"Suivant\"");
         this.info.setText(this.info.getText() + "\n\n" + "Ces graphiques ont été réalisés en Python à l'aide de la librairie matplotlib, ou sur Excel.");
-        this.info.setPrefWidth(256);
+        this.info.setStyle("-fx-text-fill: white;");
+        this.info.setPrefWidth(300);
         this.info.setWrapText(true);
         this.getChildren().addAll(this.title, this.info);
     }

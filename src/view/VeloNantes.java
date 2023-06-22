@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import modele.dao.*;
@@ -67,11 +68,11 @@ public class VeloNantes extends Application {
     private void initializeComponents(){
         this.menu = new MenuButton();
         this.menu.setText("Menu");
-        this.menu.getItems().add(new javafx.scene.control.MenuItem("Graphes"));
-        this.menu.getItems().add(new javafx.scene.control.MenuItem("Graphiques"));
-        this.menu.getItems().add(new javafx.scene.control.MenuItem("Map"));
-        this.menu.getItems().add(new javafx.scene.control.MenuItem("Données"));
-        this.menu.getItems().add(new javafx.scene.control.MenuItem("Quitter"));
+        this.menu.getItems().add(new MenuItem("Graphes"));
+        this.menu.getItems().add(new MenuItem("Graphiques"));
+        this.menu.getItems().add(new MenuItem("Map"));
+        this.menu.getItems().add(new MenuItem("Données"));
+        this.menu.getItems().add(new MenuItem("Quitter"));
 
         this.rightPane = new AnchorPane();
 
@@ -125,8 +126,10 @@ public class VeloNantes extends Application {
         this.root = new BorderPane();
         this.root.setLeft(this.leftBar);
         this.root.setCenter(rightPane);
+        this.root.getStyleClass().add("background");
 
         scene = new Scene(root, 1280, 720);
+        scene.getStylesheets().add("style.css");
         this.primaryStage.setScene(scene);
         this.primaryStage.show();
     }

@@ -128,6 +128,8 @@ public class ComptageDao implements IDao<Comptage>{
 
         if(this.get(comptage.getLaDate(), comptage.getLeCompteur()) == null){
             this.lesComptages.add(comptage);
+            comptage.getLeCompteur().addComptage(comptage);
+            comptage.getLaDate().addComptage(comptage);
         }
         String query = "INSERT INTO COMPTAGE VALUES(?, ?, ";
         for(int i = 0; i < 24; i++) {

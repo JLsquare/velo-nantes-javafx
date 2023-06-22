@@ -82,50 +82,62 @@ public class Filters extends VBox{
         this.bottomFiltersGrid.setPadding(new Insets(0, 10, 0, 10));
 
         this.startDateLabel = new Label("Date début:");
-        this.startDatePicker = new DatePicker();
+        this.startDateLabel.setStyle("-fx-text-fill: #ffffff;");
+        this.startDatePicker = new DatePicker();        
 
         this.endDateLabel = new Label("Date fin:");
+        this.endDateLabel.setStyle("-fx-text-fill: #ffffff;");
         this.endDatePicker = new DatePicker();
 
         this.quartierLabel = new Label("Quartier:");
+        this.quartierLabel.setStyle("-fx-text-fill: #ffffff;");
         this.quartierField = new ComboBox<>();
+        this.quartierField.setPrefWidth(200);
         this.quartierField.getItems().add("Tous");
         for(Quartier quartier : VeloNantes.quartierDao.getAll()) {
             this.quartierField.getItems().add(quartier.getNomQuartier() + " " + quartier.getIdQuartier());
         }
 
         this.compteurLabel = new Label("Compteur:");
+        this.compteurLabel.setStyle("-fx-text-fill: #ffffff;");
         this.compteurField = new ComboBox<>();
+        this.compteurField.setPrefWidth(200);
         this.compteurField.getItems().add("Tous");
 
         this.group = new ToggleGroup();
 
         this.totalPassagesLabel = new Label("Total passages:");
+        this.totalPassagesLabel.setStyle("-fx-text-fill: #ffffff;");
         this.totalPassages = new RadioButton();
         this.totalPassages.setUserData("totalPassages");
         this.totalPassages.setToggleGroup(this.group);
         
         this.averagePassagesLabel = new Label("Moyenne passages:");
+        this.averagePassagesLabel.setStyle("-fx-text-fill: #ffffff;");
         this.averagePassages = new RadioButton();
         this.averagePassages.setUserData("averagePassages");
         this.averagePassages.setToggleGroup(this.group);
         
         this.totalPassagesPerHourLabel = new Label("Total passages par heure:");
+        this.totalPassagesPerHourLabel.setStyle("-fx-text-fill: #ffffff;");
         this.totalPassagesPerHour = new RadioButton();
         this.totalPassagesPerHour.setUserData("totalPassagesPerHour");
         this.totalPassagesPerHour.setToggleGroup(this.group);
         
         this.averagePassagesPerHourLabel = new Label("Moyenne passages par heure:");
+        this.averagePassagesPerHourLabel.setStyle("-fx-text-fill: #ffffff;");
         this.averagePassagesPerHour = new RadioButton();
         this.averagePassagesPerHour.setUserData("averagePassagesPerHour");
         this.averagePassagesPerHour.setToggleGroup(this.group);
         
         this.totalPassagesPerDayLabel = new Label("Total passage par jour:");
+        this.totalPassagesPerDayLabel.setStyle("-fx-text-fill: #ffffff;");
         this.totalPassagesPerDay = new RadioButton();
         this.totalPassagesPerDay.setUserData("totalPassagesPerDay");
         this.totalPassagesPerDay.setToggleGroup(this.group);
         
         this.averagePassagesPerDayLabel = new Label("Moyenne passages par jour:");
+        this.averagePassagesPerDayLabel.setStyle("-fx-text-fill: #ffffff;");
         this.averagePassagesPerDay = new RadioButton();
         this.averagePassagesPerDay.setUserData("averagePassagesPerDay");
         this.averagePassagesPerDay.setToggleGroup(this.group);

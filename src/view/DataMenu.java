@@ -59,7 +59,7 @@ public class DataMenu extends HBox {
 
         for (String action : actions) {
             Label categoryLabel = new Label(action + " des données existantes");
-            categoryLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0px;");
+            categoryLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
             menuList.getChildren().add(categoryLabel);
 
             for (String table : tables) {
@@ -81,7 +81,7 @@ public class DataMenu extends HBox {
 
                 button.setMaxWidth(512);
                 button.setAlignment(Pos.CENTER);
-                button.setStyle("-fx-font-size: 16px; -fx-padding: 5px;");
+
                 menuList.getChildren().add(button);
             }
         }

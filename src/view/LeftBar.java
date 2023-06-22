@@ -1,16 +1,18 @@
 package view;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 public class LeftBar extends VBox{
 
     // ---------------- Attributes ---------------- //
 
-    private Label title;
+    private ImageView title;
     private Line separator;
     private Pane spacer;
     private Graph graph;
@@ -45,11 +47,16 @@ public class LeftBar extends VBox{
         this.setSpacing(10);
         this.setMinWidth(256); 
 
-        this.title = new Label("Velo de Nantes");
-        this.title.setStyle("-fx-font-size: 20;");
+        Image titleImage = new Image("logo.png");
+        this.title = new ImageView(titleImage);
+        this.title.setFitWidth(300); 
+        this.title.setPreserveRatio(true);
+        //this.setBackground(new Background(new BackgroundFill(, CornerRadii.EMPTY, Insets.EMPTY)));
+        this.setStyle("-fx-background-color: #9bc4d1;");
 
         this.separator = new Line();
-        this.separator.setEndX(256);
+        this.separator.setEndX(300);
+        this.separator.setStroke(Color.WHITE);
 
         this.spacer = new Pane();
         this.spacer.setMinHeight(100);

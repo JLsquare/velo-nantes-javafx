@@ -13,14 +13,16 @@ import com.dlsc.gmapsfx.javascript.object.Marker;
 import com.dlsc.gmapsfx.javascript.object.MapTypeIdEnum;
 import com.dlsc.gmapsfx.javascript.object.MarkerOptions;
 
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import modele.entities.Compteur;
 import modele.entities.DateInfo;
 import modele.entities.Quartier;
 import netscape.javascript.JSObject;
 
-public class Map extends VBox implements MapComponentInitializedListener {
+public class Map extends HBox implements MapComponentInitializedListener {
 
     // ---------------- Attributes ---------------- //
 
@@ -28,7 +30,9 @@ public class Map extends VBox implements MapComponentInitializedListener {
     private GoogleMap map;
     private MapOptions mapOptions;
     private Filters filters;
-    private Pane spacer;
+    private Pane hSpacer;
+    private VBox mapBox;
+    private Pane vSpacer;
     private InfoWindow lastOpenWindow;
 
     // ---------------- Constructor ---------------- //
@@ -57,10 +61,14 @@ public class Map extends VBox implements MapComponentInitializedListener {
     private void initializeComponents(){
         this.mapView = new GoogleMapView("", "AIzaSyAMxQ0PIfYEa1z9lHV-rOOFoKOEk2N26zw");
         this.mapView.addMapInitializedListener(this);
-        this.spacer = new Pane();
-        this.spacer.setMinHeight(50);
-        this.getChildren().add(this.spacer);
-        this.getChildren().add(this.mapView);
+        this.hSpacer = new Pane();
+        this.hSpacer.setMinWidth(50);
+        this.vSpacer = new Pane();
+        this.vSpacer.setMinHeight(60);
+        this.mapBox = new VBox();
+        this.mapBox.getChildren().addAll(this.vSpacer, this.mapView);
+        HBox.setHgrow(this.hSpacer, Priority.ALWAYS); // This will make the spacer grow horizontally
+        this.getChildren().addAll(this.hSpacer, this.mapBox); // add the spacer before the mapView
     }
 
     /**

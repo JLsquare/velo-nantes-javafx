@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class Connected extends GridPane{
@@ -13,9 +14,9 @@ public class Connected extends GridPane{
 
     private Label connectedLabel;
     private Label loginLabel;
-    private Label login;
+    private TextField login;
     private Label dateLabel;
-    private Label date;
+    private TextField date;
     private Button disconnectButton;
     private String loginString;
 
@@ -42,10 +43,15 @@ public class Connected extends GridPane{
      */
     private void initializeComponents(){
         this.connectedLabel = new Label("Connecté");
+        this.connectedLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 16px; -fx-font-weight: bold;");
         this.loginLabel = new Label("Identifiant");
-        this.login = new Label(this.loginString);
+        this.loginLabel.setStyle("-fx-text-fill: #ffffff;");
+        this.login = new TextField(this.loginString);
+        this.login.setDisable(true);
         this.dateLabel = new Label("Date");
-        this.date = new Label(LocalDateTime.now().toString());
+        this.dateLabel.setStyle("-fx-text-fill: #ffffff;");
+        this.date = new TextField(LocalDateTime.now().toString());
+        this.date.setDisable(true);
         this.disconnectButton = new Button("Déconnexion");
 
         this.setAlignment(Pos.CENTER);
