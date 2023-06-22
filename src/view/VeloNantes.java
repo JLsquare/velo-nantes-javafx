@@ -16,7 +16,9 @@ public class VeloNantes extends Application {
     // ---------------- Attributes ---------------- //
 
     private Stage primaryStage;
+    private BorderPane root;
     private LeftBar leftBar;
+    private AnchorPane rightPane;
     private MenuButton menu;
     private Graph graph;
     private DataMenu dataMenu;
@@ -71,33 +73,33 @@ public class VeloNantes extends Application {
         this.menu.getItems().add(new javafx.scene.control.MenuItem("Données"));
         this.menu.getItems().add(new javafx.scene.control.MenuItem("Quitter"));
 
-        AnchorPane rightPane = new AnchorPane();
+        this.rightPane = new AnchorPane();
 
         this.menu.getItems().get(0).setOnAction(e -> {
             System.out.println("Graphes");
-            rightPane.getChildren().clear();
-            rightPane.getChildren().addAll(menu, graph); 
+            this.rightPane.getChildren().clear();
+            this.rightPane.getChildren().addAll(menu, graph); 
             this.leftBar.toGraph();
         });
 
         this.menu.getItems().get(1).setOnAction(e -> {
             System.out.println("Graphiques");
-            rightPane.getChildren().clear(); 
-            rightPane.getChildren().addAll(menu, graphiques);
+            this.rightPane.getChildren().clear(); 
+            this.rightPane.getChildren().addAll(menu, graphiques);
             this.leftBar.toGraphiques();
         });
 
         this.menu.getItems().get(2).setOnAction(e -> {
             System.out.println("Map");
-            rightPane.getChildren().clear(); 
-            rightPane.getChildren().addAll(menu, map);
+            this.rightPane.getChildren().clear(); 
+            this.rightPane.getChildren().addAll(menu, map);
             this.leftBar.toGraph();
         });
 
         this.menu.getItems().get(3).setOnAction(e -> {
             System.out.println("Données");
-            rightPane.getChildren().clear(); 
-            rightPane.getChildren().addAll(menu, dataMenu); 
+            this.rightPane.getChildren().clear(); 
+            this.rightPane.getChildren().addAll(menu, dataMenu); 
             this.leftBar.toAuthentification();
         });
 
@@ -112,19 +114,17 @@ public class VeloNantes extends Application {
         this.map = new Map(this.leftBar.getFilters());
         this.graphiques = new Graphiques();
 
-        rightPane.setPadding(new Insets(15, 12, 15, 12));
-        rightPane.getChildren().addAll(menu, map);
+        this.rightPane.setPadding(new Insets(15, 12, 15, 12));
+        this.rightPane.getChildren().addAll(menu, map);
 
         AnchorPane.setTopAnchor(menu, 0.0);
         AnchorPane.setRightAnchor(menu, 0.0);
-
         AnchorPane.setTopAnchor(graph, 30.0);
-
         AnchorPane.setTopAnchor(dataMenu, 30.0);
 
-        BorderPane root = new BorderPane();
-        root.setLeft(this.leftBar);
-        root.setCenter(rightPane);
+        this.root = new BorderPane();
+        this.root.setLeft(this.leftBar);
+        this.root.setCenter(rightPane);
 
         scene = new Scene(root, 1280, 720);
         this.primaryStage.setScene(scene);
