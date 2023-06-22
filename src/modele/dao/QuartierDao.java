@@ -82,6 +82,8 @@ public class QuartierDao implements IDao<Quartier>{
             this.lesQuartiers.add(quartier);
         }
         this.lesQuartiers.add(new Quartier(0, "Other", 0));
+        rs.close();
+        ps.close();
     }
 
     /**
@@ -104,6 +106,7 @@ public class QuartierDao implements IDao<Quartier>{
         ps.setString(2, quartier.getNomQuartier());
         ps.setFloat(3, quartier.getLongueurPisteVelo());
         ps.executeUpdate();
+        ps.close();
     }
 
     /**
@@ -122,6 +125,7 @@ public class QuartierDao implements IDao<Quartier>{
         ps.setInt(1, quartier.getIdQuartier());
         ps.executeUpdate();
         ps.close();
+        this.lesQuartiers.remove(quartier);
     }
 
     /**
@@ -142,5 +146,7 @@ public class QuartierDao implements IDao<Quartier>{
         ps.setInt(3, quartier.getIdQuartier());
         ps.executeUpdate();
         ps.close();
+        this.lesQuartiers.remove(quartier);
+        this.lesQuartiers.add(quartier);
     }
 }

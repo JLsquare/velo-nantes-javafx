@@ -91,6 +91,8 @@ public class CompteurDao implements IDao<Compteur> {
             this.lesCompteurs.add(compteur);
             leQuartier.addCompteur(compteur);
         }
+        rs.close();
+        ps.close();
     }
 
     /**
@@ -116,6 +118,7 @@ public class CompteurDao implements IDao<Compteur> {
         ps.setFloat(5, compteur.getCoordY());
         ps.setInt(6, compteur.getLeQuartier().getIdQuartier());
         ps.executeUpdate();
+        ps.close();
     }
 
     /**
@@ -131,6 +134,8 @@ public class CompteurDao implements IDao<Compteur> {
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setInt(1, compteur.getIdCompteur());
         ps.executeUpdate();
+        ps.close();
+        this.lesCompteurs.remove(compteur);
     }
 
     /**
@@ -156,5 +161,8 @@ public class CompteurDao implements IDao<Compteur> {
         }
         ps.setInt(6, compteur.getIdCompteur());
         ps.executeUpdate();
+        ps.close();
+        this.lesCompteurs.remove(compteur);
+        this.lesCompteurs.add(compteur);
     }
 }

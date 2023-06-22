@@ -95,6 +95,8 @@ public class DateInfoDao implements IDao<DateInfo> {
 
             this.lesDate.add(dateInfo);
         }
+        rs.close();
+        ps.close();
     }
 
     /**
@@ -118,6 +120,7 @@ public class DateInfoDao implements IDao<DateInfo> {
         ps.setString(3, dateInfo.getJour().name());
         ps.setString(4, dateInfo.getVacances().name());
         ps.executeUpdate();
+        ps.close();
     }
 
     /**
@@ -131,6 +134,8 @@ public class DateInfoDao implements IDao<DateInfo> {
         PreparedStatement ps = database.preparedWriteStatment(query);
         ps.setDate(1, dateInfo.getDate());
         ps.executeUpdate();
+        ps.close();
+        this.lesDate.remove(dateInfo);
     }
 
     /**
@@ -151,6 +156,9 @@ public class DateInfoDao implements IDao<DateInfo> {
         ps.setString(3, dateInfo.getVacances().name());
         ps.setDate(4, dateInfo.getDate());
         ps.executeUpdate();
+        ps.close();
+        this.lesDate.remove(dateInfo);
+        this.lesDate.add(dateInfo);
     }
 
 }

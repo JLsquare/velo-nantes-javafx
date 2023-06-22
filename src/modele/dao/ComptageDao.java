@@ -112,6 +112,7 @@ public class ComptageDao implements IDao<Comptage>{
             laDate.addComptage(comptage);
         }
         rs.close();
+        ps.close();
     }
 
     /**
@@ -146,7 +147,6 @@ public class ComptageDao implements IDao<Comptage>{
         }
         ps.executeUpdate();
         ps.close();
-
     }
 
     /**
@@ -166,6 +166,7 @@ public class ComptageDao implements IDao<Comptage>{
         ps.setDate(2, comptage.getLaDate().getDate());
         ps.executeUpdate();
         ps.close();
+        this.lesComptages.remove(comptage);
     }
 
     /**
@@ -198,5 +199,7 @@ public class ComptageDao implements IDao<Comptage>{
         ps.setDate(27, comptage.getLaDate().getDate());
         ps.executeUpdate();
         ps.close();
+        this.lesComptages.remove(comptage);
+        this.lesComptages.add(comptage);
     }
 }
